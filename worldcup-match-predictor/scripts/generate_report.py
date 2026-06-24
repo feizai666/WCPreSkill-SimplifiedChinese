@@ -141,12 +141,53 @@ def run_font(text_font, key):
     return text_font[key]
 
 
+def baseline_textbbox(draw, text, font_obj):
+    try:
+        return draw.textbbox((0, 0), str(text), font=font_obj, anchor="ls")
+    except TypeError:
+        return draw.textbbox((0, 0), str(text), font=font_obj)
+
+
+def text_width(draw, text, font_obj):
+    try:
+        return int(round(draw.textlength(str(text), font=font_obj)))
+    except AttributeError:
+        box = baseline_textbbox(draw, text, font_obj)
+        return box[2] - box[0]
+
+
 def draw_text(draw, xy, text, text_font, fill):
     x, y = xy
+    runs = []
+    top = 0
     for key, run in text_runs(text, text_font):
         font_obj = run_font(text_font, key)
-        draw.text((x, y), run, font=font_obj, fill=fill)
-        x += text_size(draw, run, font_obj)[0]
+        box = baseline_textbbox(draw, run, font_obj)
+        top = min(top, box[1])
+        runs.append((run, font_obj))
+
+    # Different fonts expose different ascender/descender boxes. Drawing each
+    # run on a shared baseline keeps Latin digits and Chinese text on one line.
+    baseline_y = y - top
+    for run, font_obj in runs:
+        try:
+            draw.text((x, baseline_y), run, font=font_obj, fill=fill, anchor="ls")
+        except TypeError:
+            draw.text((x, y), run, font=font_obj, fill=fill)
+        x += text_width(draw, run, font_obj)
+
+
+def text_size(draw, text, text_font):
+    width = 0
+    top = 0
+    bottom = 0
+    for key, run in text_runs(text, text_font):
+        font_obj = run_font(text_font, key)
+        box = baseline_textbbox(draw, run, font_obj)
+        width += text_width(draw, run, font_obj)
+        top = min(top, box[1])
+        bottom = max(bottom, box[3])
+    return width, bottom - top
 
 
 def risk_color(level):
@@ -170,17 +211,6 @@ def strip_markup(text):
     text = re.sub(r"<[^>]+>", "", text)
     text = html.unescape(text)
     return re.sub(r"\n{3,}", "\n\n", text).strip()
-
-
-def text_size(draw, text, text_font):
-    width = 0
-    height = 0
-    for key, run in text_runs(text, text_font):
-        font_obj = run_font(text_font, key)
-        box = draw.textbbox((0, 0), str(run), font=font_obj)
-        width += box[2] - box[0]
-        height = max(height, box[3] - box[1])
-    return width, height
 
 
 def line_height(draw, text_font, gap=9):
