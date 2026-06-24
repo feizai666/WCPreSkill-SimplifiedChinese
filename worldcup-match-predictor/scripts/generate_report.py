@@ -22,28 +22,28 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 
-WIDTH = 1240
-MARGIN = 54
-CARD_RADIUS = 24
-LINE_GAP = 9
-
+WIDTH = 1600
+MARGIN = 56
+GAP = 36
+CARD_RADIUS = 30
 
 COLORS = {
-    "bg": "#eef2f7",
+    "bg": "#edf2f8",
     "panel": "#ffffff",
-    "ink": "#172033",
-    "muted": "#64748b",
-    "line": "#dbe4ef",
-    "blue": "#1d4ed8",
-    "blue_soft": "#dbeafe",
-    "green": "#16a34a",
-    "green_soft": "#dcfce7",
-    "amber": "#d97706",
-    "amber_soft": "#fef3c7",
-    "red": "#dc2626",
-    "red_soft": "#fee2e2",
+    "ink": "#101827",
+    "muted": "#5e6d83",
+    "line": "#d6e1ee",
+    "blue": "#1f4ed8",
+    "blue_dark": "#153c9f",
+    "blue_soft": "#e8f0ff",
+    "green": "#159447",
+    "green_soft": "#e7f8ee",
+    "amber": "#cf7600",
+    "amber_soft": "#fff4d8",
+    "red": "#d7222a",
+    "red_soft": "#ffe6e8",
     "purple": "#6d28d9",
-    "purple_soft": "#ede9fe",
+    "purple_soft": "#eee7ff",
 }
 
 
@@ -64,21 +64,21 @@ def find_font():
 FONT_PATH = find_font()
 
 
-def font(size, bold=False):
-    path = FONT_PATH
-    if not path:
+def font(size):
+    if not FONT_PATH:
         return ImageFont.load_default()
-    return ImageFont.truetype(path, size)
+    return ImageFont.truetype(FONT_PATH, size)
 
 
 FONTS = {
-    "title": font(38, True),
-    "teams": font(40, True),
-    "score": font(58, True),
-    "section": font(25, True),
-    "body": font(23),
-    "small": font(20),
-    "tiny": font(18),
+    "title": font(46),
+    "date": font(28),
+    "teams": font(58),
+    "score": font(92),
+    "section": font(34),
+    "body": font(30),
+    "small": font(25),
+    "tiny": font(21),
 }
 
 
@@ -102,21 +102,16 @@ def strip_markup(text):
     text = re.sub(r"<a\s+[^>]*>(.*?)</a>", r"\1", text, flags=re.I | re.S)
     text = re.sub(r"<[^>]+>", "", text)
     text = html.unescape(text)
-    text = re.sub(r"\n{3,}", "\n\n", text)
-    return text.strip()
-
-
-def summary_brief(summary):
-    text = strip_markup(summary)
-    if "信息源" in text:
-        text = text.split("信息源", 1)[0].strip()
-    lines = [line.strip() for line in text.splitlines() if line.strip()]
-    return lines[:4]
+    return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
 def text_size(draw, text, text_font):
-    box = draw.textbbox((0, 0), text, font=text_font)
+    box = draw.textbbox((0, 0), str(text), font=text_font)
     return box[2] - box[0], box[3] - box[1]
+
+
+def line_height(draw, text_font, gap=9):
+    return text_size(draw, "国", text_font)[1] + gap
 
 
 def wrap_line(draw, line, text_font, max_width):
@@ -144,49 +139,55 @@ def wrap_text(draw, text, text_font, max_width):
     return lines
 
 
-def draw_wrapped(draw, text, x, y, max_width, text_font, fill=COLORS["ink"], line_gap=LINE_GAP):
+def measure_wrapped(draw, text, max_width, text_font, gap=9):
     lines = wrap_text(draw, text, text_font, max_width)
-    line_h = text_size(draw, "国", text_font)[1] + line_gap
+    return len(lines) * line_height(draw, text_font, gap), lines
+
+
+def draw_wrapped(draw, text, x, y, max_width, text_font, fill=COLORS["ink"], gap=9):
+    _, lines = measure_wrapped(draw, text, max_width, text_font, gap)
+    step = line_height(draw, text_font, gap)
     for line in lines:
         draw.text((x, y), line, font=text_font, fill=fill)
-        y += line_h
+        y += step
     return y
 
 
-def draw_badge(draw, text, x, y, fill, fg="#ffffff", pad_x=16, pad_y=7, text_font=None):
+def draw_badge(draw, text, x, y, fill, fg="#ffffff", pad_x=18, pad_y=8, text_font=None):
     text_font = text_font or FONTS["small"]
     w, h = text_size(draw, text, text_font)
     rect = (x, y, x + w + pad_x * 2, y + h + pad_y * 2)
-    draw.rounded_rectangle(rect, radius=16, fill=fill)
+    draw.rounded_rectangle(rect, radius=18, fill=fill)
     draw.text((x + pad_x, y + pad_y - 1), text, font=text_font, fill=fg)
     return rect[2]
 
 
 def draw_section(draw, title, x, y, width):
     draw.text((x, y), title, font=FONTS["section"], fill=COLORS["blue"])
-    y += 34
+    y += 42
     draw.line((x, y, x + width, y), fill=COLORS["line"], width=2)
-    return y + 14
+    return y + 18
 
 
 def draw_odds_table(draw, odds, x, y, width):
     spf = odds.get("spf") or {}
     rspf = odds.get("rspf") or {}
-    rows = []
-    rows.append(("胜平负", spf.get("win", "-"), spf.get("draw", "-"), spf.get("lose", "-")))
     handicap = rspf.get("handicap", "")
-    label = f"让球胜平负({handicap})" if handicap else "让球胜平负"
-    rows.append((label, rspf.get("win", "-"), rspf.get("draw", "-"), rspf.get("lose", "-")))
+    rows = [
+        ("胜平负", spf.get("win", "-"), spf.get("draw", "-"), spf.get("lose", "-")),
+        (f"让球({handicap})" if handicap else "让球", rspf.get("win", "-"), rspf.get("draw", "-"), rspf.get("lose", "-")),
+    ]
 
-    col_w = [width * 0.34, width * 0.22, width * 0.22, width * 0.22]
+    row_h = 52
     headers = ["玩法", "胜", "平", "负"]
-    row_h = 42
-    draw.rounded_rectangle((x, y, x + width, y + row_h * 3), radius=12, fill="#f8fafc", outline=COLORS["line"], width=2)
+    col_w = [width * 0.42, width * 0.19, width * 0.19, width * 0.20]
+
+    draw.rounded_rectangle((x, y, x + width, y + row_h * 3), radius=16, fill="#f8fbff", outline=COLORS["line"], width=2)
     cur_x = x
     for i, header in enumerate(headers):
-        draw.text((cur_x + 14, y + 10), header, font=FONTS["small"], fill=COLORS["muted"])
+        draw.text((cur_x + 16, y + 14), header, font=FONTS["small"], fill=COLORS["muted"])
         cur_x += col_w[i]
-        if i < len(headers) - 1:
+        if i < 3:
             draw.line((cur_x, y, cur_x, y + row_h * 3), fill=COLORS["line"], width=1)
     draw.line((x, y + row_h, x + width, y + row_h), fill=COLORS["line"], width=1)
     draw.line((x, y + row_h * 2, x + width, y + row_h * 2), fill=COLORS["line"], width=1)
@@ -194,7 +195,7 @@ def draw_odds_table(draw, odds, x, y, width):
     for r, row in enumerate(rows, start=1):
         cur_x = x
         for i, value in enumerate(row):
-            draw.text((cur_x + 14, y + row_h * r + 10), str(value), font=FONTS["small"], fill=COLORS["ink"])
+            draw.text((cur_x + 16, y + row_h * r + 14), str(value), font=FONTS["small"], fill=COLORS["ink"])
             cur_x += col_w[i]
     return y + row_h * 3
 
@@ -205,113 +206,140 @@ def safe_filename(text):
     return text.strip("_")
 
 
-def calc_height(data, match):
-    probe = Image.new("RGB", (WIDTH, 100), COLORS["bg"])
-    draw = ImageDraw.Draw(probe)
-    width = WIDTH - MARGIN * 2
+def layout_metrics(draw, match):
+    card_w = WIDTH - MARGIN * 2
+    inner_w = card_w - 76
+    left_w = int(inner_w * 0.58)
+    right_w = inner_w - left_w - GAP
+
     y = 0
-    y += 165
-    for line in summary_brief(data.get("summary", "")):
-        y += len(wrap_text(draw, line, FONTS["small"], width - 36)) * 30 + 6
-    if data.get("summary"):
-        y += 28
-    y += 185
-    y += len(wrap_text(draw, match.get("total_goals", ""), FONTS["body"], width - 40)) * 34
-    y += 70
+    y += 78
+    time_h, _ = measure_wrapped(
+        draw,
+        f"北京 {match.get('time_bj', '-')} | 当地 {match.get('time_local', '-')} | {match.get('venue', '')}",
+        inner_w,
+        FONTS["small"],
+        8,
+    )
+    y += time_h + 24
+    y += 164
+    prob = match.get("probability", {})
+    prob_text = f"胜平负概率：主胜 {prob.get('win', '-')} | 平 {prob.get('draw', '-')} | 客胜 {prob.get('lose', '-')}"
+    prob_h, _ = measure_wrapped(draw, prob_text, inner_w, FONTS["body"], 9)
+    goals_h, _ = measure_wrapped(draw, "总进球预测：" + match.get("total_goals", "-"), inner_w, FONTS["body"], 9)
+    y += prob_h + goals_h + 28
+
+    left_y = 60
     for factor in match.get("key_factors", []):
-        y += len(wrap_text(draw, "• " + factor, FONTS["body"], width - 38)) * 32 + 8
-    y += 70
-    y += 150
-    y += len(wrap_text(draw, match.get("odds", {}).get("goals", ""), FONTS["small"], width - 40)) * 30
-    y += len(wrap_text(draw, match.get("odds", {}).get("score", ""), FONTS["small"], width - 40)) * 30 + 40
-    y += len(wrap_text(draw, match.get("bet_advice", ""), FONTS["body"], width - 44)) * 34 + 90
-    # Keep generous slack for CJK wrapping differences between measurement and final draw.
-    return max(1850, y + MARGIN + 320)
+        h, _ = measure_wrapped(draw, "• " + factor, left_w, FONTS["body"], 8)
+        left_y += h + 10
+
+    right_y = 60 + 156 + 22
+    odds = match.get("odds", {})
+    h, _ = measure_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), right_w, FONTS["small"], 8)
+    right_y += h + 10
+    h, _ = measure_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), right_w, FONTS["small"], 8)
+    right_y += h + 28
+    h, _ = measure_wrapped(draw, match.get("bet_advice", "-"), right_w - 34, FONTS["body"], 9)
+    right_y += 60 + h + 42
+
+    content_h = y + max(left_y, right_y) + 72
+    return {
+        "card_h": content_h,
+        "inner_w": inner_w,
+        "left_w": left_w,
+        "right_w": right_w,
+        "top_after_intro": y,
+    }
 
 
 def render_match_png(data, match, index, output_dir):
-    height = calc_height(data, match)
+    probe = Image.new("RGB", (WIDTH, 100), COLORS["bg"])
+    probe_draw = ImageDraw.Draw(probe)
+    metrics = layout_metrics(probe_draw, match)
+
+    header_h = 122
+    card_w = WIDTH - MARGIN * 2
+    card_y = MARGIN + header_h + 28
+    card_h = int(metrics["card_h"])
+    height = card_y + card_h + MARGIN
+
     img = Image.new("RGB", (WIDTH, height), COLORS["bg"])
     draw = ImageDraw.Draw(img)
-    width = WIDTH - MARGIN * 2
     x = MARGIN
     y = MARGIN
 
-    # Header
-    draw.rounded_rectangle((x, y, x + width, y + 112), radius=CARD_RADIUS, fill=COLORS["blue"])
-    draw.text((x + 28, y + 24), "世界杯比分预测与投注参考", font=FONTS["title"], fill="#ffffff")
-    draw.text((x + 30, y + 72), data.get("date", ""), font=FONTS["small"], fill="#dbeafe")
-    draw.text((x + width - 250, y + 72), f"第 {index:02d} 场", font=FONTS["small"], fill="#dbeafe")
-    y += 136
+    draw.rounded_rectangle((x, y, x + card_w, y + header_h), radius=CARD_RADIUS, fill=COLORS["blue"])
+    draw.text((x + 34, y + 24), "世界杯比分预测与投注参考", font=FONTS["title"], fill="#ffffff")
+    draw.text((x + 36, y + 78), data.get("date", ""), font=FONTS["date"], fill="#dbeafe")
+    draw.text((x + card_w - 240, y + 78), f"第 {index:02d} 场", font=FONTS["date"], fill="#dbeafe")
 
-    # Summary calibration block
-    brief = summary_brief(data.get("summary", ""))
-    if brief:
-        block_start = y
-        inner_x = x + 22
-        y += 18
-        draw.text((inner_x, y), "赛后复盘 / 今日校准", font=FONTS["section"], fill=COLORS["amber"])
-        y += 38
-        for line in brief:
-            y = draw_wrapped(draw, line, inner_x, y, width - 44, FONTS["small"], fill=COLORS["ink"], line_gap=8) + 4
-        draw.rounded_rectangle((x, block_start, x + width, y + 10), radius=18, outline="#f59e0b", width=2, fill=None)
-        y += 32
-
-    # Match panel
-    panel_top = y
-    draw.rounded_rectangle((x, panel_top, x + width, height - MARGIN), radius=CARD_RADIUS, fill=COLORS["panel"])
-    y += 28
-    inner_x = x + 30
-    inner_w = width - 60
+    draw.rounded_rectangle((x, card_y, x + card_w, card_y + card_h), radius=CARD_RADIUS, fill=COLORS["panel"])
+    inner_x = x + 38
+    inner_y = card_y + 34
+    inner_w = metrics["inner_w"]
+    left_w = metrics["left_w"]
+    right_w = metrics["right_w"]
 
     title = f"{match.get('home', '?')} vs {match.get('away', '?')}"
-    draw.text((inner_x, y), title, font=FONTS["teams"], fill=COLORS["ink"])
+    draw.text((inner_x, inner_y), title, font=FONTS["teams"], fill=COLORS["ink"])
     group = match.get("group", "")
     if group:
-        badge_w = text_size(draw, group, FONTS["small"])[0] + 32
-        draw_badge(draw, group, x + width - badge_w - 28, y + 8, COLORS["purple_soft"], fg=COLORS["purple"], text_font=FONTS["small"])
-    y += 58
-    y = draw_wrapped(draw, f"北京 {match.get('time_bj', '-')} | 当地 {match.get('time_local', '-')} | {match.get('venue', '')}",
-                     inner_x, y, inner_w, FONTS["small"], fill=COLORS["muted"], line_gap=7) + 16
+        badge_w = text_size(draw, group, FONTS["small"])[0] + 42
+        draw_badge(draw, group, x + card_w - badge_w - 38, inner_y + 10, COLORS["purple_soft"], fg=COLORS["purple"])
+    inner_y += 78
 
-    # Score strip
-    strip_top = y
-    draw.rounded_rectangle((inner_x, strip_top, inner_x + inner_w, strip_top + 126), radius=18, fill="#f8fafc", outline=COLORS["line"], width=2)
-    draw.text((inner_x + 22, strip_top + 22), "预测比分", font=FONTS["section"], fill=COLORS["muted"])
-    draw.text((inner_x + 150, strip_top + 10), match.get("predicted_score", "-"), font=FONTS["score"], fill=COLORS["red"])
-    alt = match.get("alt_score")
-    if alt:
-        draw.text((inner_x + 360, strip_top + 34), f"次选 {alt}", font=FONTS["body"], fill=COLORS["muted"])
+    inner_y = draw_wrapped(
+        draw,
+        f"北京 {match.get('time_bj', '-')} | 当地 {match.get('time_local', '-')} | {match.get('venue', '')}",
+        inner_x,
+        inner_y,
+        inner_w,
+        FONTS["small"],
+        fill=COLORS["muted"],
+        gap=8,
+    ) + 24
+
+    strip_h = 150
+    draw.rounded_rectangle((inner_x, inner_y, inner_x + inner_w, inner_y + strip_h), radius=22, fill=COLORS["blue_soft"], outline="#bdd0f5", width=2)
+    draw.text((inner_x + 28, inner_y + 32), "预测比分", font=FONTS["section"], fill=COLORS["blue_dark"])
+    draw.text((inner_x + 205, inner_y + 16), match.get("predicted_score", "-"), font=FONTS["score"], fill=COLORS["red"])
+    if match.get("alt_score"):
+        draw.text((inner_x + 470, inner_y + 50), f"次选 {match.get('alt_score')}", font=FONTS["body"], fill=COLORS["muted"])
     risk = match.get("risk", "观望")
     conf = match.get("confidence", "-")
-    draw_badge(draw, risk, inner_x + inner_w - 170, strip_top + 20, risk_color(risk), text_font=FONTS["small"])
-    draw.text((inner_x + inner_w - 170, strip_top + 74), f"置信度 {conf}", font=FONTS["small"], fill=conf_color(conf))
-    y = strip_top + 150
+    draw_badge(draw, risk, inner_x + inner_w - 210, inner_y + 28, risk_color(risk), text_font=FONTS["small"])
+    draw.text((inner_x + inner_w - 210, inner_y + 88), f"置信度 {conf}", font=FONTS["small"], fill=conf_color(conf))
+    inner_y += strip_h + 24
 
     prob = match.get("probability", {})
     prob_text = f"胜平负概率：主胜 {prob.get('win', '-')} | 平 {prob.get('draw', '-')} | 客胜 {prob.get('lose', '-')}"
-    y = draw_wrapped(draw, prob_text, inner_x, y, inner_w, FONTS["body"], fill=COLORS["ink"]) + 6
-    y = draw_wrapped(draw, "总进球预测：" + match.get("total_goals", "-"), inner_x, y, inner_w, FONTS["body"], fill=COLORS["blue"]) + 20
+    inner_y = draw_wrapped(draw, prob_text, inner_x, inner_y, inner_w, FONTS["body"], fill=COLORS["ink"]) + 6
+    inner_y = draw_wrapped(draw, "总进球预测：" + match.get("total_goals", "-"), inner_x, inner_y, inner_w, FONTS["body"], fill=COLORS["blue"]) + 24
 
-    y = draw_section(draw, "关键分析", inner_x, y, inner_w)
+    left_x = inner_x
+    right_x = inner_x + left_w + GAP
+    columns_y = inner_y
+
+    left_y = draw_section(draw, "关键分析", left_x, columns_y, left_w)
     for factor in match.get("key_factors", []):
-        y = draw_wrapped(draw, "• " + factor, inner_x, y, inner_w, FONTS["body"], fill=COLORS["ink"], line_gap=8) + 8
-    y += 10
+        left_y = draw_wrapped(draw, "• " + factor, left_x, left_y, left_w, FONTS["body"], fill=COLORS["ink"], gap=8) + 10
 
-    y = draw_section(draw, "竞彩赔率", inner_x, y, inner_w)
+    right_y = draw_section(draw, "竞彩赔率 / 建议", right_x, columns_y, right_w)
     odds = match.get("odds", {})
-    y = draw_odds_table(draw, odds, inner_x, y, inner_w) + 18
-    y = draw_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), inner_x, y, inner_w, FONTS["small"], fill=COLORS["muted"]) + 8
-    y = draw_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), inner_x, y, inner_w, FONTS["small"], fill=COLORS["muted"]) + 22
+    right_y = draw_odds_table(draw, odds, right_x, right_y, right_w) + 22
+    right_y = draw_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), right_x, right_y, right_w, FONTS["small"], fill=COLORS["muted"], gap=8) + 10
+    right_y = draw_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), right_x, right_y, right_w, FONTS["small"], fill=COLORS["muted"], gap=8) + 24
 
-    y = draw_section(draw, "投注建议", inner_x, y, inner_w)
-    advice_top = y
-    y = draw_wrapped(draw, match.get("bet_advice", "-"), inner_x + 18, y + 16, inner_w - 36, FONTS["body"], fill=COLORS["ink"]) + 18
-    draw.rounded_rectangle((inner_x, advice_top, inner_x + inner_w, y), radius=16, outline="#bbf7d0", width=2, fill=None)
-    y += 26
+    advice_top = right_y
+    draw.text((right_x, right_y), "投注建议", font=FONTS["section"], fill=COLORS["green"])
+    right_y += 46
+    advice_y = draw_wrapped(draw, match.get("bet_advice", "-"), right_x + 18, right_y + 16, right_w - 36, FONTS["body"], fill=COLORS["ink"], gap=9)
+    right_y = advice_y + 20
+    draw.rounded_rectangle((right_x, advice_top + 40, right_x + right_w, right_y), radius=18, outline="#95e7b2", width=2)
 
-    footer = f"由 worldcup-match-predictor 生成 | {datetime.now().strftime('%Y-%m-%d %H:%M')} | 投注有风险，仅供参考"
-    draw.text((inner_x, height - MARGIN - 34), footer, font=FONTS["tiny"], fill=COLORS["muted"])
+    footer = f"worldcup-match-predictor | {datetime.now().strftime('%Y-%m-%d %H:%M')} | 投注有风险，仅供参考"
+    draw.text((inner_x, card_y + card_h - 42), footer, font=FONTS["tiny"], fill=COLORS["muted"])
 
     output_dir.mkdir(parents=True, exist_ok=True)
     filename = f"{index:02d}_{safe_filename(match.get('home', 'home'))}_vs_{safe_filename(match.get('away', 'away'))}.png"
