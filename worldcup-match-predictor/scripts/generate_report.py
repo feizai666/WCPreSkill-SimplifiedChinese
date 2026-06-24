@@ -1,124 +1,346 @@
 #!/usr/bin/env python3
-"""生成世界杯比分预测 HTML 报告。
+"""生成世界杯比分预测 PNG 报告卡片。
 
 用法：
-  python generate_report.py <data.json> <output.html>
+  python generate_report.py <data.json> <output_dir>
 
 data.json 结构示例见同目录 sample_data.json。
 脚本仅做渲染，不含预测逻辑——预测数据由 skill 分析后写入 JSON。
+
+输出规则：
+  - 每场比赛生成 1 张 PNG。
+  - 当天 6 场比赛就生成 6 张 PNG。
+  - PNG 文件保存到调用方传入的日期目录，例如 reports/2026-06-25/。
 """
+import html
 import json
+import re
 import sys
 from datetime import datetime
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+
+WIDTH = 1240
+MARGIN = 54
+CARD_RADIUS = 24
+LINE_GAP = 9
+
+
+COLORS = {
+    "bg": "#eef2f7",
+    "panel": "#ffffff",
+    "ink": "#172033",
+    "muted": "#64748b",
+    "line": "#dbe4ef",
+    "blue": "#1d4ed8",
+    "blue_soft": "#dbeafe",
+    "green": "#16a34a",
+    "green_soft": "#dcfce7",
+    "amber": "#d97706",
+    "amber_soft": "#fef3c7",
+    "red": "#dc2626",
+    "red_soft": "#fee2e2",
+    "purple": "#6d28d9",
+    "purple_soft": "#ede9fe",
+}
+
+
+def find_font():
+    candidates = [
+        "/System/Library/Fonts/STHeiti Medium.ttc",
+        "/System/Library/Fonts/STHeiti Light.ttc",
+        "/Library/Fonts/Arial Unicode.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    ]
+    for path in candidates:
+        if Path(path).exists():
+            return path
+    return None
+
+
+FONT_PATH = find_font()
+
+
+def font(size, bold=False):
+    path = FONT_PATH
+    if not path:
+        return ImageFont.load_default()
+    return ImageFont.truetype(path, size)
+
+
+FONTS = {
+    "title": font(38, True),
+    "teams": font(40, True),
+    "score": font(58, True),
+    "section": font(25, True),
+    "body": font(23),
+    "small": font(20),
+    "tiny": font(18),
+}
+
+
+def risk_color(level):
+    return {
+        "稳胆": COLORS["green"],
+        "博胆": COLORS["amber"],
+        "高风险": COLORS["red"],
+        "观望": COLORS["muted"],
+    }.get(level, COLORS["muted"])
 
 
 def conf_color(level):
-    return {"高": "#16a34a", "中": "#d97706", "低": "#dc2626"}.get(level, "#6b7280")
+    return {"高": COLORS["green"], "中": COLORS["amber"], "低": COLORS["red"]}.get(level, COLORS["muted"])
 
 
-def risk_badge(level):
-    color = {"稳胆": "#16a34a", "博胆": "#d97706", "高风险": "#dc2626",
-             "观望": "#6b7280"}.get(level, "#6b7280")
-    return f'<span class="badge" style="background:{color}">{level}</span>'
+def strip_markup(text):
+    text = text or ""
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.I)
+    text = re.sub(r"</?(b|strong|i|em)>", "", text, flags=re.I)
+    text = re.sub(r"<a\s+[^>]*>(.*?)</a>", r"\1", text, flags=re.I | re.S)
+    text = re.sub(r"<[^>]+>", "", text)
+    text = html.unescape(text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
 
 
-def render_match(m):
-    odds = m.get("odds", {})
-    spf = odds.get("spf", {})        # 不让球胜平负 {win,draw,lose}
-    rspf = odds.get("rspf", {})      # 让球胜平负 {handicap,win,draw,lose}
-    goals = odds.get("goals", "")    # 总进球数赔率描述
-    score_odds = odds.get("score", "")  # 比分(波胆)最看好档描述
+def summary_brief(summary):
+    text = strip_markup(summary)
+    if "信息源" in text:
+        text = text.split("信息源", 1)[0].strip()
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    return lines[:4]
 
-    def spf_row(name, o, extra=""):
-        if not o:
-            return f'<tr><td>{name}</td><td colspan="3" class="muted">暂无</td></tr>'
-        return (f'<tr><td>{name}{extra}</td><td>{o.get("win","-")}</td>'
-                f'<td>{o.get("draw","-")}</td><td>{o.get("lose","-")}</td></tr>')
 
-    factors = "".join(f"<li>{f}</li>" for f in m.get("key_factors", []))
-    prob = m.get("probability", {})
+def text_size(draw, text, text_font):
+    box = draw.textbbox((0, 0), text, font=text_font)
+    return box[2] - box[0], box[3] - box[1]
+
+
+def wrap_line(draw, line, text_font, max_width):
+    if not line:
+        return [""]
+    wrapped = []
+    current = ""
+    for ch in line:
+        candidate = current + ch
+        width, _ = text_size(draw, candidate, text_font)
+        if width <= max_width or not current:
+            current = candidate
+        else:
+            wrapped.append(current)
+            current = ch
+    if current:
+        wrapped.append(current)
+    return wrapped
+
+
+def wrap_text(draw, text, text_font, max_width):
+    lines = []
+    for line in str(text).splitlines():
+        lines.extend(wrap_line(draw, line.strip(), text_font, max_width))
+    return lines
+
+
+def draw_wrapped(draw, text, x, y, max_width, text_font, fill=COLORS["ink"], line_gap=LINE_GAP):
+    lines = wrap_text(draw, text, text_font, max_width)
+    line_h = text_size(draw, "国", text_font)[1] + line_gap
+    for line in lines:
+        draw.text((x, y), line, font=text_font, fill=fill)
+        y += line_h
+    return y
+
+
+def draw_badge(draw, text, x, y, fill, fg="#ffffff", pad_x=16, pad_y=7, text_font=None):
+    text_font = text_font or FONTS["small"]
+    w, h = text_size(draw, text, text_font)
+    rect = (x, y, x + w + pad_x * 2, y + h + pad_y * 2)
+    draw.rounded_rectangle(rect, radius=16, fill=fill)
+    draw.text((x + pad_x, y + pad_y - 1), text, font=text_font, fill=fg)
+    return rect[2]
+
+
+def draw_section(draw, title, x, y, width):
+    draw.text((x, y), title, font=FONTS["section"], fill=COLORS["blue"])
+    y += 34
+    draw.line((x, y, x + width, y), fill=COLORS["line"], width=2)
+    return y + 14
+
+
+def draw_odds_table(draw, odds, x, y, width):
+    spf = odds.get("spf") or {}
+    rspf = odds.get("rspf") or {}
+    rows = []
+    rows.append(("胜平负", spf.get("win", "-"), spf.get("draw", "-"), spf.get("lose", "-")))
     handicap = rspf.get("handicap", "")
-    rspf_label = f"（让{handicap}）" if handicap else ""
-    return f"""
-    <div class="match">
-      <div class="match-head">
-        <div class="teams">{m.get('home','?')} <span class="vs">vs</span> {m.get('away','?')}</div>
-        <div class="group">{m.get('group','')}</div>
-      </div>
-      <div class="time">🕐 北京 {m.get('time_bj','-')} ｜ 当地 {m.get('time_local','-')} ｜ {m.get('venue','')}</div>
-      <div class="score">预测比分：<b>{m.get('predicted_score','-')}</b>
-        <span class="alt">{('次选 ' + m['alt_score']) if m.get('alt_score') else ''}</span></div>
-      <div class="goals">⚽ 总进球预测：<b>{m.get('total_goals','-')}</b></div>
-      <div class="prob">主胜 {prob.get('win','-')} ｜ 平 {prob.get('draw','-')} ｜ 客胜 {prob.get('lose','-')}
-        ｜ 置信度 <b style="color:{conf_color(m.get('confidence',''))}">{m.get('confidence','-')}</b></div>
-      <div class="section-title">关键分析</div>
-      <ul class="factors">{factors}</ul>
-      <div class="section-title">竞彩赔率（胜/平/负）</div>
-      <table class="odds">
-        <tr><th>玩法</th><th>胜</th><th>平</th><th>负</th></tr>
-        {spf_row("胜平负", spf)}
-        {spf_row("让球胜平负", rspf, extra=rspf_label)}
-      </table>
-      <div class="extra-odds">
-        <div>🥅 总进球数（竞彩）：{goals or '—'}</div>
-        <div>🎯 比分/波胆（市场最看好）：{score_odds or '—'}</div>
-      </div>
-      <div class="bet">💡 投注建议：{m.get('bet_advice','-')} {risk_badge(m.get('risk','观望'))}</div>
-    </div>"""
+    label = f"让球胜平负({handicap})" if handicap else "让球胜平负"
+    rows.append((label, rspf.get("win", "-"), rspf.get("draw", "-"), rspf.get("lose", "-")))
+
+    col_w = [width * 0.34, width * 0.22, width * 0.22, width * 0.22]
+    headers = ["玩法", "胜", "平", "负"]
+    row_h = 42
+    draw.rounded_rectangle((x, y, x + width, y + row_h * 3), radius=12, fill="#f8fafc", outline=COLORS["line"], width=2)
+    cur_x = x
+    for i, header in enumerate(headers):
+        draw.text((cur_x + 14, y + 10), header, font=FONTS["small"], fill=COLORS["muted"])
+        cur_x += col_w[i]
+        if i < len(headers) - 1:
+            draw.line((cur_x, y, cur_x, y + row_h * 3), fill=COLORS["line"], width=1)
+    draw.line((x, y + row_h, x + width, y + row_h), fill=COLORS["line"], width=1)
+    draw.line((x, y + row_h * 2, x + width, y + row_h * 2), fill=COLORS["line"], width=1)
+
+    for r, row in enumerate(rows, start=1):
+        cur_x = x
+        for i, value in enumerate(row):
+            draw.text((cur_x + 14, y + row_h * r + 10), str(value), font=FONTS["small"], fill=COLORS["ink"])
+            cur_x += col_w[i]
+    return y + row_h * 3
+
+
+def safe_filename(text):
+    text = re.sub(r"[\\/:*?\"<>|]+", "_", text)
+    text = re.sub(r"\s+", "_", text)
+    return text.strip("_")
+
+
+def calc_height(data, match):
+    probe = Image.new("RGB", (WIDTH, 100), COLORS["bg"])
+    draw = ImageDraw.Draw(probe)
+    width = WIDTH - MARGIN * 2
+    y = 0
+    y += 165
+    for line in summary_brief(data.get("summary", "")):
+        y += len(wrap_text(draw, line, FONTS["small"], width - 36)) * 30 + 6
+    if data.get("summary"):
+        y += 28
+    y += 185
+    y += len(wrap_text(draw, match.get("total_goals", ""), FONTS["body"], width - 40)) * 34
+    y += 70
+    for factor in match.get("key_factors", []):
+        y += len(wrap_text(draw, "• " + factor, FONTS["body"], width - 38)) * 32 + 8
+    y += 70
+    y += 150
+    y += len(wrap_text(draw, match.get("odds", {}).get("goals", ""), FONTS["small"], width - 40)) * 30
+    y += len(wrap_text(draw, match.get("odds", {}).get("score", ""), FONTS["small"], width - 40)) * 30 + 40
+    y += len(wrap_text(draw, match.get("bet_advice", ""), FONTS["body"], width - 44)) * 34 + 90
+    # Keep generous slack for CJK wrapping differences between measurement and final draw.
+    return max(1850, y + MARGIN + 320)
+
+
+def render_match_png(data, match, index, output_dir):
+    height = calc_height(data, match)
+    img = Image.new("RGB", (WIDTH, height), COLORS["bg"])
+    draw = ImageDraw.Draw(img)
+    width = WIDTH - MARGIN * 2
+    x = MARGIN
+    y = MARGIN
+
+    # Header
+    draw.rounded_rectangle((x, y, x + width, y + 112), radius=CARD_RADIUS, fill=COLORS["blue"])
+    draw.text((x + 28, y + 24), "世界杯比分预测与投注参考", font=FONTS["title"], fill="#ffffff")
+    draw.text((x + 30, y + 72), data.get("date", ""), font=FONTS["small"], fill="#dbeafe")
+    draw.text((x + width - 250, y + 72), f"第 {index:02d} 场", font=FONTS["small"], fill="#dbeafe")
+    y += 136
+
+    # Summary calibration block
+    brief = summary_brief(data.get("summary", ""))
+    if brief:
+        block_start = y
+        inner_x = x + 22
+        y += 18
+        draw.text((inner_x, y), "赛后复盘 / 今日校准", font=FONTS["section"], fill=COLORS["amber"])
+        y += 38
+        for line in brief:
+            y = draw_wrapped(draw, line, inner_x, y, width - 44, FONTS["small"], fill=COLORS["ink"], line_gap=8) + 4
+        draw.rounded_rectangle((x, block_start, x + width, y + 10), radius=18, outline="#f59e0b", width=2, fill=None)
+        y += 32
+
+    # Match panel
+    panel_top = y
+    draw.rounded_rectangle((x, panel_top, x + width, height - MARGIN), radius=CARD_RADIUS, fill=COLORS["panel"])
+    y += 28
+    inner_x = x + 30
+    inner_w = width - 60
+
+    title = f"{match.get('home', '?')} vs {match.get('away', '?')}"
+    draw.text((inner_x, y), title, font=FONTS["teams"], fill=COLORS["ink"])
+    group = match.get("group", "")
+    if group:
+        badge_w = text_size(draw, group, FONTS["small"])[0] + 32
+        draw_badge(draw, group, x + width - badge_w - 28, y + 8, COLORS["purple_soft"], fg=COLORS["purple"], text_font=FONTS["small"])
+    y += 58
+    y = draw_wrapped(draw, f"北京 {match.get('time_bj', '-')} | 当地 {match.get('time_local', '-')} | {match.get('venue', '')}",
+                     inner_x, y, inner_w, FONTS["small"], fill=COLORS["muted"], line_gap=7) + 16
+
+    # Score strip
+    strip_top = y
+    draw.rounded_rectangle((inner_x, strip_top, inner_x + inner_w, strip_top + 126), radius=18, fill="#f8fafc", outline=COLORS["line"], width=2)
+    draw.text((inner_x + 22, strip_top + 22), "预测比分", font=FONTS["section"], fill=COLORS["muted"])
+    draw.text((inner_x + 150, strip_top + 10), match.get("predicted_score", "-"), font=FONTS["score"], fill=COLORS["red"])
+    alt = match.get("alt_score")
+    if alt:
+        draw.text((inner_x + 360, strip_top + 34), f"次选 {alt}", font=FONTS["body"], fill=COLORS["muted"])
+    risk = match.get("risk", "观望")
+    conf = match.get("confidence", "-")
+    draw_badge(draw, risk, inner_x + inner_w - 170, strip_top + 20, risk_color(risk), text_font=FONTS["small"])
+    draw.text((inner_x + inner_w - 170, strip_top + 74), f"置信度 {conf}", font=FONTS["small"], fill=conf_color(conf))
+    y = strip_top + 150
+
+    prob = match.get("probability", {})
+    prob_text = f"胜平负概率：主胜 {prob.get('win', '-')} | 平 {prob.get('draw', '-')} | 客胜 {prob.get('lose', '-')}"
+    y = draw_wrapped(draw, prob_text, inner_x, y, inner_w, FONTS["body"], fill=COLORS["ink"]) + 6
+    y = draw_wrapped(draw, "总进球预测：" + match.get("total_goals", "-"), inner_x, y, inner_w, FONTS["body"], fill=COLORS["blue"]) + 20
+
+    y = draw_section(draw, "关键分析", inner_x, y, inner_w)
+    for factor in match.get("key_factors", []):
+        y = draw_wrapped(draw, "• " + factor, inner_x, y, inner_w, FONTS["body"], fill=COLORS["ink"], line_gap=8) + 8
+    y += 10
+
+    y = draw_section(draw, "竞彩赔率", inner_x, y, inner_w)
+    odds = match.get("odds", {})
+    y = draw_odds_table(draw, odds, inner_x, y, inner_w) + 18
+    y = draw_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), inner_x, y, inner_w, FONTS["small"], fill=COLORS["muted"]) + 8
+    y = draw_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), inner_x, y, inner_w, FONTS["small"], fill=COLORS["muted"]) + 22
+
+    y = draw_section(draw, "投注建议", inner_x, y, inner_w)
+    advice_top = y
+    y = draw_wrapped(draw, match.get("bet_advice", "-"), inner_x + 18, y + 16, inner_w - 36, FONTS["body"], fill=COLORS["ink"]) + 18
+    draw.rounded_rectangle((inner_x, advice_top, inner_x + inner_w, y), radius=16, outline="#bbf7d0", width=2, fill=None)
+    y += 26
+
+    footer = f"由 worldcup-match-predictor 生成 | {datetime.now().strftime('%Y-%m-%d %H:%M')} | 投注有风险，仅供参考"
+    draw.text((inner_x, height - MARGIN - 34), footer, font=FONTS["tiny"], fill=COLORS["muted"])
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    filename = f"{index:02d}_{safe_filename(match.get('home', 'home'))}_vs_{safe_filename(match.get('away', 'away'))}.png"
+    out_path = output_dir / filename
+    img.save(out_path)
+    return out_path
 
 
 def main():
     if len(sys.argv) < 3:
-        print("用法: python generate_report.py <data.json> <output.html>")
+        print("用法: python generate_report.py <data.json> <output_dir>")
         sys.exit(1)
+
     with open(sys.argv[1], encoding="utf-8") as f:
         data = json.load(f)
 
-    matches = "".join(render_match(m) for m in data.get("matches", []))
-    date = data.get("date", datetime.now().strftime("%Y-%m-%d"))
-    summary = data.get("summary", "")
+    output_dir = Path(sys.argv[2])
+    matches = data.get("matches", [])
+    if not matches:
+        print("未发现 matches，未生成 PNG。")
+        return
 
-    html = f"""<!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>世界杯比分预测 · {date}</title>
-<style>
-*{{box-sizing:border-box;margin:0;padding:0}}
-body{{font-family:-apple-system,'PingFang SC',sans-serif;background:#f1f5f9;color:#1e293b;line-height:1.6;padding:24px}}
-.wrap{{max-width:860px;margin:0 auto}}
-header{{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;padding:28px;border-radius:16px;margin-bottom:20px}}
-header h1{{font-size:24px}} header .date{{opacity:.9;margin-top:6px}}
-.disclaimer{{background:#fef3c7;border:1px solid #fcd34d;color:#92400e;padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:20px}}
-.summary{{background:#fff;border-radius:14px;padding:18px 20px;margin-bottom:20px;border-left:4px solid #2563eb}}
-.match{{background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.06)}}
-.match-head{{display:flex;justify-content:space-between;align-items:center}}
-.teams{{font-size:19px;font-weight:700}} .vs{{color:#94a3b8;font-size:14px;margin:0 6px}}
-.group{{background:#ede9fe;color:#6d28d9;padding:3px 10px;border-radius:20px;font-size:12px}}
-.time{{color:#64748b;font-size:13px;margin:8px 0}}
-.score{{font-size:16px;margin:6px 0}} .score b{{color:#dc2626;font-size:20px}} .alt{{color:#94a3b8;font-size:13px;margin-left:8px}}
-.goals{{font-size:14px;margin:4px 0;color:#0369a1}} .goals b{{color:#0369a1}}
-.prob{{font-size:13px;color:#475569;margin-bottom:10px}}
-.section-title{{font-size:13px;font-weight:700;color:#334155;margin:12px 0 6px;border-bottom:1px solid #e2e8f0;padding-bottom:4px}}
-.factors{{padding-left:20px;font-size:13px;color:#475569}} .factors li{{margin:3px 0}}
-table.odds{{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}}
-table.odds th,table.odds td{{border:1px solid #e2e8f0;padding:6px 10px;text-align:center}}
-table.odds th{{background:#f8fafc}} .muted{{color:#94a3b8}}
-.extra-odds{{margin-top:8px;font-size:13px;color:#475569;background:#f8fafc;border-radius:8px;padding:8px 12px}} .extra-odds div{{margin:3px 0}}
-.bet{{margin-top:12px;background:#f0fdf4;border:1px solid #bbf7d0;padding:10px 14px;border-radius:10px;font-size:14px}}
-.badge{{color:#fff;padding:2px 10px;border-radius:20px;font-size:12px;margin-left:6px}}
-footer{{text-align:center;color:#94a3b8;font-size:12px;margin-top:24px}}
-</style></head>
-<body><div class="wrap">
-<header><h1>⚽ 世界杯比分预测与投注参考</h1><div class="date">{date}</div></header>
-<div class="disclaimer">⚠️ 本报告基于公开信息与启发式分析，所有预测与投注建议仅供参考，存在不确定性，不构成盈利保证。投注有风险，请理性娱乐。</div>
-{f'<div class="summary"><b>今日综述</b><br>{summary}</div>' if summary else ''}
-{matches}
-<footer>由 worldcup-match-predictor 生成 · {datetime.now().strftime('%Y-%m-%d %H:%M')}</footer>
-</div></body></html>"""
+    generated = []
+    for idx, match in enumerate(matches, start=1):
+        generated.append(render_match_png(data, match, idx, output_dir))
 
-    with open(sys.argv[2], "w", encoding="utf-8") as f:
-        f.write(html)
-    print(f"报告已生成: {sys.argv[2]}")
+    print(f"已生成 {len(generated)} 张 PNG 到: {output_dir}")
+    for path in generated:
+        print(path)
 
 
 if __name__ == "__main__":

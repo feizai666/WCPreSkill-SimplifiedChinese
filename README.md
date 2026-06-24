@@ -10,7 +10,7 @@
 2. **多维信息收集** —— 球队近半年国际赛事成绩、历史交锋、打法风格、球员状态、停赛/累计黄牌风险、小组出线形势、当地开球时间与气候等。
 3. **综合分析建模** —— 估算双方综合状态分，给出预测比分、胜平负概率与置信度。
 4. **赔率抓取与投注建议** —— 用 Playwright 抓取北京单场（北单）与竞彩的实时胜平负赔率，做价值对比，输出仅针对世界杯比赛的下注参考。
-5. **输出报告** —— 多场比赛时生成自包含 HTML 报告。
+5. **输出报告** —— 按比赛生成 PNG 报告卡片，并放入目标日期目录。
 
 ## 目录结构
 
@@ -20,13 +20,21 @@ worldcup-match-predictor/
 ├── references/
 │   └── prediction-framework.md       # 预测方法论与权重框架
 └── scripts/
-    ├── generate_report.py            # HTML 报告生成脚本
+    ├── generate_report.py            # PNG 报告卡片生成脚本
     └── sample_data.json              # 示例数据
 ```
 
 ## 使用方式
 
 将本技能安装到 Box AI，然后说"预测明天的世界杯比赛"即可触发；也可由定时任务每天自动调用。
+
+渲染脚本用法：
+
+```bash
+python worldcup-match-predictor/scripts/generate_report.py <data.json> reports/YYYY-MM-DD/
+```
+
+如果当天有 6 场比赛，会在 `reports/YYYY-MM-DD/` 下生成 6 张 PNG，每场一张。
 
 ## ⚠️ 免责声明
 
