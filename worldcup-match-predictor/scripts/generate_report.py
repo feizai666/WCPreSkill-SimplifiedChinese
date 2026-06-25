@@ -8,6 +8,7 @@ data.json 结构示例见同目录 sample_data.json。
 脚本仅做渲染，不含预测逻辑——预测数据由 skill 分析后写入 JSON。
 
 输出规则：
+  - 如果 data.json 包含 reflection，则先生成 00 号赛后复盘卡。
   - 每场比赛生成 1 张 PNG。
   - 当天 6 场比赛就生成 6 张 PNG。
   - PNG 文件保存到调用方传入的日期目录，例如 reports/2026-06-25/。
@@ -358,6 +359,72 @@ def layout_metrics(draw, match):
     }
 
 
+def reflection_layout_metrics(draw, reflection):
+    card_w = WIDTH - MARGIN * 2
+    inner_w = card_w - px(76)
+    y = px(90)
+    subtitle = reflection.get("subtitle", "")
+    if subtitle:
+        h, _ = measure_wrapped(draw, subtitle, inner_w, FONTS["small"], 8)
+        y += h + px(28)
+
+    for section in reflection.get("sections", []):
+        y += px(60)
+        for item in section.get("items", []):
+            h, _ = measure_wrapped(draw, "• " + item, inner_w, FONTS["body"], 8)
+            y += h + px(12)
+        y += px(10)
+
+    return {"card_h": y + px(70), "inner_w": inner_w}
+
+
+def render_reflection_png(data, reflection, output_dir):
+    probe = Image.new("RGB", (WIDTH, px(100)), COLORS["bg"])
+    probe_draw = ImageDraw.Draw(probe)
+    metrics = reflection_layout_metrics(probe_draw, reflection)
+
+    header_h = px(122)
+    card_w = WIDTH - MARGIN * 2
+    card_y = MARGIN + header_h + px(28)
+    card_h = int(metrics["card_h"])
+    height = card_y + card_h + MARGIN
+
+    img = Image.new("RGB", (WIDTH, height), COLORS["bg"])
+    draw = ImageDraw.Draw(img)
+    x = MARGIN
+    y = MARGIN
+
+    draw.rounded_rectangle((x, y, x + card_w, y + header_h), radius=CARD_RADIUS, fill=COLORS["blue"])
+    draw_text(draw, (x + px(34), y + px(24)), "世界杯预测复盘与今日校准", FONTS["title"], "#ffffff")
+    draw_text(draw, (x + px(36), y + px(78)), data.get("date", ""), FONTS["date"], "#dbeafe")
+    draw_text(draw, (x + card_w - px(240), y + px(78)), "第 00 场", FONTS["date"], "#dbeafe")
+
+    draw.rounded_rectangle((x, card_y, x + card_w, card_y + card_h), radius=CARD_RADIUS, fill=COLORS["panel"])
+    inner_x = x + px(38)
+    inner_y = card_y + px(34)
+    inner_w = metrics["inner_w"]
+
+    draw_text(draw, (inner_x, inner_y), reflection.get("title", "赛后复盘 / 今日校准"), FONTS["teams"], COLORS["ink"])
+    inner_y += px(78)
+    subtitle = reflection.get("subtitle", "")
+    if subtitle:
+        inner_y = draw_wrapped(draw, subtitle, inner_x, inner_y, inner_w, FONTS["small"], fill=COLORS["muted"], gap=8) + px(28)
+
+    for section in reflection.get("sections", []):
+        inner_y = draw_section(draw, section.get("title", ""), inner_x, inner_y, inner_w)
+        for item in section.get("items", []):
+            inner_y = draw_wrapped(draw, "• " + item, inner_x, inner_y, inner_w, FONTS["body"], fill=COLORS["ink"], gap=8) + px(12)
+        inner_y += px(10)
+
+    footer = f"worldcup-match-predictor | {datetime.now().strftime('%Y-%m-%d %H:%M')} | 复盘用于校准，不等于赛果保证"
+    draw_text(draw, (inner_x, card_y + card_h - px(42)), footer, FONTS["tiny"], COLORS["muted"])
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    out_path = output_dir / "00_赛后复盘_今日校准.png"
+    img.save(out_path, dpi=(OUTPUT_DPI, OUTPUT_DPI))
+    return out_path
+
+
 def render_match_png(data, match, index, output_dir):
     probe = Image.new("RGB", (WIDTH, px(100)), COLORS["bg"])
     probe_draw = ImageDraw.Draw(probe)
@@ -468,6 +535,9 @@ def main():
         return
 
     generated = []
+    reflection = data.get("reflection")
+    if reflection:
+        generated.append(render_reflection_png(data, reflection, output_dir))
     for idx, match in enumerate(matches, start=1):
         generated.append(render_match_png(data, match, idx, output_dir))
 
