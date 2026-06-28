@@ -306,6 +306,60 @@ def draw_odds_table(draw, odds, x, y, width):
     return y + row_h * 3
 
 
+def knockout_summary(match):
+    knockout = match.get("knockout") or {}
+    if not knockout:
+        return ""
+    parts = []
+    if knockout.get("regular_time"):
+        parts.append(f"常规时间 {knockout['regular_time']}")
+    if knockout.get("extra_time"):
+        parts.append(f"加时 {knockout['extra_time']}")
+    if knockout.get("penalties"):
+        parts.append(f"点球 {knockout['penalties']}")
+    if knockout.get("advancer"):
+        parts.append(f"晋级 {knockout['advancer']}")
+    if knockout.get("advancement_prob"):
+        parts.append(f"晋级概率 {knockout['advancement_prob']}")
+    return "；".join(parts)
+
+
+def match_extra_sections(match):
+    sections = []
+    if match.get("weather"):
+        sections.append(("天气/场地", [match["weather"]]))
+
+    referee = match.get("referee")
+    card_prediction = match.get("card_prediction")
+    referee_items = []
+    if isinstance(referee, dict):
+        if referee.get("name"):
+            referee_items.append(f"主裁判：{referee['name']}")
+        if referee.get("style"):
+            referee_items.append(f"执法尺度：{referee['style']}")
+        if referee.get("history"):
+            referee_items.append(f"历史倾向：{referee['history']}")
+    elif referee:
+        referee_items.append(str(referee))
+    if card_prediction:
+        referee_items.append(f"出牌推测：{card_prediction}")
+    if referee_items:
+        sections.append(("裁判/出牌", referee_items))
+
+    coach_items = []
+    if match.get("coach_tactics"):
+        coach_items.append(match["coach_tactics"])
+    if match.get("bench_depth"):
+        coach_items.append(f"替补后手：{match['bench_depth']}")
+    if coach_items:
+        sections.append(("教练/后手", coach_items))
+
+    knockout = knockout_summary(match)
+    if knockout:
+        sections.append(("淘汰赛预测", [knockout]))
+    return sections
+
+
 def safe_filename(text):
     text = re.sub(r"[\\/:*?\"<>|]+", "_", text)
     text = re.sub(r"\s+", "_", text)
@@ -333,12 +387,21 @@ def layout_metrics(draw, match):
     prob_text = f"胜平负概率：主胜 {prob.get('win', '-')} | 平 {prob.get('draw', '-')} | 客胜 {prob.get('lose', '-')}"
     prob_h, _ = measure_wrapped(draw, prob_text, inner_w, FONTS["body"], 9)
     goals_h, _ = measure_wrapped(draw, "总进球预测：" + match.get("total_goals", "-"), inner_w, FONTS["body"], 9)
-    y += prob_h + goals_h + px(28)
+    knockout = knockout_summary(match)
+    knockout_h = 0
+    if knockout:
+        knockout_h, _ = measure_wrapped(draw, "淘汰赛预测：" + knockout, inner_w, FONTS["body"], 9)
+    y += prob_h + goals_h + knockout_h + px(28)
 
     left_y = px(60)
     for factor in match.get("key_factors", []):
         h, _ = measure_wrapped(draw, "• " + factor, left_w, FONTS["body"], 8)
         left_y += h + px(10)
+    for title, items in match_extra_sections(match):
+        left_y += px(54)
+        for item in items:
+            h, _ = measure_wrapped(draw, "• " + item, left_w, FONTS["small"], 8)
+            left_y += h + px(8)
 
     right_y = px(60) + px(156) + px(22)
     odds = match.get("odds", {})
@@ -349,7 +412,8 @@ def layout_metrics(draw, match):
     h, _ = measure_wrapped(draw, match.get("bet_advice", "-"), right_w - px(34), FONTS["body"], 9)
     right_y += px(60) + h + px(42)
 
-    content_h = y + max(left_y, right_y) + px(72)
+    bottom_pad = px(160) if match_extra_sections(match) else px(72)
+    content_h = y + max(left_y, right_y) + bottom_pad
     return {
         "card_h": content_h,
         "inner_w": inner_w,
@@ -488,6 +552,9 @@ def render_match_png(data, match, index, output_dir):
     prob_text = f"胜平负概率：主胜 {prob.get('win', '-')} | 平 {prob.get('draw', '-')} | 客胜 {prob.get('lose', '-')}"
     inner_y = draw_wrapped(draw, prob_text, inner_x, inner_y, inner_w, FONTS["body"], fill=COLORS["ink"]) + px(6)
     inner_y = draw_wrapped(draw, "总进球预测：" + match.get("total_goals", "-"), inner_x, inner_y, inner_w, FONTS["body"], fill=COLORS["blue"]) + px(24)
+    knockout = knockout_summary(match)
+    if knockout:
+        inner_y = draw_wrapped(draw, "淘汰赛预测：" + knockout, inner_x, inner_y - px(18), inner_w, FONTS["body"], fill=COLORS["green"]) + px(24)
 
     left_x = inner_x
     right_x = inner_x + left_w + GAP
@@ -496,6 +563,14 @@ def render_match_png(data, match, index, output_dir):
     left_y = draw_section(draw, "关键分析", left_x, columns_y, left_w)
     for factor in match.get("key_factors", []):
         left_y = draw_wrapped(draw, "• " + factor, left_x, left_y, left_w, FONTS["body"], fill=COLORS["ink"], gap=8) + px(10)
+    for title, items in match_extra_sections(match):
+        left_y += px(14)
+        draw_text(draw, (left_x, left_y), title, FONTS["small"], COLORS["blue"])
+        left_y += px(36)
+        draw.line((left_x, left_y, left_x + left_w, left_y), fill=COLORS["line"], width=px(1))
+        left_y += px(14)
+        for item in items:
+            left_y = draw_wrapped(draw, "• " + item, left_x, left_y, left_w, FONTS["small"], fill=COLORS["ink"], gap=8) + px(8)
 
     right_y = draw_section(draw, "竞彩赔率 / 建议", right_x, columns_y, right_w)
     odds = match.get("odds", {})
