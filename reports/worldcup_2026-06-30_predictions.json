@@ -1,6 +1,6 @@
 {
   "date": "2026-06-30（北京时间）",
-  "summary": "目标口径：按北京时间 2026-06-30 统计，共 3 场世界杯 32 强淘汰赛；当地日期均为 2026-06-29。赛程为巴西 vs 日本、德国 vs 巴拉圭、荷兰 vs 摩洛哥。00 号卡复盘北京时间 2026-06-29 南非 0-1 加拿大的真实赛果与预测偏差。本次继续使用淘汰赛扩展分析：天气场地、主裁判执法与出牌数、主教练临场调整、替补后手深度、常规时间预测与全场晋级预测分开呈现。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-06-29 11:20。赛程、结果、裁判、天气和赛前信息参考 FIFA Match Centre、ESPN、Sports Illustrated、Guardian、Houston Chronicle、NBC/Al Jazeera/AS、ValueStats/PlayerStats、天气预报等公开信息。投注有风险，仅供参考。",
+  "summary": "目标口径：按北京时间 2026-06-30 统计，共 3 场世界杯 32 强淘汰赛；当地日期均为 2026-06-29。赛程为巴西 vs 日本、德国 vs 巴拉圭、荷兰 vs 摩洛哥。00 号卡复盘北京时间 2026-06-29 南非 0-1 加拿大的真实赛果与预测偏差。本次继续使用淘汰赛扩展分析：天气场地、主裁判执法与出牌数、主教练临场调整、替补后手深度、常规时间预测与全场晋级预测分开呈现。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-06-29 11:52。赛程、结果、裁判、天气和赛前信息参考 FIFA Match Centre、ESPN、Sports Illustrated、Guardian、Houston Chronicle、NBC/Al Jazeera/AS、Opta Analyst、ValueStats/PlayerStats、天气预报等公开信息。投注有风险，仅供参考。",
   "reflection": {
     "title": "赛后复盘：常规时间与晋级判断要拆开验",
     "subtitle": "复盘口径：对比 2026-06-29 首场 32 强赛真实赛果、昨日预测和比赛过程；今日校准继续强调裁判、换人、常规时间与晋级路径。",
@@ -19,7 +19,8 @@
         "items": [
           "常规时间预测必须更细分：巴西 vs 日本和荷兰 vs 摩洛哥都存在 1 球差或 90 分钟平局尾部，不能因为纸面强队就直接写稳过。",
           "裁判尺度差异会进入比分和出牌判断：Mariani（ITA）相对温和，Jayed（MAR）中等，Sampaio（BRA）偏高牌且有红牌先例；三场出牌数不能用同一个模板。",
-          "主教练后手会决定后 30 分钟。Ancelotti（BRA 主帅/ITA）和 Nagelsmann（GER）有更强替补解题空间；Moriyasu（JPN）和 Regragui（MAR）则更擅长通过阵型纪律把比赛拖入低事件区。"
+          "主教练后手会决定后 30 分钟。Ancelotti（BRA 主帅/ITA）和 Nagelsmann（GER）有更强替补解题空间；Moriyasu（JPN）和 Regragui（MAR）则更擅长通过阵型纪律把比赛拖入低事件区。",
+          "赛前阵容二次核查必须更严：日本的 Endo（JPN）与 Mitoma（JPN）已经伤缺，Kubo（JPN）也不能作为可靠后手处理；因此巴西 vs 日本不能再写成日本仍有 Kubo（JPN）/Mitoma（JPN）边路冲击。"
         ]
       }
     ]
@@ -32,21 +33,22 @@
       "time_bj": "2026-06-30 01:00",
       "time_local": "休斯敦 2026-06-29 12:00（CDT）",
       "venue": "Houston Stadium / NRG Stadium, Houston",
-      "predicted_score": "2-1",
-      "alt_score": "1-1",
-      "total_goals": "常规时间预计 2-3 球，偏大 2.0；若进入加时，全场总进球倾向 3 球",
+      "predicted_score": "2-0",
+      "alt_score": "2-1",
+      "total_goals": "常规时间预计 2-3 球，偏小 3.5；若进入加时，全场总进球倾向 2-3 球",
       "probability": {
-        "win": "53%",
-        "draw": "27%",
-        "lose": "20%"
+        "win": "57%",
+        "draw": "24%",
+        "lose": "19%"
       },
       "confidence": "中",
       "key_factors": [
         "巴西小组赛 3-0 海地、3-0 苏格兰、1-1 摩洛哥，Vinícius Júnior（BRA）连续贡献进球威胁，Marquinhos（BRA）稳定后场，Neymar（BRA）回归使前场后手更厚。",
-        "日本小组赛 4-0 突尼斯、2-2 荷兰、1-1 瑞典，3-4-2-1 的边翼卫和二线插上很成熟；Zion Suzuki（JPN）、Hiroki Itō（JPN）、Daichi Kamada（JPN）、Ayase Ueda（JPN）都能把比赛拖成细节局。",
-        "竞彩常规时间主胜 1.50，但最低波胆是 2:1，不是 2:0 或 3:0；市场承认巴西优势，也承认日本进球和压到一球差的能力。",
+        "日本小组赛 4-0 突尼斯、2-2 荷兰、1-1 瑞典，3-4-2-1 的边翼卫和二线插上很成熟；但阵容二次核查显示 Endo（JPN）与 Mitoma（JPN）已伤缺，Kubo（JPN）也不应作为可靠可用后手处理，日本创造力和边路爆点要下调。",
+        "日本仍有 Zion Suzuki（JPN）、Hiroki Itō（JPN）、Daichi Kamada（JPN）、Ritsu Doan（JPN）、Ayase Ueda（JPN）等支点，尤其 Ueda（JPN）本届参与进球稳定；但缺少 Mitoma（JPN）和 Kubo（JPN）后，反击一对一上限明显下降。",
+        "竞彩常规时间主胜 1.50，最低波胆是 2:1，但 1:0、2:0 和 1:1 也紧随其后；我在二次阵容核查后把日本进球权重下调，首选从 2-1 改为 2-0，2-1 作为市场分支保留。",
         "休斯敦中午湿热，高温高湿会考验日本高强度跑动；若 NRG 顶棚关闭影响会被削弱，若开放或湿度进入体能层面，日本后 20 分钟防线会更吃紧。",
-        "候选脚本：2-1 巴西靠前场个人能力破局、1-1 日本纪律拖入加时、2-0 巴西早球后控局、3-1 日本压上后被反击。最终选常规 2-1，巴西晋级。"
+        "候选脚本：2-0 巴西早球后控局、2-1 日本靠 Ueda（JPN）或定位球追回一球、1-1 日本纪律拖入加时、3-1 日本压上后被反击。最终选常规 2-0，巴西晋级。"
       ],
       "weather": "休斯敦 6 月 29 日炎热潮湿，最高约 35°C、最低约 26°C；中午开球对高强度逼抢不友好。NRG/Houston Stadium 有顶棚条件，但顶棚状态若未公开，应把湿热作为中等不确定变量。",
       "referee": {
@@ -54,15 +56,15 @@
         "style": "Serie A 与欧战经验丰富，近年场均黄牌约 3.3-3.8 张，整体偏控制但不算重牌。",
         "history": "FIFA/ESPN 赛前信息显示 Mariani（ITA）执法本场；他是 UEFA elite 裁判，红牌均值不高，更可能用早期口头警告和少量黄牌维持节奏。"
       },
-      "card_prediction": "预计黄牌 3-5 张，红牌概率约 8-10%，点球概率约 20%。日本（JPN）边路防 Vinícius Júnior（BRA）和 Raphinha（BRA）会有战术犯规，巴西（BRA）防转换也可能吃牌，但 Mariani（ITA）不太像会把比赛吹成碎片战。",
-      "coach_tactics": "Ancelotti（BRA 主帅/ITA）会让巴西先控球耐心找左路一对一，再用 Neymar（BRA）或中锋后手改变禁区触球；Moriyasu（JPN）大概率维持三中卫和双前腰，先守住半空间，再通过 Kubo（JPN）/Mitoma（JPN）类边路后手找反击。",
-      "bench_depth": "巴西（BRA）的替补攻击手和定位球资源明显更厚，领先后也能换防守型中场收节奏；日本（JPN）的后手更偏速度和技术，若 70 分钟后仍平，会比巴西更愿意接受加时。",
+      "card_prediction": "预计黄牌 3-5 张，红牌概率约 8-10%，点球概率约 20%。日本（JPN）边路防 Vinícius Júnior（BRA）、Rayan（BRA）或 Martinelli（BRA）会有战术犯规，巴西（BRA）防转换也可能吃牌，但 Mariani（ITA）不太像会把比赛吹成碎片战。",
+      "coach_tactics": "Ancelotti（BRA 主帅/ITA）会让巴西先控球耐心找左路一对一，再用 Neymar（BRA）、Endrick（BRA）或 Rayan（BRA）等后手改变禁区触球；Moriyasu（JPN）大概率维持三中卫和双前腰，先守住半空间，再通过 Doan（JPN）、Kamada（JPN）、Nakamura（JPN）、Maeda（JPN）和 Ueda（JPN）寻找反击与二点机会。",
+      "bench_depth": "巴西（BRA）的替补攻击手和定位球资源明显更厚，领先后也能换防守型中场收节奏；日本（JPN）在 Endo（JPN）、Mitoma（JPN）缺席且 Kubo（JPN）不可靠的前提下，后手更偏团队跑动和中锋冲击，单点爆破能力下降。",
       "knockout": {
-        "regular_time": "2-1",
+        "regular_time": "2-0",
         "extra_time": "若 90 分钟 1-1，巴西加时进球概率略高",
-        "penalties": "点球大战概率约 15%，若进入点球巴西 55%-45% 略优",
+        "penalties": "点球大战概率约 13%，若进入点球巴西 56%-44% 略优",
         "advancer": "巴西",
-        "advancement_prob": "巴西 68% / 日本 32%"
+        "advancement_prob": "巴西 71% / 日本 29%"
       },
       "odds": {
         "spf": {
@@ -79,7 +81,7 @@
         "goals": "2球(3.40)最低，3球(3.70)，1球(4.90)，4球(5.10)，5球(9.75)；市场预期 2-3 球",
         "score": "2:1(6.00)、1:0(7.25)、1:1(7.50)、2:0(7.50)、3:1(8.75)、0:0(11.00)"
       },
-      "bet_advice": "常规时间主看巴西不败，比分 2:1 防 1:1；让球(-1)主胜不够稳，日本受让方向有保护价值。晋级方向倾向巴西，90 分钟主胜可小注但不宜重仓。",
+      "bet_advice": "常规时间主看巴西不败，比分 2:0 防 2:1；让球(-1)主胜仍不够稳，但日本核心伤缺后受让保护价值下降。晋级方向倾向巴西，90 分钟主胜可小注但不宜重仓。",
       "risk": "博胆"
     },
     {
