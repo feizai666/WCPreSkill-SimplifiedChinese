@@ -218,21 +218,73 @@ def line_height(draw, text_font, gap=9):
     return text_size(draw, "国Ag09", text_font)[1] + px(gap)
 
 
-def wrap_line(draw, line, text_font, max_width):
-    if not line:
-        return [""]
-    wrapped = []
+def split_wrap_tokens(line):
+    tokens = []
+    i = 0
+    while i < len(line):
+        ch = line[i]
+        if ch.isspace():
+            j = i + 1
+            while j < len(line) and line[j].isspace():
+                j += 1
+            tokens.append(line[i:j])
+            i = j
+        elif ch == "（":
+            close = line.find("）", i + 1, min(len(line), i + 12))
+            if close != -1:
+                tokens.append(line[i : close + 1])
+                i = close + 1
+            else:
+                tokens.append(ch)
+                i += 1
+        elif latin_font_char(ch):
+            j = i + 1
+            while j < len(line) and latin_font_char(line[j]) and not line[j].isspace():
+                j += 1
+            tokens.append(line[i:j])
+            i = j
+        else:
+            tokens.append(ch)
+            i += 1
+    return tokens
+
+
+def split_oversize_token(draw, token, text_font, max_width):
+    pieces = []
     current = ""
-    for ch in line:
+    for ch in token:
         candidate = current + ch
         width, _ = text_size(draw, candidate, text_font)
         if width <= max_width or not current:
             current = candidate
         else:
-            wrapped.append(current)
+            pieces.append(current)
             current = ch
     if current:
-        wrapped.append(current)
+        pieces.append(current)
+    return pieces
+
+
+def wrap_line(draw, line, text_font, max_width):
+    if not line:
+        return [""]
+    wrapped = []
+    current = ""
+    for token in split_wrap_tokens(line):
+        candidate = current + token
+        width, _ = text_size(draw, candidate, text_font)
+        if width <= max_width or not current:
+            current = candidate
+        else:
+            wrapped.append(current.rstrip())
+            current = token.lstrip()
+            width, _ = text_size(draw, current, text_font)
+            if width > max_width:
+                pieces = split_oversize_token(draw, current, text_font, max_width)
+                wrapped.extend(pieces[:-1])
+                current = pieces[-1]
+    if current:
+        wrapped.append(current.rstrip())
     return wrapped
 
 
