@@ -1,6 +1,6 @@
 {
   "date": "2026-07-02（北京时间）",
-  "summary": "目标口径：按北京时间 2026-07-02 统计，共 3 场世界杯 32 强淘汰赛；当地日期均为 2026-07-01。赛程为英格兰 vs 刚果金、比利时 vs 塞内加尔、美国 vs 波黑。今日继续执行阵容可用性硬约束：伤缺、停赛、未确认可用或 live 已下场球员不得写成确定后手；补水时间按主教练短暂停处理。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-07-01。赛程、裁判、阵容和赛后复盘参考 FIFA Match Centre、Al Jazeera、Sports Illustrated、Guardian、Goal、U.S. Soccer、Refereeing World、AP/Fox/CBS/Outlook、天气预报等公开信息。投注有风险，仅供参考。",
+  "summary": "目标口径：按北京时间 2026-07-02 统计，共 3 场世界杯 32 强淘汰赛；当地日期均为 2026-07-01。赛程为英格兰 vs 刚果金、比利时 vs 塞内加尔、美国 vs 波黑。本版已新增并读取阵容台账：data/rosters/2026-07-02/，其中 Foden（ENG）/Palmer（ENG）标为 not_in_squad，Saka（ENG）标为 available_fitness_managed/rotation_not_locked，James（ENG）/Quansah（ENG）标为本场伤缺，Senesi（ARG）替换 Balerdi（ARG）也已写入后续台账。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-07-01。赛程、裁判、阵容和赛后复盘参考 FIFA Match Centre、ESPN/Sky Sports、Al Jazeera、Sports Illustrated、Guardian、Goal、U.S. Soccer、Refereeing World、AP/Fox/CBS/Outlook、天气预报等公开信息。投注有风险，仅供参考。",
   "reflection": {
     "title": "赛后复盘：命中也要看过程",
     "subtitle": "复盘口径：对比 2026-07-01 北京时间三场 32 强赛真实赛果、昨日预测和比赛过程；今日校准重点是补水暂停、主场情绪、低位防守与阵容冲突信息。",
@@ -18,6 +18,7 @@
         "title": "今天校准",
         "items": [
           "英格兰 vs 刚果金不能只看 1.16 低赔。DR Congo（COD）无明显伤停、5-3-2 低位纪律好，Wissa（COD）反击威胁真实存在；England（ENG）右后卫伤病会让 Tuchel（ENG 主帅/GER）的边路保护更重要。",
+          "本版已修正英格兰名单幻觉：Foden（ENG）和 Palmer（ENG）没有入选本届 26 人名单，不得写成替补后手；Saka（ENG）虽然在名单内，但有跟腱管理且不是本届稳定首发路径，只能作为轮换/待定变量。",
           "比利时 vs 塞内加尔的信息源对 Mendy（SEN）状态有冲突：Sports Illustrated 预计可首发，Goal/部分媒体提示膝伤或缺阵风险。因此不能把 Senegal（SEN）门将环节写成确定优势或确定劣势，只能作为不确定变量处理。",
           "美国 vs 波黑要把主场和宽度优势上调，但也要防 Bosnia（BIH）通过 Džeko（BIH）/Demirović（BIH）和中卫高点拿到定位球进球；不能因为美国低赔就自动写 3-0。",
           "今天三场的共同点是低位防守如何被打开：若强队早球，比分会越过市场最低波胆；若前 30 分钟没进球，补水暂停后的教练修正会决定比赛是否进入 1 球小胜或加时。"
@@ -44,7 +45,7 @@
       "confidence": "中",
       "key_factors": [
         "England（ENG）纸面强，但这场不是自动 3-0。Tuchel（ENG 主帅/GER）的球队小组赛曾被 Ghana（GHA）拖成 0-0，面对五后卫低位时需要耐心、横向转移和定位球，不适合一味自由发挥。",
-        "阵容核查显示 Reece James（ENG）和 Jarell Quansah（ENG）缺席，Djed Spence（ENG）预计顶右后卫，Declan Rice（ENG）回到中场，Saka（ENG）、Bellingham（ENG）、Rashford（ENG）和 Kane（ENG）仍是主进攻框架。",
+        "阵容台账已修正：Foden（ENG）和 Palmer（ENG）没有入选本届名单，不能再写成替补后手；Reece James（ENG）和 Jarell Quansah（ENG）本场伤缺，Djed Spence（ENG）预计顶右后卫，Declan Rice（ENG）回到中场。Saka（ENG）在名单内但有跟腱管理且不是稳定首发路径，主线更应看 Kane（ENG）、Bellingham（ENG）、Rashford（ENG）/Madueke（ENG）和定位球。",
         "DR Congo（COD）方面暂无明显伤停，Desabre（COD 主帅/FRA）大概率继续 5-3-2，Mbemba（COD）压防线、Masuaku（COD）和 Wan-Bissaka（COD）负责边路，Wissa（COD）与 Bakambu（COD）打第一波反击。",
         "亚特兰大中午开球，天气预报约 33°C 且湿度高。Mercedes-Benz 可控环境会降低热影响，但上下半场补水时间仍会给 Tuchel（ENG 主帅/GER）修正边路站位，也给 Desabre（COD 主帅/FRA）安排反击出口。",
         "竞彩常规时间主胜 1.16、让球(-1)主胜 1.63，最低波胆 2:0，随后 1:0、3:0、2:1；市场认为 England（ENG）能赢，但也承认低比分和 DR Congo（COD）进一球的分支。",
@@ -56,9 +57,9 @@
         "style": "AFC 裁判，国际大赛经验较多，整体倾向先管理对抗再出牌；面对低位防守和强队围攻时，禁区拉拽与反击战术犯规是重点。",
         "history": "FIFA Match Centre 和 Refereeing World 均指向约旦裁判组执法本场；他不属于极端重牌裁判，但淘汰赛压力下会更早管理抗议和拖延。"
       },
-      "card_prediction": "预计黄牌 3-5 张，红牌概率约 8-11%，点球概率约 18-23%。DR Congo（COD）防 Saka（ENG）和 Bellingham（ENG）的肋部推进可能吃牌；England（ENG）右路保护若不到位，防 Wissa（COD）转换也有战术犯规风险。",
-      "coach_tactics": "Tuchel（ENG 主帅/GER）会要求耐心横移，尽量用 O'Reilly（ENG）的左路插上和 Kane（ENG）的回撤制造中路空位；补水时间若仍是 0-0，他可能更早让边锋换侧或增加禁区内高点。Desabre（COD 主帅/FRA）会把比赛切碎，用五后卫和双前锋等待 England（ENG）右侧身后。",
-      "bench_depth": "England（ENG）替补席有 Foden（ENG）、Watkins（ENG）、Gordon（ENG）、Madueke（ENG）等改变节奏的资源，落后或僵持都有 Plan B；DR Congo（COD）后手更依赖速度和身体，若先丢球，主动控球解法较少。",
+      "card_prediction": "预计黄牌 3-5 张，红牌概率约 8-11%，点球概率约 18-23%。DR Congo（COD）防 Bellingham（ENG）、Rashford（ENG）或 Madueke（ENG）的肋部推进可能吃牌；England（ENG）右路保护若不到位，防 Wissa（COD）转换也有战术犯规风险。",
+      "coach_tactics": "Tuchel（ENG 主帅/GER）会要求耐心横移，尽量用 O'Reilly（ENG）的左路插上、Kane（ENG）的回撤和 Bellingham（ENG）的二线前插制造中路空位；补水时间若仍是 0-0，他可能更早让 Rashford（ENG）/Madueke（ENG）换侧，或增加 Toney（ENG）/Watkins（ENG）的禁区高点。Desabre（COD 主帅/FRA）会把比赛切碎，用五后卫和双前锋等待 England（ENG）右侧身后。",
+      "bench_depth": "England（ENG）替补席有 Watkins（ENG）、Toney（ENG）、Gordon（ENG）、Madueke（ENG）、Eze（ENG）、Mainoo（ENG）等改变节奏的资源，落后或僵持都有 Plan B；Foden（ENG）不在本届名单，不能作为后手。DR Congo（COD）后手更依赖速度和身体，若先丢球，主动控球解法较少。",
       "knockout": {
         "regular_time": "2-0",
         "extra_time": "若 90 分钟 1-1，England（ENG）加时仍有替补和定位球优势",
@@ -160,8 +161,8 @@
       "confidence": "中",
       "key_factors": [
         "USA（USA）小组赛 4-1 Paraguay（PAR）、2-0 Australia（AUS）、2-3 Türkiye（TUR），进攻产量很高且有主场优势。U.S. Soccer 统计本届小组赛 8 球、多人得分，说明 Pochettino（USA 主帅/ARG）的进攻不是单点依赖。",
-        "阵容核查显示 Pulisic（USA）小腿问题后已可回到首发框架，Roldan（USA）是唯一明确伤病担忧且本届未出场，不把他写入后手。SI 预计 Freese（USA）、Dest（USA）、Robinson（USA）、Adams（USA）、Tillman（USA）、Pulisic（USA）、Balogun（USA）进入主线。",
-        "Bosnia（BIH）历史性进入淘汰赛，Džeko（BIH）和 Demirović（BIH）能用 4-4-2 打直接球，Katić（BIH）、Radeljić（BIH）等高点让定位球很有威胁；Muharemović（BIH）停赛结束预计回归，防线硬度提升。",
+        "阵容台账采用 U.S. Soccer 赛前稿覆盖：Pulisic（USA）伤后已可回到首发框架，Roldan（USA）是唯一明确伤病担忧且本届未出场，不写入后手。官方赛前稿显示 23 名 USA（USA）球员已在本届出场，McKennie（USA）是唯一三场小组赛均首发球员。",
+        "Bosnia（BIH）历史性进入淘汰赛，Džeko（BIH）和 Demirović（BIH）能用 4-4-2 打直接球，Katić（BIH）、Radeljić（BIH）等高点让定位球很有威胁；但名单源存在差异，U.S. Soccer 赛前稿列入 Mladen Jurkas（BIH）和 Arjan Malic（BIH），与 ESPN 基础名单不同，相关球员只能按 match roster update 处理。",
         "Santa Clara 下午约 25°C、低云后转晴，条件很适合 USA（USA）用边后卫宽度和前场压迫；补水暂停会给 Barbarez（BIH）重整低位站位，也给 Pochettino（USA 主帅/ARG）调整 Pulisic（USA）和 Dest（USA）的同侧配合。",
         "竞彩常规时间主胜 1.22、让球(-1)主胜 1.80，最低波胆 2:0，其次 1:0/2:1， total goals 最低为 3 球。我比市场更看重 Bosnia（BIH）的高点偷一球，所以首选 3-1。",
         "候选脚本：3-1 USA（USA）主场边路打开但被定位球追回一球、2-0 USA（USA）早球后控局、2-1 Bosnia（BIH）中锋连线拖到最后、3-0 USA（USA）高压早早打穿。最终选常规 3-1，USA（USA）晋级。"
