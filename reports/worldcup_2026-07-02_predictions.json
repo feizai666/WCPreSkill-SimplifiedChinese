@@ -1,0 +1,204 @@
+{
+  "date": "2026-07-02（北京时间）",
+  "summary": "目标口径：按北京时间 2026-07-02 统计，共 3 场世界杯 32 强淘汰赛；当地日期均为 2026-07-01。赛程为英格兰 vs 刚果金、比利时 vs 塞内加尔、美国 vs 波黑。今日继续执行阵容可用性硬约束：伤缺、停赛、未确认可用或 live 已下场球员不得写成确定后手；补水时间按主教练短暂停处理。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-07-01。赛程、裁判、阵容和赛后复盘参考 FIFA Match Centre、Al Jazeera、Sports Illustrated、Guardian、Goal、U.S. Soccer、Refereeing World、AP/Fox/CBS/Outlook、天气预报等公开信息。投注有风险，仅供参考。",
+  "reflection": {
+    "title": "赛后复盘：命中也要看过程",
+    "subtitle": "复盘口径：对比 2026-07-01 北京时间三场 32 强赛真实赛果、昨日预测和比赛过程；今日校准重点是补水暂停、主场情绪、低位防守与阵容冲突信息。",
+    "sections": [
+      {
+        "title": "昨日赛果与预测对照",
+        "items": [
+          "科特迪瓦 1-2 挪威，昨日首选 1-2 命中，晋级方向也正确。过程上最值得保留的是：我没有把这场写成简单强弱盘，而是保留了科特迪瓦（CIV）边路速度和进球能力；真实比赛里 Amad Diallo（CIV）确实扳平，最后 Haaland（NOR）第 86 分钟解决比赛。这里说明“挪威优势=禁区效率和后段高点”这条推理链是对的。",
+          "法国 3-0 瑞典，昨日首选 3-1、次选 2-0，方向和大比分尾部判断正确，但高估了 Sweden（SWE）的反击进球。真实比赛 Mbappé（FRA）梅开二度，Barcola（FRA）进球，France（FRA）在高温下仍能用宽度和替补深度保持压制；这说明 Deschamps（FRA 主帅）对节奏和阵容体能的管理比我给的权重还要更高。",
+          "墨西哥 2-0 厄瓜多尔，昨日首选 1-1、倾向 Mexico（MEX）加时晋级，常规时间判断明显偏保守。正确的部分是：我没有沿用错误的“Quinones（MEX）停赛”说法，Quinones（MEX）真实首发并进球；错的部分是低估了 Azteca 主场、雷暴延迟后的情绪释放，以及第一次补水后 Jimenez（MEX）迅速扩大比分的临场窗口。",
+          "墨西哥这场再次提醒：补水时间不只是体能恢复，也是战术暂停。Ecuador（ECU）本来有身体和转换优势，但早丢球后被主场声浪和 Mexico（MEX）的上半场压迫打乱，最后 Hincapié（ECU）补时红牌说明情绪管理也会影响淘汰赛末段。"
+        ]
+      },
+      {
+        "title": "今天校准",
+        "items": [
+          "英格兰 vs 刚果金不能只看 1.16 低赔。DR Congo（COD）无明显伤停、5-3-2 低位纪律好，Wissa（COD）反击威胁真实存在；England（ENG）右后卫伤病会让 Tuchel（ENG 主帅/GER）的边路保护更重要。",
+          "比利时 vs 塞内加尔的信息源对 Mendy（SEN）状态有冲突：Sports Illustrated 预计可首发，Goal/部分媒体提示膝伤或缺阵风险。因此不能把 Senegal（SEN）门将环节写成确定优势或确定劣势，只能作为不确定变量处理。",
+          "美国 vs 波黑要把主场和宽度优势上调，但也要防 Bosnia（BIH）通过 Džeko（BIH）/Demirović（BIH）和中卫高点拿到定位球进球；不能因为美国低赔就自动写 3-0。",
+          "今天三场的共同点是低位防守如何被打开：若强队早球，比分会越过市场最低波胆；若前 30 分钟没进球，补水暂停后的教练修正会决定比赛是否进入 1 球小胜或加时。"
+        ]
+      }
+    ]
+  },
+  "matches": [
+    {
+      "home": "英格兰",
+      "away": "刚果金",
+      "group": "32 强 · 淘汰赛",
+      "time_bj": "2026-07-02 00:00",
+      "time_local": "亚特兰大 2026-07-01 12:00（EDT）",
+      "venue": "Atlanta Stadium / Mercedes-Benz Stadium, Atlanta",
+      "predicted_score": "2-0",
+      "alt_score": "2-1",
+      "total_goals": "常规时间预计 2-3 球，偏小 3.5；若 England（ENG）前 30 分钟进球，可打开到 3 球",
+      "probability": {
+        "win": "68%",
+        "draw": "21%",
+        "lose": "11%"
+      },
+      "confidence": "中",
+      "key_factors": [
+        "England（ENG）纸面强，但这场不是自动 3-0。Tuchel（ENG 主帅/GER）的球队小组赛曾被 Ghana（GHA）拖成 0-0，面对五后卫低位时需要耐心、横向转移和定位球，不适合一味自由发挥。",
+        "阵容核查显示 Reece James（ENG）和 Jarell Quansah（ENG）缺席，Djed Spence（ENG）预计顶右后卫，Declan Rice（ENG）回到中场，Saka（ENG）、Bellingham（ENG）、Rashford（ENG）和 Kane（ENG）仍是主进攻框架。",
+        "DR Congo（COD）方面暂无明显伤停，Desabre（COD 主帅/FRA）大概率继续 5-3-2，Mbemba（COD）压防线、Masuaku（COD）和 Wan-Bissaka（COD）负责边路，Wissa（COD）与 Bakambu（COD）打第一波反击。",
+        "亚特兰大中午开球，天气预报约 33°C 且湿度高。Mercedes-Benz 可控环境会降低热影响，但上下半场补水时间仍会给 Tuchel（ENG 主帅/GER）修正边路站位，也给 Desabre（COD 主帅/FRA）安排反击出口。",
+        "竞彩常规时间主胜 1.16、让球(-1)主胜 1.63，最低波胆 2:0，随后 1:0、3:0、2:1；市场认为 England（ENG）能赢，但也承认低比分和 DR Congo（COD）进一球的分支。",
+        "候选脚本：2-0 England（ENG）定位球/禁区二点破局后补时前锁定、2-1 Wissa（COD）反击偷一球、1-0 低位久守小胜、3-0 早球后 DR Congo（COD）被迫前压。最终选常规 2-0，England（ENG）晋级。"
+      ],
+      "weather": "亚特兰大 7 月 1 日局地炎热潮湿，最高约 33°C；正午开球会放大体能和补水暂停权重。若顶棚关闭，比赛技术条件更稳定，但死球补水仍会打断节奏。",
+      "referee": {
+        "name": "Adham Makhadmeh（JOR）",
+        "style": "AFC 裁判，国际大赛经验较多，整体倾向先管理对抗再出牌；面对低位防守和强队围攻时，禁区拉拽与反击战术犯规是重点。",
+        "history": "FIFA Match Centre 和 Refereeing World 均指向约旦裁判组执法本场；他不属于极端重牌裁判，但淘汰赛压力下会更早管理抗议和拖延。"
+      },
+      "card_prediction": "预计黄牌 3-5 张，红牌概率约 8-11%，点球概率约 18-23%。DR Congo（COD）防 Saka（ENG）和 Bellingham（ENG）的肋部推进可能吃牌；England（ENG）右路保护若不到位，防 Wissa（COD）转换也有战术犯规风险。",
+      "coach_tactics": "Tuchel（ENG 主帅/GER）会要求耐心横移，尽量用 O'Reilly（ENG）的左路插上和 Kane（ENG）的回撤制造中路空位；补水时间若仍是 0-0，他可能更早让边锋换侧或增加禁区内高点。Desabre（COD 主帅/FRA）会把比赛切碎，用五后卫和双前锋等待 England（ENG）右侧身后。",
+      "bench_depth": "England（ENG）替补席有 Foden（ENG）、Watkins（ENG）、Gordon（ENG）、Madueke（ENG）等改变节奏的资源，落后或僵持都有 Plan B；DR Congo（COD）后手更依赖速度和身体，若先丢球，主动控球解法较少。",
+      "knockout": {
+        "regular_time": "2-0",
+        "extra_time": "若 90 分钟 1-1，England（ENG）加时仍有替补和定位球优势",
+        "penalties": "点球大战概率约 10%，若进入点球 England（ENG）56%-44% 略优",
+        "advancer": "英格兰",
+        "advancement_prob": "英格兰 78% / 刚果金 22%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.16",
+          "draw": "5.35",
+          "lose": "12.50"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "1.63",
+          "draw": "3.75",
+          "lose": "4.01"
+        },
+        "goals": "2球(3.50)、3球(3.70)、1球(4.75)、4球(5.05)、5球(9.20)；市场主线 2-3 球",
+        "score": "2:0(4.70)、1:0(5.30)、3:0(6.25)、2:1(7.50)、3:1(9.50)、1:1(10.00)"
+      },
+      "bet_advice": "主看 England（ENG）常规时间胜和让球(-1)主胜，比分 2:0 防 2:1；若前 20 分钟仍 0-0，走低总进球更合理。晋级方向 England（ENG）稳，但不建议把 1.16 单独重仓。",
+      "risk": "稳胆"
+    },
+    {
+      "home": "比利时",
+      "away": "塞内加尔",
+      "group": "32 强 · 淘汰赛",
+      "time_bj": "2026-07-02 04:00",
+      "time_local": "西雅图 2026-07-01 13:00（PDT）",
+      "venue": "Seattle Stadium / Lumen Field, Seattle",
+      "predicted_score": "2-1",
+      "alt_score": "1-1",
+      "total_goals": "常规时间预计 2-3 球，偏大 2.0；若 Senegal（SEN）先球，比赛可能被拉到 3-4 球",
+      "probability": {
+        "win": "43%",
+        "draw": "31%",
+        "lose": "26%"
+      },
+      "confidence": "低",
+      "key_factors": [
+        "这场是今日最接近的淘汰赛。Belgium（BEL）末轮 5-1 New Zealand（NZL）终于打开，Trossard（BEL）、De Bruyne（BEL）、Lukaku（BEL）和 De Ketelaere（BEL）都参与进攻，但前两轮超过 200 分钟没有运动战进球，说明他们仍有慢热风险。",
+        "Senegal（SEN）末轮 5-0 Iraq（IRQ）才压线成为最佳第三名，攻击线爆发但样本有红牌因素。Mané（SEN）、Sarr（SEN）、Jackson（SEN）和 Pape Gueye（SEN）具备反击与后插上威胁，绝不是 Belgium（BEL）能舒服控球的对手。",
+        "阵容核查存在关键冲突：Sports Illustrated 预计 Mendy（SEN）可首发，Goal/部分媒体提示 Mendy（SEN）膝伤或缺阵风险；因此我不把 Senegal（SEN）门将环节写成确定优势，反而把这列为本场最大不确定点。Belgium（BEL）方面 Debast（BEL）可回归但不确定是否首发，Lukaku（BEL）更像替补后手。",
+        "Seattle 午后约 19°C、阴云舒适，天气不会拖慢比赛。补水暂停的意义更偏战术：Garcia（BEL 主帅/FRA）可以在 Belgium（BEL）慢热时调整 De Bruyne（BEL）的接球区，Thiaw（SEN 主帅）则能即时修正对 Doku（BEL）和 Trossard（BEL）的夹击。",
+        "竞彩常规时间主胜 1.93、平 3.02、客胜 3.57，最低波胆是 1:1，其次 2:1。市场明确认为 Belgium（BEL）只是小优，而非稳胜。",
+        "候选脚本：2-1 Belgium（BEL）靠 De Bruyne（BEL）和替补 Lukaku（BEL）后段解决、1-1 Senegal（SEN）用速度拖进加时、0-1 Senegal（SEN）反击冷门、2-2 双方边路互爆。最终选常规 2-1，Belgium（BEL）晋级，但置信度低。"
+      ],
+      "weather": "西雅图 7 月 1 日多云舒适，最高约 19°C，体能环境三场最佳；天气更利于双方保持高节奏，补水暂停主要用于战术沟通而非单纯降温。",
+      "referee": {
+        "name": "Said Martínez（HON）",
+        "style": "CONCACAF 裁判，比赛管理经验丰富，本届已参与多场高压场次；对抗强、转换快的比赛里会更愿意用牌控制节奏。",
+        "history": "FIFA/Refereeing World 与 AS 等赛前信息均显示 Martínez（HON）执法本场。Belgium（BEL）和 Senegal（SEN）都是边路推进队，裁判的早牌尺度会明显影响比赛开放程度。"
+      },
+      "card_prediction": "预计黄牌 5-7 张，红牌概率约 14-18%，点球概率约 22-27%。Senegal（SEN）防 Doku（BEL）一对一、Belgium（BEL）中场防 Sarr（SEN）/Mané（SEN）转换，都容易出现战术犯规。",
+      "coach_tactics": "Garcia（BEL 主帅/FRA）会希望用 Vanaken（BEL）和 Tielemans（BEL）稳定出球，让 De Bruyne（BEL）进入右肋而不是回撤太深；若僵持，Lukaku（BEL）和 Debast（BEL）是不同方向的后手。Thiaw（SEN 主帅）会先保持 4-3-3 的宽度，用 Pape Gueye（SEN）后插上补充禁区人数。",
+      "bench_depth": "Belgium（BEL）有 Lukaku（BEL）这种能改变禁区形态的替补，也有 Doku（BEL）/Trossard（BEL）换边制造错位；Senegal（SEN）速度后手更好，但若 Mendy（SEN）不能首发或状态受影响，抗压稳定性会下降。",
+      "knockout": {
+        "regular_time": "2-1",
+        "extra_time": "若 90 分钟 1-1，Belgium（BEL）替补高点略占优，但 Senegal（SEN）反击仍危险",
+        "penalties": "点球大战概率约 23%，若进入点球 Belgium（BEL）52%-48% 微弱优势",
+        "advancer": "比利时",
+        "advancement_prob": "比利时 57% / 塞内加尔 43%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.93",
+          "draw": "3.02",
+          "lose": "3.57"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "4.18",
+          "draw": "3.43",
+          "lose": "1.67"
+        },
+        "goals": "2球(3.20)、3球(3.75)、1球(4.60)、4球(5.60)、0球(9.50)；市场主线 2 球，3 球紧随其后",
+        "score": "1:1(5.25)、2:1(6.30)、1:0(7.10)、2:0(9.35)、0:0(9.50)、0:1(10.00)"
+      },
+      "bet_advice": "主看 Belgium（BEL）不败，比分 2:1 防 1:1；让球(-1)客胜适合覆盖 Belgium（BEL）小胜或不胜。若赛前确认 Mendy（SEN）缺席，Belgium（BEL）2:1/2:0 权重上调；若 Mendy（SEN）首发且状态好，平局权重上调。",
+      "risk": "高风险"
+    },
+    {
+      "home": "美国",
+      "away": "波黑",
+      "group": "32 强 · 淘汰赛",
+      "time_bj": "2026-07-02 08:00",
+      "time_local": "圣克拉拉 2026-07-01 17:00（PDT）",
+      "venue": "San Francisco Bay Area Stadium / Levi's Stadium, Santa Clara",
+      "predicted_score": "3-1",
+      "alt_score": "2-0",
+      "total_goals": "常规时间预计 3-4 球，偏大 2.5；若 Bosnia（BIH）先守住 45 分钟，则降到 2-3 球",
+      "probability": {
+        "win": "65%",
+        "draw": "22%",
+        "lose": "13%"
+      },
+      "confidence": "中",
+      "key_factors": [
+        "USA（USA）小组赛 4-1 Paraguay（PAR）、2-0 Australia（AUS）、2-3 Türkiye（TUR），进攻产量很高且有主场优势。U.S. Soccer 统计本届小组赛 8 球、多人得分，说明 Pochettino（USA 主帅/ARG）的进攻不是单点依赖。",
+        "阵容核查显示 Pulisic（USA）小腿问题后已可回到首发框架，Roldan（USA）是唯一明确伤病担忧且本届未出场，不把他写入后手。SI 预计 Freese（USA）、Dest（USA）、Robinson（USA）、Adams（USA）、Tillman（USA）、Pulisic（USA）、Balogun（USA）进入主线。",
+        "Bosnia（BIH）历史性进入淘汰赛，Džeko（BIH）和 Demirović（BIH）能用 4-4-2 打直接球，Katić（BIH）、Radeljić（BIH）等高点让定位球很有威胁；Muharemović（BIH）停赛结束预计回归，防线硬度提升。",
+        "Santa Clara 下午约 25°C、低云后转晴，条件很适合 USA（USA）用边后卫宽度和前场压迫；补水暂停会给 Barbarez（BIH）重整低位站位，也给 Pochettino（USA 主帅/ARG）调整 Pulisic（USA）和 Dest（USA）的同侧配合。",
+        "竞彩常规时间主胜 1.22、让球(-1)主胜 1.80，最低波胆 2:0，其次 1:0/2:1， total goals 最低为 3 球。我比市场更看重 Bosnia（BIH）的高点偷一球，所以首选 3-1。",
+        "候选脚本：3-1 USA（USA）主场边路打开但被定位球追回一球、2-0 USA（USA）早球后控局、2-1 Bosnia（BIH）中锋连线拖到最后、3-0 USA（USA）高压早早打穿。最终选常规 3-1，USA（USA）晋级。"
+      ],
+      "weather": "圣克拉拉 7 月 1 日下午约 25°C，早些时候低云、比赛时大体晴朗，整体是三场里最利于高跑动和边路宽度的天气。",
+      "referee": {
+        "name": "Raphael Claus（BRA）",
+        "style": "CONMEBOL 裁判，习惯管理身体对抗和禁区拉拽，面对强主场氛围时通常需要早期建立尺度。",
+        "history": "FIFA Match Centre 和 Refereeing World 指向 Claus（BRA）执法本场。USA（USA）的边路压迫与 Bosnia（BIH）的高点冲吊会让他频繁处理空中对抗和二点犯规。"
+      },
+      "card_prediction": "预计黄牌 4-6 张，红牌概率约 10-14%，点球概率约 20-25%。Bosnia（BIH）防 Pulisic（USA）和 Dest（USA）的边路组合可能吃牌；USA（USA）防 Džeko（BIH）支点和 Demirović（BIH）身后跑动也会有拉拽风险。",
+      "coach_tactics": "Pochettino（USA 主帅/ARG）会倾向用边后卫和边锋拉开 Bosnia（BIH）4-4-2，补水暂停后若没有领先，可能提高 Adams（USA）身前的压迫线；Barbarez（BIH）会先守住禁区，利用 Džeko（BIH）的第一点和 Bajraktarević（BIH）/Alajbegović（BIH）的速度打反击。",
+      "bench_depth": "USA（USA）有 Pepi（USA）、Reyna（USA）、Weah（USA）、Aaronson（USA）等多种进攻后手，领先后也能换 McKennie（USA）增加对抗；Bosnia（BIH）经验和高点好，但若落后两球，替补速度和持续压迫会偏吃力。",
+      "knockout": {
+        "regular_time": "3-1",
+        "extra_time": "进入加时概率不高，若 90 分钟 2-2，USA（USA）替补深度仍占优",
+        "penalties": "点球大战概率约 9%，若进入点球 USA（USA）55%-45% 优势",
+        "advancer": "美国",
+        "advancement_prob": "美国 79% / 波黑 21%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.22",
+          "draw": "4.91",
+          "lose": "9.40"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "1.80",
+          "draw": "3.72",
+          "lose": "3.28"
+        },
+        "goals": "3球(3.45)、2球(3.85)、4球(4.70)、1球(5.50)、5球(8.20)；市场预期 3 球最集中",
+        "score": "2:0(5.50)、1:0(6.30)、2:1(6.40)、3:0(8.00)、1:1(8.40)、3:1(8.50)"
+      },
+      "bet_advice": "主看 USA（USA）常规时间胜和让球(-1)主胜，比分 3:1 防 2:0/2:1；总进球 3 球是主线。若临场 Bosnia（BIH）排出双高中锋且 USA（USA）边后卫压得很高，双方进球可小注。",
+      "risk": "稳胆"
+    }
+  ]
+}
