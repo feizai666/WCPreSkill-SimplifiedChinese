@@ -1,0 +1,205 @@
+{
+  "date": "2026-07-03（北京时间）",
+  "summary": "目标口径：按北京时间 2026-07-03 统计，共 3 场世界杯 32 强淘汰赛；当地日期均为 2026-07-02。赛程为西班牙 vs 奥地利、葡萄牙 vs 克罗地亚、瑞士 vs 阿尔及利亚。本版先更新并读取阵容台账 data/rosters/2026-07-03/：Balogun（USA）红牌停赛已写入，Nico Williams（ESP）/Yéremy Pino（ESP）不预计首发，Víctor Muñoz（ESP）伤疑，Cristiano Ronaldo（POR）标为 available_rotation_risk 而不是确认缺阵。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-07-02 中午。赛程、裁判、阵容和赛后复盘参考 ESPN、RotoWire、Guardian、beIN SPORTS、Barca Blaugranes、Dailysports/FIFA 任命信息、Sporttery 与公开天气信息。投注有风险，仅供参考。",
+  "reflection": {
+    "title": "赛后复盘：少一点幻觉，多一点分支",
+    "subtitle": "复盘口径：对比北京时间 2026-07-02 三场 32 强赛真实赛果与昨日预测；今日校准重点是早球冲击、替补后手、红牌停赛，以及“可能不上”和“确定不上”的边界。",
+    "sections": [
+      {
+        "title": "昨日赛果与预测对照",
+        "items": [
+          "英格兰 2-1 刚果金，昨日首选 2-0、次选 2-1，晋级方向和次选比分命中，但首选低估了刚果金（COD）开场转换。Cipenga（COD）早早进球说明我对五后卫反击的尊重还不够，不能因为 England（ENG）纸面优势和低赔就把对手进球概率压得太低。",
+          "这场保留下来的正确点是：我没有把 England（ENG）写成自动 3-0，并且强调 Tuchel（ENG 主帅/GER）的临场调整。真实比赛里 England（ENG）在落后后通过换人和站位修正，最后由 Kane（ENG）连续解决问题；补水时间与中场调整对强队破低位仍然是关键权重。",
+          "比利时 3-2 塞内加尔（加时），昨日首选常规 2-1、次选 1-1，晋级方向正确但常规过程错得明显。Senegal（SEN）一度 2-0 领先，说明我低估了 Mané（SEN）/Sarr（SEN）这一侧的冲击，以及 Belgium（BEL）慢热时中场被打身后的风险。",
+          "比利时这场也有值得保留的判断：我把本场列为高风险，并写了 Lukaku（BEL）替补改变禁区形态。真实比赛 Lukaku（BEL）后段追分、Tielemans（BEL）加时继续救场，证明“26 人 team 的后手”比首发纸面更重要；之后淘汰赛必须更明确写替补能改变什么，而不是只列名字。",
+          "美国 2-0 波黑，昨日首选 3-1、次选 2-0，次选比分和晋级方向正确，但对红牌事件的影响处理还要更细。Balogun（USA）先进球又红牌，说明强队领先后也可能因一次 VAR 改变后续淘汰赛可用阵容；今天已把他写入 07-03 roster 覆盖层，下一场 USA（USA）不得再把他列为首发、后手或点球手。",
+          "今日校准：比分预测不能只靠赔率最低波胆，也不能为了反惯性而乱开大。正确做法是先确认可用球员，再写“首发确定/首发不确定/停赛/伤疑/替补提速”的分支，最后把裁判、补水暂停和教练后手合进比赛脚本。"
+        ]
+      },
+      {
+        "title": "明日重点校准",
+        "items": [
+          "西班牙 vs 奥地利：Spain（ESP）强，但两个边锋伤疑会改变进攻形态；不能把 Spain（ESP）的控球优势机械翻译成 3-0。",
+          "葡萄牙 vs 克罗地亚：Cristiano Ronaldo（POR）不是确认缺阵，RotoWire 仍预测他首发；但若 Martinez（POR 主帅/ESP）真的不用他先发，Portugal（POR）前场会更快，尤其 Gonçalo Ramos（POR）、Rafael Leão（POR）、Francisco Conceição（POR）、Pedro Neto（POR）能提升压迫和身后跑。",
+          "瑞士 vs 阿尔及利亚：Switzerland（SUI）更稳，Algeria（ALG）防线失球多但前场有 Mahrez（ALG）和 Amoura（ALG）转换；这场更像低比分拉扯，不应只按小组第一打第三名来写。"
+        ]
+      }
+    ]
+  },
+  "matches": [
+    {
+      "home": "西班牙",
+      "away": "奥地利",
+      "group": "32 强 · 淘汰赛",
+      "time_bj": "2026-07-03 03:00",
+      "time_local": "洛杉矶/英格尔伍德 2026-07-02 12:00（PDT）",
+      "venue": "Los Angeles Stadium / SoFi Stadium, Inglewood",
+      "predicted_score": "2-1",
+      "alt_score": "2-0",
+      "total_goals": "常规时间预计 2-3 球，偏小 3.5；若 Austria（AUT）前压被 Spain（ESP）连续打穿，可升到 3-4 球",
+      "probability": {
+        "win": "66%",
+        "draw": "22%",
+        "lose": "12%"
+      },
+      "confidence": "中",
+      "key_factors": [
+        "Spain（ESP）小组赛不败且防守质量稳定，Rodri（ESP）、Pedri（ESP）、Dani Olmo（ESP）的中路控球是本场最可靠的优势；但淘汰赛第一场不能只看纸面强弱，Austria（AUT）的压迫会制造身体对抗和前场抢断。",
+        "阵容台账已更新：Nico Williams（ESP）内收肌问题、Yéremy Pino（ESP）肩锁关节扭伤，二人都不预计首发；Víctor Muñoz（ESP）也有伤疑。Álex Baena（ESP）和 Lamine Yamal（ESP）会承担宽度，但 Baena（ESP）更偏内收连接，Spain（ESP）左路纵深会比健康版弱一点。",
+        "Austria（AUT）暂无新增伤停，Rangnick（AUT 主帅/GER）大概率继续高压。Alaba（AUT）、Sabitzer（AUT）、Laimer（AUT）和 Arnautovic（AUT）能让这场不像弱队摆大巴：他们会冲 Spain（ESP）出球节奏，也会用定位球和第二点争抢找机会。",
+        "关键分歧是 Spain（ESP）能否把 Austria（AUT）的压迫变成身后空间。若 Rodri（ESP）和 Pedri（ESP）第一脚出球干净，Austria（AUT）的高位就是风险；若 Spain（ESP）左路因为缺 Nico Williams（ESP）失去直接冲刺，比赛会变成更磨的 1 球差。",
+        "竞彩常规时间主胜 1.19、最低波胆 2:0，但我把 2-1 放在首选：不是低估 Spain（ESP），而是尊重 Austria（AUT）高压和定位球在淘汰赛里的单球爆点。",
+        "候选脚本：2-1 Spain（ESP）控球占优但被压迫/定位球追回一球、2-0 Spain（ESP）下半场破局后控死、1-1 Austria（AUT）拖进加时、3-1 早球后高压崩盘。最终选常规 2-1，Spain（ESP）晋级。"
+      ],
+      "weather": "英格尔伍德当地中午开球，外部天气偏暖，但 SoFi Stadium 场地条件相对可控。补水暂停的作用更偏战术：Spain（ESP）可调整边路站位，Austria（AUT）可重置压迫触发点。",
+      "referee": {
+        "name": "Glenn Nyberg（SWE）",
+        "style": "UEFA 裁判，整体更重比赛管理和连续性，不是极端重牌类型；但 Austria（AUT）的高压和 Spain（ESP）的肋部盘带会持续制造战术犯规。",
+        "history": "赛前任命信息指向 Nyberg（SWE）执法本场。若他早早给高压犯规出牌，Austria（AUT）的逼抢强度会被明显限制。"
+      },
+      "card_prediction": "预计黄牌 3-5 张，红牌概率约 8-11%，点球概率约 18-22%。Austria（AUT）防 Yamal（ESP）一对一和 Pedri（ESP）转身处容易吃牌；Spain（ESP）若丢球权后反抢失败，也会有战术犯规。",
+      "coach_tactics": "Luis de la Fuente（ESP 主帅）需要在缺少 Nico Williams（ESP）直线爆点后，让 Álex Baena（ESP）更多内收，释放 Cucurella（ESP）或 Porro（ESP）的边路推进；补水时间若仍 0-0，Spain（ESP）可能更早上 Ferran Torres（ESP）或 Borja Iglesias（ESP）改变禁区触点。Rangnick（AUT 主帅/GER）会要求前 25 分钟把强度拉满，争取让 Spain（ESP）出球出现一次大失误。",
+      "bench_depth": "Spain（ESP）替补更厚，但边锋健康度打折；Austria（AUT）有 Kalajdzic（AUT）这种高点后手，若落后一球会更直接。Spain（ESP）的优势在后 30 分钟控制，Austria（AUT）的机会在前压后的第一波混乱。",
+      "knockout": {
+        "regular_time": "2-1",
+        "extra_time": "若 90 分钟 1-1，Spain（ESP）替补和控球耐心仍更优",
+        "penalties": "点球大战概率约 10%，若进入点球 Spain（ESP）55%-45% 略优",
+        "advancer": "西班牙",
+        "advancement_prob": "西班牙 79% / 奥地利 21%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.19",
+          "draw": "5.15",
+          "lose": "10.50"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "1.77",
+          "draw": "3.55",
+          "lose": "3.53"
+        },
+        "goals": "3球(3.40)、2球(3.60)、4球(4.95)、1球(5.35)、5球(8.50)、0球(14.00)",
+        "score": "2:0(4.65)、1:0(6.50)、2:1(6.70)、3:0(7.00)、3:1(8.75)、1:1(9.50)"
+      },
+      "bet_advice": "主看 Spain（ESP）常规时间胜，比分 2:1 防 2:0；让球(-1)主胜可小注但不宜重，因为 Spain（ESP）边路伤情让大胜门槛变高。若赛前 Yamal（ESP）状态明显好，3 球权重上调。",
+      "risk": "稳胆"
+    },
+    {
+      "home": "葡萄牙",
+      "away": "克罗地亚",
+      "group": "32 强 · 淘汰赛",
+      "time_bj": "2026-07-03 07:00",
+      "time_local": "多伦多 2026-07-02 19:00（EDT）",
+      "venue": "Toronto Stadium / BMO Field, Toronto",
+      "predicted_score": "2-1",
+      "alt_score": "1-1",
+      "total_goals": "常规时间预计 2-3 球；若 Cristiano Ronaldo（POR）不首发且 Portugal（POR）提速成功，3 球权重上调",
+      "probability": {
+        "win": "52%",
+        "draw": "29%",
+        "lose": "19%"
+      },
+      "confidence": "低",
+      "key_factors": [
+        "Portugal（POR）纸面深度更好，但小组赛节奏并不稳定，先后出现大胜 Uzbekistan（UZB）和被 Colombia（COL）拖平的两个面孔。Croatia（CRO）虽然老化，但 Modric（CRO）、Kovacic（CRO）和 Gvardiol（CRO）能把比赛拖成他们熟悉的低速局。",
+        "Cristiano Ronaldo（POR）的状态我不写成确定缺阵：RotoWire 预测他首发，Martinez（POR 主帅/ESP）公开话术仍在保护队长；但用户侧临场消息提示他可能不上，因此本场必须写双分支。",
+        "若 Cristiano Ronaldo（POR）不首发，Portugal（POR）会明显提速。Gonçalo Ramos（POR）能给第一道压迫和近门柱跑动，Rafael Leão（POR）、Francisco Conceição（POR）、Pedro Neto（POR）能增加弱侧冲刺，Bruno Fernandes（POR）和 Vitinha（POR）的传球会少一些强行找高点，多一些直塞和二点反抢。",
+        "这个提速不是纯利好：不用 Cristiano Ronaldo（POR）首发会损失禁区牵制、头球落点和关键球心理优势。Croatia（CRO）如果低位守住前 30 分钟，Portugal（POR）仍可能回到外围倒脚和传中效率问题。",
+        "Croatia（CRO）的关键是 Dalic（CRO 主帅）能不能把 Modric（CRO）保护到 70 分钟以后。若 Sucic（CRO）/Kovacic（CRO）被 Bruno Fernandes（POR）拉散，Livakovic（CRO）身前会暴露；若 Croatia（CRO）成功降速，1-1 和加时概率很高。",
+        "竞彩最低波胆 2:1，胜平负给 Portugal（POR）小优而非碾压。我的首选也是 2-1，但置信度低：这场很可能由首发公布后 Cristiano Ronaldo（POR）是否出场、以及 Portugal（POR）前 20 分钟压迫质量决定。"
+      ],
+      "weather": "多伦多傍晚开球，天气相对舒适，开放球场环境下体能不是主要阻碍。补水暂停会给 Martinez（POR 主帅/ESP）和 Dalic（CRO 主帅）在半场中段重新调前场压迫/低位距离的机会。",
+      "referee": {
+        "name": "Facundo Tello（ARG）",
+        "style": "南美裁判，通常能接受较强身体对抗，但会用牌压住反复抗议和战术犯规；老将多、节奏慢的淘汰赛容易在中场拉扯处堆牌。",
+        "history": "赛前任命信息指向 Tello（ARG）执法本场。Portugal（POR）边路速度和 Croatia（CRO）中场保护会让他频繁处理反击阻挡。"
+      },
+      "card_prediction": "预计黄牌 4-6 张，红牌概率约 10-14%，点球概率约 20-25%。Croatia（CRO）防 Leão（POR）/Neto（POR）的回追犯规风险高；Portugal（POR）若被 Perisic（CRO）或 Baturina（CRO）打身后，也会用战术犯规止损。",
+      "coach_tactics": "Martinez（POR 主帅/ESP）的难题是首发九号位：若用 Cristiano Ronaldo（POR），Portugal（POR）更像传中和二点压制；若用 Gonçalo Ramos（POR）或更机动前场，球队压迫会快，但需要 Bruno Fernandes（POR）减少无效横传。补水时间若仍 0-0，他可能快速切换到 Leão（POR）/Conceição（POR）一对一。Dalic（CRO 主帅）会把比赛降速，要求 Modric（CRO）和 Kovacic（CRO）尽量把 Portugal（POR）拖到阵地战。",
+      "bench_depth": "Portugal（POR）后手优势明显：Ronaldo（POR）若替补可作为禁区终结牌，Ramos（POR）/Leão（POR）/Conceição（POR）/Trincão（POR）可作为提速牌。Croatia（CRO）有 Kramaric（CRO）、Pasalic（CRO）和 Perisic（CRO）经验，但持续冲刺和回追会是问题。",
+      "knockout": {
+        "regular_time": "2-1",
+        "extra_time": "若 90 分钟 1-1，Portugal（POR）替补速度略优，但 Croatia（CRO）加时经验很强",
+        "penalties": "点球大战概率约 18%，若进入点球 Portugal（POR）53%-47% 微弱优势",
+        "advancer": "葡萄牙",
+        "advancement_prob": "葡萄牙 64% / 克罗地亚 36%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.55",
+          "draw": "3.42",
+          "lose": "5.22"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "3.05",
+          "draw": "2.98",
+          "lose": "2.15"
+        },
+        "goals": "2球(3.40)、3球(3.40)、1球(5.00)、4球(5.40)、5球(10.00)、0球(11.50)",
+        "score": "2:1(5.20)、1:1(6.00)、1:0(7.50)、2:0(8.50)、3:1(11.00)、0:0(11.50)"
+      },
+      "bet_advice": "主看 Portugal（POR）不败和常规小胜，比分 2:1 防 1:1；让球(-1)客胜适合覆盖 Portugal（POR）只赢一球或被拖平。若赛前确认 Cristiano Ronaldo（POR）替补，Portugal（POR）前场提速，2:1/3:1 权重上调；若他首发且 Croatia（CRO）五六十分钟仍守住，1:1 权重上调。",
+      "risk": "高风险"
+    },
+    {
+      "home": "瑞士",
+      "away": "阿尔及利亚",
+      "group": "32 强 · 淘汰赛",
+      "time_bj": "2026-07-03 11:00",
+      "time_local": "温哥华 2026-07-02 20:00（PDT）",
+      "venue": "BC Place / Vancouver",
+      "predicted_score": "1-1",
+      "alt_score": "2-1",
+      "total_goals": "常规时间预计 2-3 球，偏小 3.5；Switzerland（SUI）更稳，但 Algeria（ALG）有转换进球能力",
+      "probability": {
+        "win": "44%",
+        "draw": "31%",
+        "lose": "25%"
+      },
+      "confidence": "低",
+      "key_factors": [
+        "Switzerland（SUI）小组第一，7 分、7 个进球，整体平衡比 Algeria（ALG）更好。Kobel（SUI）、Akanji（SUI）、Xhaka（SUI）、Freuler（SUI）这条中轴足够成熟，Yakin（SUI 主帅）最擅长把比赛带进可控节奏。",
+        "Algeria（ALG）是最佳第三名路线进来，三场丢 7 球，防线稳定性不足；但 Mahrez（ALG）、Amoura（ALG）、Gouiri（ALG）和 Aït-Nouri（ALG）能在转换中制造质量机会，不能把他们当成只会挨打的第三名。",
+        "本场还有一个教练叙事：Petkovic（ALG 主帅/SUI）长期执教过 Switzerland（SUI），对 Swiss 中场结构非常熟。Algeria（ALG）可能不会盲目压出来，而是用 Boudaoui（ALG）/Zerrouki（ALG）限制 Xhaka（SUI）的第一传，等 Mahrez（ALG）弱侧接球。",
+        "Switzerland（SUI）的进攻点不是单一中锋。Manzambi（SUI）本届进球状态好，Embolo（SUI）能支点和做球，Ndoye（SUI）/Vargas（SUI）可以攻击边路。若 Algeria（ALG）门将和中卫继续摇摆，Switzerland（SUI）定位球和二点有优势。",
+        "竞彩最低波胆 1:1，主胜 1.78 但让球(-1)客胜 1.82，市场也在提醒：Switzerland（SUI）更可能晋级，但未必 90 分钟轻松赢两球。",
+        "候选脚本：1-1 Algeria（ALG）转换先进或追平，Switzerland（SUI）加时再靠组织解决；2-1 Switzerland（SUI）常规后段制胜；1-0 Switzerland（SUI）控节奏小胜；1-2 Algeria（ALG）反击冷门。最终选常规 1-1，Switzerland（SUI）加时 2-1 晋级。"
+      ],
+      "weather": "温哥华晚间开球，BC Place 场地条件相对稳定，外部天气影响小。补水暂停对 Algeria（ALG）更重要，可以让 Petkovic（ALG 主帅/SUI）整理防线距离；Switzerland（SUI）则会借暂停调整 Xhaka（SUI）接球位置。",
+      "referee": {
+        "name": "Yael Falcón Pérez（ARG）",
+        "style": "阿根廷裁判，倾向允许一定身体对抗，但会较早处理连续犯规和抗议。两队都有边路推进，转换防守里的拉拽会是出牌重点。",
+        "history": "ESPN 与赛前裁判任命信息均指向 Falcón Pérez（ARG）执法本场；他的尺度会影响 Algeria（ALG）能否用身体对抗切碎 Switzerland（SUI）的节奏。"
+      },
+      "card_prediction": "预计黄牌 4-6 张，红牌概率约 10-15%，点球概率约 18-23%。Algeria（ALG）防 Ndoye（SUI）/Vargas（SUI）冲刺容易吃牌；Switzerland（SUI）防 Mahrez（ALG）内切和 Amoura（ALG）反插也有拉拽风险。",
+      "coach_tactics": "Yakin（SUI 主帅）会先保中轴，用 Xhaka（SUI）和 Freuler（SUI）控制二点，再让 Ndoye（SUI）/Vargas（SUI）打边路速度；若 60 分钟仍平，Okafor（SUI）和 Amdouni（SUI）可改变前场跑动。Petkovic（ALG 主帅/SUI）熟悉 Swiss 体系，可能重点封 Xhaka（SUI）第一传，再找 Mahrez（ALG）和 Aït-Nouri（ALG）一侧的转换。",
+      "bench_depth": "Switzerland（SUI）替补更均衡，能在前锋和中场都换出新鲜跑动；Algeria（ALG）替补速度不差，但防线和门将稳定性是隐患。若拖进加时，Switzerland（SUI）的结构优势会更明显。",
+      "knockout": {
+        "regular_time": "1-1",
+        "extra_time": "Switzerland（SUI）加时 2-1，靠定位球或二点补射制胜",
+        "penalties": "点球大战概率约 20%，若进入点球 Switzerland（SUI）54%-46% 略优",
+        "advancer": "瑞士",
+        "advancement_prob": "瑞士 60% / 阿尔及利亚 40%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.78",
+          "draw": "3.10",
+          "lose": "4.10"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "3.68",
+          "draw": "3.25",
+          "lose": "1.82"
+        },
+        "goals": "2球(3.00)、3球(3.75)、1球(4.40)、4球(6.20)、0球(9.00)、5球(12.50)",
+        "score": "1:1(5.20)、1:0(6.00)、2:1(6.40)、2:0(7.25)、0:0(9.00)、0:1(11.00)"
+      },
+      "bet_advice": "主看 Switzerland（SUI）晋级方向，常规时间可走 Switzerland（SUI）不败，比分 1:1 防 2:1；让球(-1)客胜更适合覆盖 Switzerland（SUI）小胜/平局。若临场 Algeria（ALG）门将继续不稳，2:1 权重上调。",
+      "risk": "博胆"
+    }
+  ]
+}
