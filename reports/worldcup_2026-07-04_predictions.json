@@ -1,0 +1,205 @@
+{
+  "date": "2026-07-04（北京时间）",
+  "summary": "目标口径：按北京时间 2026-07-04 统计，共 3 场世界杯 32 强淘汰赛；当地日期均为 2026-07-03。赛程为澳大利亚 vs 埃及、阿根廷 vs 佛得角、哥伦比亚 vs 加纳。本版先更新并读取阵容台账 data/rosters/2026-07-04/：Mathew Leckie（AUS）/Jacob Italiano（AUS）伤缺，Mohamed Salah（EGY）可出场但首发不确定，Mohanad Lasheen（EGY）停赛，Leonardo Balerdi（ARG）继续标为 replaced_out，Marcos Senesi（ARG）补入，Cristian Romero（ARG）伤疑，Antoine Semenyo（GHA）伤疑。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-07-03 13:20。赛程、裁判、阵容和赛后复盘参考 FIFA Match Centre、ESPN、RotoWire、Guardian、Houston Chronicle、Racing Post、The Times、Sporttery 与公开天气信息。投注有风险，仅供参考。",
+  "reflection": {
+    "title": "赛后复盘：方向不错，过程还要更狠",
+    "subtitle": "复盘口径：对比北京时间 2026-07-03 三场 32 强赛真实赛果与昨日预测；今日校准重点是强队边路修正、VAR 尾部、临场换人和低估控场强队零封的风险。",
+    "sections": [
+      {
+        "title": "昨日赛果与预测对照",
+        "items": [
+          "西班牙 3-0 奥地利，昨日首选 2-1、次选 2-0，方向对但比分低估。错在我把 Nico Williams（ESP）和 Yéremy Pino（ESP）的伤疑权重放得偏高，低估了 Spain（ESP）在 Oyarzabal（ESP）、Pedro Porro（ESP）和中场控制下仍能打穿高压。Austria（AUT）的压迫没有制造足够多的高质量机会，反而被 Spain（ESP）控住节奏。",
+          "这场要保留的教训是：强队边路伤情不一定等于进攻降级，关键看教练是否能换一种宽度来源。Luis de la Fuente（ESP 主帅）没有硬套健康版边锋体系，而是用中路控制和后插上解决问题；以后不能只看某个边锋缺不缺，要看替代结构是否成立。",
+          "葡萄牙 2-1 克罗地亚，昨日首选 2-1 命中，晋级方向也正确。正确点是没有把 Cristiano Ronaldo（POR）可能不首发写成事实，而是保留双分支；真实比赛里 Ronaldo（POR）点球扳平、Gonçalo Ramos（POR）补时头球制胜，说明 Portugal（POR）的 26 人后手判断是对的。",
+          "葡萄牙这场过程比比分更重要：Croatia（CRO）由 Perisic（CRO）先球，后面还有两个进球被 VAR 吹掉，说明我低估了 VAR/越位/禁区细节对淘汰赛尾段的冲击。之后要把“比分命中但过程高方差”单独写出来，不能因为 2-1 命中就假装比赛稳定。",
+          "瑞士 2-0 阿尔及利亚，昨日首选 1-1、判断 Switzerland（SUI）加时晋级，方向对但加时概率高估。真实比赛 Embolo（SUI）和 Ndoye（SUI）让 Swiss 提前建立优势，Manzambi（SUI）的突破和 Yakin（SUI 主帅）的防线组织比我给的权重更高；Mahrez（ALG）被换下后 Algeria（ALG）更缺最后一传。",
+          "今日校准：明天三场不能只按强弱分层。Australia（AUS）vs Egypt（EGY）是 Salah（EGY）首发不确定和低比分拉扯；Argentina（ARG）vs Cape Verde（CPV）要尊重佛得角小组赛对 Spain（ESP）/Uruguay（URU）的抗压；Colombia（COL）vs Ghana（GHA）则更像低位防守与单点爆破。"
+        ]
+      },
+      {
+        "title": "明日重点校准",
+        "items": [
+          "澳大利亚 vs 埃及：Salah（EGY）不是伤缺，而是 fit to play 但首发不确定；Australia（AUS）没有 Leckie（AUS）和 Italiano（AUS），反击更依赖 Irankunda（AUS）和定位球。",
+          "阿根廷 vs 佛得角：不要把 Balerdi（ARG）写进名单，Senesi（ARG）已经补入；Cape Verde（CPV）有故事线也有纪律性，但进攻产量不足，Argentina（ARG）若早球会把比赛拉开。",
+          "哥伦比亚 vs 加纳：Ghana（GHA）低位可以拖住节奏，但 Semenyo（GHA）脚踝伤疑会削弱转换；Colombia（COL）不是火力碾压队，更像 1-0/2-0 的耐心盘。"
+        ]
+      }
+    ]
+  },
+  "matches": [
+    {
+      "home": "澳大利亚",
+      "away": "埃及",
+      "group": "32 强 · 淘汰赛",
+      "time_bj": "2026-07-04 02:00",
+      "time_local": "阿灵顿/达拉斯 2026-07-03 13:00（CDT）",
+      "venue": "Dallas Stadium / AT&T Stadium, Arlington",
+      "predicted_score": "1-1",
+      "alt_score": "0-1",
+      "total_goals": "常规时间预计 1-2 球，偏小 2.5；若 Salah（EGY）首发且状态完整，可抬到 2-3 球",
+      "probability": {
+        "win": "29%",
+        "draw": "34%",
+        "lose": "37%"
+      },
+      "confidence": "低",
+      "key_factors": [
+        "这场是 07-04 最接近的盘。Australia（AUS）和 Egypt（EGY）都在追求队史突破：Australia（AUS）从未赢过世界杯淘汰赛，Egypt（EGY）也是第一次来到这种阶段，心理压力会让开局更谨慎。",
+        "Australia（AUS）会继续 3-4-2-1/5-4-1 的低位，Souttar（AUS）守中路和定位球第一点，Irvine（AUS）与 O'Neill（AUS）保护禁区前，Irankunda（AUS）是主要反击出口。Leckie（AUS）和 Italiano（AUS）已伤缺，Toure（AUS）也只按不确定替补速度点处理。",
+        "Egypt（EGY）的上限取决于 Salah（EGY）。他从腿筋伤势恢复、已训练且可出场，但 Hassan（EGY 主帅）没有确认首发；若 Salah（EGY）只替补，Egypt（EGY）前 60 分钟更依赖 Marmoush（EGY）和 Emam Ashour（EGY）自己制造空间。",
+        "Mohanad Lasheen（EGY）停赛会削弱 Egypt（EGY）中场轮换。面对 Australia（AUS）的深块和高点，Egypt（EGY）需要 Marwan Attia（EGY）/Hamdy Fathy（EGY）把二点球保护好，否则会被 Irankunda（AUS）打身后。",
+        "竞彩常规时间客胜 2.30、平 2.65、主胜 3.15，最低波胆是 1:1，其次 0:1 和 0:0；市场认为 Egypt（EGY）略优，但常规时间平局非常真实。",
+        "候选脚本：1-1 Australia（AUS）定位球或反击先/后进一球，Egypt（EGY）靠 Salah（EGY）或 Marmoush（EGY）回应；0-1 Egypt（EGY）个人能力解决；1-0 Australia（AUS）高点偷到；1-2 Egypt（EGY）加时提速。最终选常规 1-1，Egypt（EGY）加时或点球晋级。"
+      ],
+      "weather": "达拉斯午后外部约 33°C 以上，AT&T Stadium 有可闭合屋顶，若闭顶比赛技术条件会稳定很多；但高温背景下补水暂停仍会成为 Hassan（EGY 主帅）调整 Salah（EGY）使用方式、Popovic（AUS 主帅）重置防线距离的关键窗口。",
+      "referee": {
+        "name": "Gustavo Tejera（URU）",
+        "style": "南美裁判，通常允许一定身体对抗，但对反复拉拽和转换犯规会较快用牌。Australia（AUS）低位防守和 Egypt（EGY）边路推进会让他频繁处理身体接触。",
+        "history": "FIFA Match Centre 显示本场主裁为 Tejera（URU）。这类低比分淘汰赛若早牌控制尺度，Australia（AUS）的边路防守会更受限制。"
+      },
+      "card_prediction": "预计黄牌 4-6 张，红牌概率约 10-14%，点球概率约 18-23%。Australia（AUS）防 Salah（EGY）/Marmoush（EGY）转身，Egypt（EGY）防 Irankunda（AUS）反击，都有战术犯规风险。",
+      "coach_tactics": "Popovic（AUS 主帅）会先把比赛压低事件数，用 Souttar（AUS）和 Circati（AUS）保护禁区，补水暂停后若仍 0-0，可能让 Bos（AUS）或 Behich（AUS）更主动压上。Hassan（EGY 主帅）的核心选择是 Salah（EGY）首发还是后手：首发能拉开 Australia（AUS）防线，替补则保留 60 分钟后的爆点。",
+      "bench_depth": "Egypt（EGY）的后手质量更高，但过度依赖 Salah（EGY）的健康；Australia（AUS）替补速度有限，若先丢球追比赛会吃力。若拖到加时，Egypt（EGY）更可能通过个人能力制造一次决定性机会。",
+      "knockout": {
+        "regular_time": "1-1",
+        "extra_time": "Egypt（EGY）加时 2-1 或维持 1-1 进入点球",
+        "penalties": "点球大战概率约 24%，若进入点球 Egypt（EGY）52%-48% 微弱优势",
+        "advancer": "埃及",
+        "advancement_prob": "埃及 57% / 澳大利亚 43%"
+      },
+      "odds": {
+        "spf": {
+          "win": "3.15",
+          "draw": "2.65",
+          "lose": "2.30"
+        },
+        "rspf": {
+          "handicap": "+1",
+          "win": "1.48",
+          "draw": "3.55",
+          "lose": "5.80"
+        },
+        "goals": "2球(2.90)、1球(3.35)、3球(4.20)、0球(6.00)、4球(8.50)",
+        "score": "1:1(4.75)、0:1(5.75)、0:0(6.00)、1:0(7.30)、1:2(7.50)、2:1(9.50)"
+      },
+      "bet_advice": "主看平局/小比分，比分 1:1 防 0:1；总进球 1-2 球是主线。让球(+1)主胜赔率太低，不如用 Egypt（EGY）晋级方向或常规平局小注。若赛前 Salah（EGY）确认首发且状态好，0:1/1:2 权重上调。",
+      "risk": "博胆"
+    },
+    {
+      "home": "阿根廷",
+      "away": "佛得角",
+      "group": "32 强 · 淘汰赛",
+      "time_bj": "2026-07-04 06:00",
+      "time_local": "迈阿密花园 2026-07-03 18:00（EDT）",
+      "venue": "Miami Stadium / Hard Rock Stadium, Miami Gardens",
+      "predicted_score": "2-0",
+      "alt_score": "3-0",
+      "total_goals": "常规时间预计 2-3 球；若 Argentina（ARG）早球，比赛可打开到 3-4 球",
+      "probability": {
+        "win": "78%",
+        "draw": "16%",
+        "lose": "6%"
+      },
+      "confidence": "中",
+      "key_factors": [
+        "Argentina（ARG）是明天纸面最稳方向，但不是简单 4-0。Cape Verde（CPV）小组赛 0-0 Spain（ESP）、2-2 Uruguay（URU）、0-0 Saudi Arabia（KSA），只丢过 2 球，组织纪律和抗压不是故事滤镜，而是真实比赛内容。",
+        "阵容台账继续修正 Argentina（ARG）名单：Balerdi（ARG）因伤 replaced_out，Senesi（ARG）补入；报告里不得再把 Balerdi（ARG）写成后卫后手。Romero（ARG）膝部问题仍需观察，但 RotoWire 和阿根廷赛前信息都把他放在可首发分支。",
+        "Scaloni（ARG 主帅）预计让 Messi（ARG）、Lautaro Martínez（ARG）、Enzo Fernández（ARG）、Mac Allister（ARG）和 De Paul（ARG）等主力回归。Julián Álvarez（ARG）因脚踝状态和 Lautaro（ARG）竞争九号位，不能按名气自动写成首发。",
+        "Cape Verde（CPV）的优势是低位窄、门将 Vozinha（CPV）经验足、Ryan Mendes（CPV）/Jamiro Monteiro（CPV）可以带出反击；劣势是终结效率不足，一旦先丢球，很难靠阵地战连续创造高质量机会。",
+        "迈阿密傍晚仍然炎热潮湿，Cape Verde（CPV）对湿热环境不陌生，这会降低 Argentina（ARG）全场高强度碾压的概率；但补水暂停也给 Scaloni（ARG 主帅）足够时间调整 Messi（ARG）的接球区。",
+        "竞彩让球(-2)主胜 2.13、让平 3.62、让负 2.62，最低波胆 2:0/3:0。我的首选 2-0，是因为 Cape Verde（CPV）能把前 45 分钟压得很窄；若 Argentina（ARG）30 分钟内进球，3-0 会迅速上升。"
+      ],
+      "weather": "迈阿密花园傍晚预计仍约 29-31°C 且湿度高，Hard Rock Stadium 不是完全封闭环境。补水暂停会显著放大教练临场权重：Cape Verde（CPV）可以重整低位距离，Argentina（ARG）可以调整 Messi（ARG）和 Almada（ARG）的肋部站位。",
+      "referee": {
+        "name": "Drew Fischer（CAN）",
+        "style": "CONCACAF 裁判，通常重视比赛管理，面对强弱盘会重点处理拖延、抗议和禁区拉拽。Cape Verde（CPV）若长时间低位防守，禁区内接触会是重点。",
+        "history": "FIFA Match Centre 显示本场主裁为 Fischer（CAN）。他的早期尺度会影响 Cape Verde（CPV）能否持续用身体封堵 Messi（ARG）和 Lautaro（ARG）的接球线。"
+      },
+      "card_prediction": "预计黄牌 3-5 张，红牌概率约 8-12%，点球概率约 20-25%。Cape Verde（CPV）防 Messi（ARG）转身和 Almada（ARG）内切容易吃牌；Argentina（ARG）若领先后控球，犯规压力会下降。",
+      "coach_tactics": "Scaloni（ARG 主帅）会先耐心控球，利用 Messi（ARG）右肋拿球、Lautaro（ARG）斜插和 Mac Allister（ARG）/Enzo Fernández（ARG）的二线传导寻找第一球；若 60 分钟仍僵持，Julián Álvarez（ARG）、Nico Paz（ARG）或 Lo Celso（ARG）是改变节奏的后手。Bubista（CPV 主帅）会把中路塞满，尽量让 Argentina（ARG）只能外围传中。",
+      "bench_depth": "Argentina（ARG）替补深度是决定性优势，领先后可以用 Paredes（ARG）/Otamendi（ARG）控节奏，僵持时有 Álvarez（ARG）/Nico Paz（ARG）提速。Cape Verde（CPV）Sidny Lopes Cabral（CPV）复出有帮助，但 Jovane Cabral（CPV）和 Telmo Arcanjo（CPV）伤疑削弱后手。",
+      "knockout": {
+        "regular_time": "2-0",
+        "extra_time": "若 90 分钟 0-0，Argentina（ARG）加时仍有明显替补优势",
+        "penalties": "点球大战概率约 8%，若进入点球 Argentina（ARG）60%-40% 优势",
+        "advancer": "阿根廷",
+        "advancement_prob": "阿根廷 88% / 佛得角 12%"
+      },
+      "odds": {
+        "spf": {
+          "win": "未开售",
+          "draw": "未开售",
+          "lose": "未开售"
+        },
+        "rspf": {
+          "handicap": "-2",
+          "win": "2.13",
+          "draw": "3.62",
+          "lose": "2.62"
+        },
+        "goals": "3球(3.30)、2球(4.00)、4球(4.40)、1球(6.30)、5球(7.50)、6球(14.00)",
+        "score": "2:0(4.50)、3:0(4.80)、1:0(6.70)、4:0(8.00)、2:1(10.00)、3:1(11.00)"
+      },
+      "bet_advice": "主看 Argentina（ARG）胜和 2:0/3:0 分布；让球(-2)不宜重仓，2:0 会输让胜但仍是最合理比分。若临场 Romero（ARG）缺席影响防线默契，2:1 尾部上调；若 20 分钟内早球，3:0/4:0 上调。",
+      "risk": "稳胆"
+    },
+    {
+      "home": "哥伦比亚",
+      "away": "加纳",
+      "group": "32 强 · 淘汰赛",
+      "time_bj": "2026-07-04 09:30",
+      "time_local": "堪萨斯城 2026-07-03 20:30（CDT）",
+      "venue": "Kansas City Stadium / Arrowhead Stadium, Kansas City",
+      "predicted_score": "2-0",
+      "alt_score": "1-0",
+      "total_goals": "常规时间预计 1-3 球，偏小 3.5；若 Ghana（GHA）先丢后必须压出来，Colombia（COL）有晚段第二球",
+      "probability": {
+        "win": "64%",
+        "draw": "24%",
+        "lose": "12%"
+      },
+      "confidence": "中",
+      "key_factors": [
+        "Colombia（COL）是优势方，但他们不是纯火力碾压队，而是更擅长把比赛磨成可控低比分。Lorenzo（COL 主帅）的小组赛赢 DR Congo（COD）就是这种模式：控球、耐心、等 Díaz（COL）或 James Rodríguez（COL）制造关键一下。",
+        "Ghana（GHA）在小组赛能把 England（ENG）拖成 0-0，说明 Queiroz（GHA 主帅/POR）的低位纪律可靠；但当他们追 Croatia（CRO）时防线被拉开，说明一旦先丢球，比赛会向 Colombia（COL）喜欢的空间战倾斜。",
+        "阵容台账显示 Colombia（COL）预计 XI 无新增伤缺，Díaz（COL）、James Rodríguez（COL）、Luis Suárez（COL）和 Daniel Muñoz（COL）是核心。Ghana（GHA）方面 Semenyo（GHA）脚踝伤疑，若速度受限，Ghana（GHA）反击质量会下降。",
+        "中场对位是比赛钥匙：Lerma（COL）保护 Colombia（COL）后防，Partey（GHA）要压住 James Rodríguez（COL）的接球点。若 Partey（GHA）被拉出禁区前，Díaz（COL）左路一对一会不断获得机会。",
+        "堪萨斯城有极端高温预警，虽然晚间开球，但热湿背景仍会放大补水暂停和体能管理。Colombia（COL）如果领先，会更愿意把节奏降下来；Ghana（GHA）若落后，后 20 分钟体能回追风险明显上升。",
+        "竞彩主胜 1.29，最低波胆 2:0、1:0、2:1都很接近。我的首选 2-0 不是大胜模板，而是 Ghana（GHA）低位能守很久，但一旦 70 分钟后前压，Colombia（COL）晚段第二球概率不低。"
+      ],
+      "weather": "堪萨斯城晚间仍在高温高湿背景下，NWS 热浪预警覆盖比赛日；开放球场环境会让补水暂停和换人更关键。若上半场节奏被拖慢，下半场 60 分钟后的体能差会决定 Ghana（GHA）是否还能保持低位密度。",
+      "referee": {
+        "name": "Clément Turpin（FRA）",
+        "style": "经验丰富的 UEFA 裁判，通常倾向先沟通管理、再用牌控制连续犯规。Colombia（COL）边路持球和 Ghana（GHA）低位防守会制造不少战术犯规。",
+        "history": "FIFA Match Centre 显示本场主裁为 Turpin（FRA）。他的尺度相对成熟，若早期不轻易打断，Colombia（COL）会更容易用连续传导压住 Ghana（GHA）。"
+      },
+      "card_prediction": "预计黄牌 3-5 张，红牌概率约 7-10%，点球概率约 17-22%。Ghana（GHA）防 Díaz（COL）和 Muñoz（COL）前插更容易吃牌；Colombia（COL）防 Sulemana（GHA）反击也有战术犯规风险。",
+      "coach_tactics": "Lorenzo（COL 主帅）会先让 James Rodríguez（COL）在右肋/中路自由接球，Díaz（COL）负责左路单点爆破，Muñoz（COL）后插上制造人数优势；若打不开，Cucho Hernández（COL）或 Quintero（COL）可作为后手。Queiroz（GHA 主帅/POR）会优先压低空间，让 Partey（GHA）保护中路，再靠 Jordan Ayew（GHA）和 Sulemana（GHA）打反击。",
+      "bench_depth": "Colombia（COL）的替补更能改变控球质量，领先后也有防守换人；Ghana（GHA）的速度后手依赖 Semenyo（GHA）身体状态，若他受限，开放局面下的反击威胁会打折。",
+      "knockout": {
+        "regular_time": "2-0",
+        "extra_time": "若 90 分钟 1-1，Colombia（COL）加时仍有控球和替补优势",
+        "penalties": "点球大战概率约 13%，若进入点球 Colombia（COL）55%-45% 优势",
+        "advancer": "哥伦比亚",
+        "advancement_prob": "哥伦比亚 76% / 加纳 24%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.29",
+          "draw": "4.20",
+          "lose": "8.60"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "2.20",
+          "draw": "2.95",
+          "lose": "2.98"
+        },
+        "goals": "2球(3.15)、3球(3.60)、1球(4.05)、4球(6.20)、0球(9.50)",
+        "score": "2:0(5.00)、1:0(5.25)、2:1(5.25)、3:0(7.50)、1:1(7.55)、0:0(9.50)"
+      },
+      "bet_advice": "主看 Colombia（COL）常规胜，比分 2:0 防 1:0；让球(-1)主胜可以小注，若只赢一球则让平。总进球 2 球是主线。若赛前 Semenyo（GHA）不能首发或状态明显受限，Colombia（COL）零封和 2:0 权重上调。",
+      "risk": "稳胆"
+    }
+  ]
+}
