@@ -1,8 +1,8 @@
 ---
 name: worldcup-match-predictor
 cn_name: 世界杯赛事比分预测
-description: 预测世界杯比赛比分并给出投注建议。获取指定日期（默认北京时间次日）的世界杯赛程后，综合收集并分析球队近半年国际赛事成绩、历史交锋、打法风格、球员状态、停赛/累计黄牌停赛风险、小组出线形势、当地开球时间与气候、主裁判执法尺度、出牌倾向、主教练战术与临场调整、替补后手深度等多维因素；淘汰赛阶段还要拆分常规时间预测、加时赛/点球大战概率与最终晋级判断。给出每场比赛的预测比分、总进球数、胜平负判断、出牌数判断与置信度；同时抓取竞彩（中国体育彩票）的实时胜平负、让球胜平负、总进球数、比分（波胆）赔率，做价值对比，输出针对世界杯比赛的下注参考建议。当用户要求预测世界杯比赛、查询次日赛程预测、分析世界杯赔率/投注，或由定时任务每日自动调用时触发。
-compatibility: 需要联网能力（web_search / web_fetch）与 Playwright 浏览器自动化（抓取动态赔率页面）；可选 Python + Pillow 用于生成 PNG 报告卡片。
+description: 预测世界杯比赛比分并给出投注建议。获取指定日期（默认北京时间次日）的世界杯赛程后，综合收集并分析球队近半年国际赛事成绩、历史交锋、打法风格、球员状态、停赛/累计黄牌停赛风险、小组出线形势、当地开球时间与气候、主裁判执法尺度、出牌倾向、主教练战术与临场调整、替补后手深度等多维因素；淘汰赛阶段还要拆分常规时间预测、加时赛/点球大战概率与最终晋级判断。给出每场比赛的预测比分、总进球数、胜平负判断、出牌数判断与置信度；同时抓取 API-Football 欧洲盘口赔率，Bet365 做完整主盘口，Pinnacle 做校准，覆盖全场独赢胜平负、让球胜平负、全场大小和波胆，输出针对世界杯比赛的下注参考建议。当用户要求预测世界杯比赛、查询次日赛程预测、分析世界杯赔率/投注，或由定时任务每日自动调用时触发。
+compatibility: 需要联网能力（web_search + Tavily Extract + API-Football）；可选 Python + Pillow 用于生成 PNG 报告卡片。
 ---
 
 # 世界杯赛事比分预测（World Cup Match Predictor）
@@ -10,6 +10,33 @@ compatibility: 需要联网能力（web_search / web_fetch）与 Playwright 浏�
 为指定日期的世界杯比赛生成**比分预测**与**投注参考**。流程分六步：赛后复盘校准 → 阵容台账更新 → 确定赛程 → 多维信息收集 → 综合分析建模 → 输出预测报告（含赔率对比与下注建议）。
 
 > ⚠️ 投注建议仅针对世界杯比赛，且仅供参考。理性娱乐，所有预测均存在不确定性，不构成任何盈利保证。
+
+---
+
+## 能力边界与调用协议（必须遵守）
+
+先阅读 `references/capability-boundaries.md`，并按其中的责任边界执行：
+
+- 脚本负责数据工程：抓取、过滤、校验、标准化、日志、渲染。
+- LLM 负责足球判断：证据权衡、冲突处理、概率、比分、风险、投注建议和最终表达。
+- 人工不属于正常数据路径；不得要求用户手动筛 URL、补赔率或拼中间 JSON，除非外部服务失败且无法自动恢复。
+
+关键数据状态：
+
+- `prediction_input.json` 是脚本给 LLM 的统一输入包，不是最终预测。
+- `availability_candidates.json/csv` 是候选伤停/停赛线索，不是确认结论。
+- `prediction_source_bundle.json` 是证据片段包，LLM 必须基于 snippets 和 source quality 判断可信度。
+- `main_lines`、`calibration_deltas`、`value_signals` 是市场信号，不是投注建议。
+- 最终 `predicted_score`、`probability`、`key_factors`、`bet_advice` 必须由 LLM 基于证据生成。
+
+标准调用顺序：
+
+1. 确认北京时间目标日期。
+2. 运行或读取 `prepare_prediction_inputs.py` 产物。
+3. 读取 `prediction_input.json`、roster CSV、`prediction_source_bundle.json`、odds JSON。
+4. LLM 进行证据权衡与预测建模。
+5. 写最终预测 JSON。
+6. 运行 `generate_report.py` 渲染 PNG。
 
 ---
 
@@ -56,7 +83,7 @@ compatibility: 需要联网能力（web_search / web_fetch）与 Playwright 浏�
    - `availability_overrides.csv`：当天新闻、官方赛前稿、伤停、停赛、补招和名单冲突的覆盖表。
 2. CSV 必须包含这些字段：`team`、`team_code`、`player`、`position_group`、`club`、`roster_status`、`availability_status`、`absence_note`、`expected_absence_matches`、`suspension_status`、`yellow_card_risk`、`starting_role`、`source_url`、`last_checked_bj`。
 3. 基础名单优先使用 FIFA/足协官方名单；如果官方页面为动态内容无法稳定解析，可使用明确写明“最终 26 人名单已提交 FIFA/官方公布”的主流名单源作为 base roster，并在 `base_roster_source` 标注。
-4. 每天必须用最新官方赛前稿、球队发布会、主流媒体 team news 更新 `availability_overrides.csv`：
+4. 每天必须用最新官方赛前稿、球队发布会、主流媒体 team news 更新 `availability_overrides.csv` 或自动生成的 `availability_candidates.json/csv`：
    - 伤缺、伤疑、预计缺席几场、能否赶上下一轮。
    - 红牌停赛、累计黄牌停赛、黄牌再吃一张的风险。
    - 赛前补招/替换，例如 `Senesi（ARG）替换 Balerdi（ARG）`。
@@ -82,7 +109,41 @@ compatibility: 需要联网能力（web_search / web_fetch）与 Playwright 浏�
 
 ## 第二步：多维信息收集（每场比赛都要做）
 
-这是预测质量的核心。**必须实际联网收集**，不能凭空臆测。对阵双方各自收集以下维度，建议并行发起多次 `web_search`，再对关键结论用 `web_fetch` 核实。
+这是预测质量的核心。**必须实际联网收集**，不能凭空臆测。对阵双方各自收集以下维度，建议并行发起多次 `web_search` 发现候选 URL；拿到明确新闻、队报、赛前稿、预测首发或伤停 URL 后，默认用 Tavily Extract 抽取正文，再基于抽取正文交叉核对关键结论。
+
+### 网络内容获取主路径
+
+1. 大范围发现仍用 `web_search`，关键词围绕比赛、球队、`team news`、`injury`、`suspension`、`predicted lineup`、`referee`、`weather`。
+2. 对已经确定的普通网页 URL，优先运行：
+
+   ```bash
+   python worldcup-match-predictor/scripts/network_fetch_audit.py \
+     --availability-csv data/rosters/YYYY-MM-DD/availability_overrides.csv \
+     --out-dir logs/network/YYYY-MM-DD
+   ```
+
+   该脚本默认读取 `.env` 的 `TAVILY_API_KEY` 并使用 Tavily Extract，输出逐 URL 成功率、正文长度、球员命中、关键词命中、证据片段和 `prediction_source_bundle.json`。
+3. 如果 Tavily 对某个普通新闻 URL 失败，可再用 `--scheme local-http` 做诊断；诊断结果必须写进日志或报告的不确定性说明，不得把没抓到的消息写成已核验事实。
+4. 如果当天 `availability_overrides.csv` 的 URL 明显不足，先用 `--discover-query ... --extract-discovered` 运行 Tavily Search，脚本会按 source quality 自动过滤并抽取候选 URL，不需要人工筛入台账；不要只凭旧 URL 继续分析。
+5. 后续写预测 JSON 时优先读取 `prediction_source_bundle.json` 和 `snippets/*.md`，只有需要追溯上下文时才读 `contents/*.md` 全文，避免 token 噪声。
+6. 不要用 Tavily 替代更合适的结构化主路径：
+   - 基础名单继续优先使用 `update_rosters.py` 内的 ESPN content API。
+   - 欧洲盘口赔率使用 `api_football_odds.py` + API-Football。
+   - 官方动态页面、赔率表、JS 渲染页面若需要结构化字段，使用专门解析器或浏览器自动化。
+
+### 自动输入准备
+
+需要跑完整预测前，优先运行：
+
+```bash
+python worldcup-match-predictor/scripts/prepare_prediction_inputs.py \
+  --date YYYY-MM-DD \
+  --season 2026 \
+  --out-dir logs/pipeline/YYYY-MM-DD
+```
+
+该脚本自动完成赛程发现、新闻搜索与抽取、source quality 过滤、候选伤停/停赛生成、Bet365/Pinnacle 欧赔抓取，输出 `prediction_input.json`。除非 API key 缺失或外部服务不可用，不应要求用户手动筛 URL、手动补 odds 或手动拼中间 JSON。
+若目标日期 roster snapshot 不存在，脚本会自动运行 `update_rosters.py` 创建；只有调试旧输出时才使用 `--no-update-rosters`。
 
 ### A. 近期状态（近半年所有国际赛事）
 - 搜集两队近半年**全部国际赛事**成绩（世界杯、预选赛、热身赛、洲际赛事、欧国联等）。
@@ -206,35 +267,48 @@ compatibility: 需要联网能力（web_search / web_fetch）与 Playwright 浏�
 
 ## 第四步：赔率抓取与投注建议（仅限世界杯比赛）
 
-**只使用竞彩（中国体育彩票）官方赔率**，不再抓取北单。需抓取竞彩的 **4 类玩法**，并据此分析比分、总进球与下注方向。
+使用 API-Football 欧洲盘口赔率作为主路径。Bet365 做完整主盘口；Pinnacle 做 sharp line 校准，不要求它覆盖全部市场。需抓取 **4 类玩法**，并据此分析比分、总进球与下注方向。
 
-### 赔率来源（竞彩官方，4 个独立玩法页面）
-| 玩法 | URL |
-|------|-----|
-| 胜平负 / 让球胜平负 | `https://www.sporttery.cn/jc/jsq/zqspf/` |
-| 比分（波胆） | `https://www.sporttery.cn/jc/jsq/zqbf/` |
-| 总进球数 | `https://www.sporttery.cn/jc/jsq/zqzjq/` |
-| 半全场（可选） | `https://www.sporttery.cn/jc/jsq/zqbqc/` |
+### 赔率来源（API-Football）
+1. 运行：
 
-> ⚠️ 竞彩正确入口是 `/jc/jsq/...`（不是 `/ic/isq/...`，旧路径已失效跳错误页）。若 URL 失效，从胜平负页导航栏链接里重新解析各玩法路径。
+   ```bash
+   python worldcup-match-predictor/scripts/api_football_odds.py \
+     --date YYYY-MM-DD \
+     --home HomeTeam \
+     --away AwayTeam \
+     --season 2026 \
+     --out logs/odds/YYYY-MM-DD/HomeTeam_vs_AwayTeam.json
+   ```
 
-### ⚠️ 抓取方式（重要）
-这些页面都是 **JavaScript 动态渲染**的，直接 `web_fetch` 只能拿到空表头或错误页。**必须用 Playwright**：
+   若已知 `fixture_id`，优先使用：
 
-1. `browser_navigate` 打开玩法页 → `browser_wait_for(text="世界杯")` 等渲染。
-2. 用 `browser_evaluate` 读 `document.body.innerText`，按 `06-XX` 日期 + 球队名定位当天世界杯场次。
-3. **胜平负页**：提取每场「不让球」胜/平/负 + 「让球胜平负」让球数与胜/平/负赔率 + 大众支持率。
-4. **总进球数页**：提取每场 0/1/2/3/4/5/6/7+ 球各档赔率，找**赔率最低档**（市场预期进球数）。
-5. **比分页**：每场比分块默认**折叠**，需先点击展开按钮（`span.folderTd`，文本为 `+`）再读取；取**赔率最低的几个比分**（市场最看好的波胆）。
-6. 抓取失败或当天无世界杯场次，如实说明并跳过，**不要编造赔率**。
+   ```bash
+   python worldcup-match-predictor/scripts/api_football_odds.py \
+     --fixture-id <fixture_id> \
+     --out logs/odds/YYYY-MM-DD/HomeTeam_vs_AwayTeam.json
+   ```
+
+2. 脚本读取 `.env` 的 `API_FOOTBALL_KEY`（兼容 `APISPORTS_KEY`、`API_SPORTS_KEY`、`FOOTBALL_API_KEY`）。
+3. 目标日期解析会检查目标日期前后一天，避免北京时间凌晨比赛落在 UTC 前一天；全链路脚本随后必须按目标北京时间过滤最终 `fixtures.json`。
+4. 主路径要求 Bet365 覆盖：
+   - `Match Winner`：全场独赢胜平负。
+   - `Handicap Result`：让球胜平负（三项式，不是亚洲盘口二项式）。
+   - `Goals Over/Under`：全场大小。
+   - `Exact Score`：波胆。
+5. Pinnacle 用于校准共有市场：
+   - 常见可校准：`Match Winner`、`Goals Over/Under`、`Exact Score`。
+   - 若 Pinnacle 缺 `Handicap Result`，只写 warning，不让主路径失败。
+6. 抓取失败、Bet365 缺必需市场、API 无赔率或 fixture 匹配不唯一时，如实说明并跳过投注建议，不得编造赔率。
 
 ### 价值分析与下注建议（结合 4 类玩法）
-1. 把第三步估算的胜平负概率换算成"合理赔率"（≈ 1 / 概率），与竞彩实际赔率对比找价值（实际 > 合理 → 有价值）。
-2. **胜平负 / 让球胜平负**：给出推荐方向；当不让球赔率过低（如 < 1.3）时，评估让球盘是否更有价值。
-3. **总进球数**：结合市场最低档与自己对两队攻防的判断，给出"大/小球"倾向（如大 2.5 / 小 2.5），并指出市场预期的进球档。
-4. **比分（波胆）**：把自己的预测比分与市场最看好的几个比分对照，给出"预测比分 + 高赔博胆比分"建议。
-5. 每个推荐标注**风险等级**（稳胆 / 博胆 / 高风险），可附单关/串关思路。
-6. **每场都附风险提示**，报告开头统一声明：投注有风险，仅供参考，理性娱乐。
+1. 把第三步估算的胜平负概率换算成"合理赔率"（≈ 1 / 概率），与 Bet365 实际赔率对比找价值（实际 > 合理 → 有价值）。
+2. 用 Pinnacle 共有市场做校准：若 Bet365 与 Pinnacle 差异显著，优先解释为市场分歧或 Bet365 赔付结构差异，不要直接当成套利信号。
+3. **全场独赢胜平负 / 让球胜平负**：给出推荐方向；当不让球赔率过低（如 < 1.3）时，评估让球盘是否更有价值。
+4. **全场大小**：结合市场最低赔率档与自己对两队攻防的判断，给出"大/小球"倾向（如大 2.5 / 小 2.5），并指出市场预期的进球档。
+5. **波胆**：把自己的预测比分与 Bet365 最看好的几个 `Exact Score` 对照，给出"预测比分 + 高赔博胆比分"建议；Pinnacle 波胆若覆盖更深，只作校准，不盲目采用极端高比分。
+6. 每个推荐标注**风险等级**（稳胆 / 博胆 / 高风险），可附单关/串关思路。
+7. **每场都附风险提示**，报告开头统一声明：投注有风险，仅供参考，理性娱乐。
 
 ---
 
@@ -247,7 +321,7 @@ PNG 输出规则：
 - 数量：每次生成先输出 1 张 `00_赛后复盘_今日校准.png`，再每场比赛 1 张 PNG；当天 6 场比赛就输出 7 张 PNG，不额外生成汇总 PNG。
 - 命名：`00_赛后复盘_今日校准.png`、`01_主队_vs_客队.png`、`02_主队_vs_客队.png` 等；比赛卡按开球时间排序。
 - 00 号卡内容：对前一比赛日真实赛果、比赛过程和历史预测逐场复盘；既指出预测错在哪里，也保留预测对的推理链；小组赛末轮必须重点检查积分、同分胜负关系、净胜球、进球数、红黄牌，以及第三名出线门槛。
-- 比赛卡内容：只包含单场比赛卡片信息：对阵信息、预测比分、总进球预测、胜平负概率、关键分析、竞彩赔率与投注建议；赛后复盘/今日校准集中绘制在 00 号卡，不重复绘制到每张比赛卡片。
+- 比赛卡内容：只包含单场比赛卡片信息：对阵信息、预测比分、总进球预测、胜平负概率、关键分析、欧洲盘口赔率与投注建议；赛后复盘/今日校准集中绘制在 00 号卡，不重复绘制到每张比赛卡片。
 - 淘汰赛卡片：`预测比分`默认指**常规时间比分**；卡片需额外显示“淘汰赛预测 / 全场晋级”区块，说明是否可能加时、是否可能点球、最终晋级队。
 - 扩展分析区块：若 JSON 中包含 `weather`、`referee`、`card_prediction`、`coach_tactics`、`bench_depth`、`knockout` 等字段，PNG 卡片必须显示这些内容，避免只在内部推理但不交付给用户。
 - 人名标注：球员/教练/裁判等人名后必须加三字母国家或队伍简称，如 `David（CAN）`、`Broos（RSA）`、`João Pinheiro（POR）`；淘汰赛卡片尤其要给替补后手和主教练标注所属队伍。
@@ -269,7 +343,7 @@ PNG 输出规则：
 | 淘汰赛预测 | 常规时间比分、加时/点球概率、最终晋级队（淘汰赛必填） |
 | 关键分析 | 状态、H2H、风格、停赛、出线形势等要点 |
 | 置信度 | 高/中/低 + 主要不确定点 |
-| 竞彩赔率 | 胜平负 + 让球胜平负 + 总进球数(最低档) + 比分(最看好) |
+| 欧洲盘口赔率 | Bet365 全场独赢胜平负 + 让球胜平负 + 全场大小 + 波胆；Pinnacle 校准 |
 | 投注建议 | 方向、玩法（胜平负/让球/总进球/比分）、风险等级（仅世界杯） |
 
 汇总部分：当天所有比赛一览表 + 综合下注建议（如"今日推荐 2 场，1 稳胆 1 博胆"）。
@@ -285,31 +359,38 @@ PNG 输出规则：
 1. ✅ `get_current_time` 确认目标日期
 2. ✅ 复盘已有历史预测报告，联网核对赛果与关键过程
 3. ✅ 更新 `data/rosters/YYYY-MM-DD/` 阵容台账与 `availability_overrides.csv`
-4. ✅ 读取当天涉及球队的 `teams/<TEAM_CODE>.csv`，确认未入选、伤停、补招、停赛和最近主力路径
-5. ✅ 写出误差归因与今日校准，主动检查比分模板化风险
-6. ✅ 搜索并列出当天全部世界杯比赛
-7. ✅ 每场逐维度联网收集信息（第二步 A–H）
-8. ✅ 查询天气/场地、主裁判执法尺度，估算出牌数和点球/红牌风险
-9. ✅ 分析主教练战术、临场调整、替补后手和领先/落后脚本
-10. ✅ 单独评估补水时间、半场和加时中场对主教练临场调整的影响
-11. ✅ 淘汰赛阶段拆分常规时间预测、加时/点球概率和最终晋级判断
-12. ✅ 检查所有预测首发、替补后手、伤停名单和 live 仍在场球员，避免把不可用或已下场球员写入后续判断
-13. ✅ 检查所有球员、教练、裁判人名是否标注三字母国家/队伍简称
-14. ✅ 结合框架建模，列候选比分分布后再得出预测比分与概率
-15. ✅ Playwright 抓取**竞彩**赔率（胜平负/让球/总进球/比分，动态页面）
-16. ✅ 价值对比，生成投注建议（仅世界杯，含比分与总进球分析）
-17. ✅ 输出结构化 JSON 源数据，并按比赛生成 PNG 报告卡片（多场则多张 PNG）后 declare_artifact
-18. ✅ 全程声明：仅供参考，理性投注
+4. ✅ 用 `prepare_prediction_inputs.py` 自动准备赛程、新闻证据、候选可用性和欧赔输入
+5. ✅ 读取当天涉及球队的 `teams/<TEAM_CODE>.csv`，确认未入选、伤停、补招、停赛和最近主力路径
+6. ✅ 写出误差归因与今日校准，主动检查比分模板化风险
+7. ✅ 搜索并列出当天全部世界杯比赛
+8. ✅ 每场逐维度联网收集信息（第二步 A–H），已知 URL 默认用 Tavily Extract 核实正文
+9. ✅ 查询天气/场地、主裁判执法尺度，估算出牌数和点球/红牌风险
+10. ✅ 分析主教练战术、临场调整、替补后手和领先/落后脚本
+11. ✅ 单独评估补水时间、半场和加时中场对主教练临场调整的影响
+12. ✅ 淘汰赛阶段拆分常规时间预测、加时/点球概率和最终晋级判断
+13. ✅ 检查所有预测首发、替补后手、伤停名单和 live 仍在场球员，避免把不可用或已下场球员写入后续判断
+14. ✅ 检查所有球员、教练、裁判人名是否标注三字母国家/队伍简称
+15. ✅ 结合框架建模，列候选比分分布后再得出预测比分与概率
+16. ✅ API-Football 抓取欧洲盘口赔率（Bet365 主盘口，Pinnacle 校准，读取 `main_lines` 和 `value_signals`）
+17. ✅ 价值对比，生成投注建议（仅世界杯，含比分与总进球分析）
+18. ✅ 输出结构化 JSON 源数据，并按比赛生成 PNG 报告卡片（多场则多张 PNG）后 declare_artifact
+19. ✅ 全程声明：仅供参考，理性投注
 
 ---
 
 ## 注意事项
 
 - **必须真实联网**收集数据，信息不足时如实说明，不要臆造成绩/赔率/伤停。
-- 赔率页面是动态的，**坚持用 Playwright**，不要因为 `web_fetch` 失败就放弃。
-- **只用竞彩官方赔率**（`/jc/jsq/...`），不再使用北单；比分玩法默认折叠需点开 `span.folderTd`。
-- 区分「不让球胜平负」与「让球胜平负」，避免赔率误读。
-- 总进球数取赔率最低档作为市场预期；比分取赔率最低的几个作为市场最看好波胆。
+- 已知普通网页 URL 的正文抽取默认使用 Tavily Extract；普通 `web_fetch` / local HTTP 只作为失败诊断或 A/B 对照。
+- Tavily Search 结果必须经过 source quality 过滤；官方/足协/FIFA/主流媒体优先，博彩 SEO 和低质量预测站降权或剔除。
+- 写预测 JSON 时优先用 `prediction_source_bundle.json` 的证据片段；不要把 Tavily 全文无筛选地塞进分析。
+- 赔率主路径使用 API-Football；Bet365 必须覆盖四项，Pinnacle 只做共有市场校准。
+- 全链路输入必须优先使用 `network/<fixture_id>/...` 的 match-scoped 证据；聚合 `network/*` 只作总览审计。
+- `availability_candidates` 只是线索；同一候选必须有本场 source snippet 支撑，不能跨比赛复用。
+- `weather` 和 `referee` 字段带获取状态；若为 `未核验` 或 `未公布`，报告中必须保留不确定性，不能补写确定值。
+- `sporttery_odds.js` 是 legacy 诊断工具，不属于正常赔率主路径。
+- 区分 `Match Winner`、`Handicap Result`、`Asian Handicap`，不要把三项式让球胜平负和二项式亚洲盘口混用。
+- 全场大小取赔率最低档作为市场预期；波胆取赔率最低的几个作为市场最看好比分。
 - 不要让比分预测过度趋同；每场都要评估大比分、冷门、弱队进球和早球打开局面的概率。
 - 小组赛后期务必查清积分榜与出线形势，这对预测和"默契球"判断影响极大。
 - 淘汰赛必须区分常规时间和最终晋级；常规时间平局不等于没有胜负判断。

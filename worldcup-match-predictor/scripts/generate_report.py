@@ -327,17 +327,120 @@ def draw_section(draw, title, x, y, width):
     return y + px(18)
 
 
-def draw_odds_table(draw, odds, x, y, width):
+def market_values(odds, market_key):
+    primary = odds.get("primary") or {}
+    markets = primary.get("markets") or {}
+    market = markets.get(market_key) or {}
+    return market.get("values") or []
+
+
+def odd_lookup(values, label):
+    for item in values:
+        if item.get("value") == label:
+            return item.get("odd", "-")
+    return "-"
+
+
+def parse_handicap_result(value):
+    match = re.match(r"^(Home|Draw|Away)\s+([+-]?\d+(?:\.\d+)?)$", value or "")
+    if not match:
+        return None
+    return match.group(1), match.group(2)
+
+
+def balanced_handicap_line(values):
+    grouped = {}
+    for item in values:
+        parsed = parse_handicap_result(item.get("value"))
+        if not parsed:
+            continue
+        side, line = parsed
+        grouped.setdefault(line, {})[side] = item.get("odd", "-")
+
+    complete = []
+    for line, odds in grouped.items():
+        if {"Home", "Draw", "Away"}.issubset(odds):
+            nums = []
+            for odd in odds.values():
+                try:
+                    nums.append(float(odd))
+                except (TypeError, ValueError):
+                    nums.append(99.0)
+            complete.append((max(nums) - min(nums), line, odds))
+    if not complete:
+        return "", {"Home": "-", "Draw": "-", "Away": "-"}
+    _, line, odds = sorted(complete)[0]
+    return line, odds
+
+
+def odds_table_rows(odds):
+    match_winner = market_values(odds, "match_winner")
+    handicap = market_values(odds, "handicap_result")
+    if match_winner or handicap:
+        main_lines = ((odds.get("primary") or {}).get("main_lines") or {})
+        main_handicap = main_lines.get("handicap_result") or {}
+        line = main_handicap.get("line")
+        handicap_odds = {
+            "Home": main_handicap.get("home", "-"),
+            "Draw": main_handicap.get("draw", "-"),
+            "Away": main_handicap.get("away", "-"),
+        }
+        if not line:
+            line, handicap_odds = balanced_handicap_line(handicap)
+        return [
+            ("独赢", odd_lookup(match_winner, "Home"), odd_lookup(match_winner, "Draw"), odd_lookup(match_winner, "Away")),
+            (
+                f"让球({line})" if line else "让球",
+                handicap_odds.get("Home", "-"),
+                handicap_odds.get("Draw", "-"),
+                handicap_odds.get("Away", "-"),
+            ),
+        ]
+
     spf = odds.get("spf") or {}
     rspf = odds.get("rspf") or {}
-    handicap = rspf.get("handicap", "")
-    rows = [
-        ("胜平负", spf.get("win", "-"), spf.get("draw", "-"), spf.get("lose", "-")),
-        (f"让球({handicap})" if handicap else "让球", rspf.get("win", "-"), rspf.get("draw", "-"), rspf.get("lose", "-")),
+    handicap_line = rspf.get("handicap", "")
+    return [
+        ("独赢", spf.get("win", "-"), spf.get("draw", "-"), spf.get("lose", "-")),
+        (
+            f"让球({handicap_line})" if handicap_line else "让球",
+            rspf.get("win", "-"),
+            rspf.get("draw", "-"),
+            rspf.get("lose", "-"),
+        ),
     ]
 
+
+def odds_goals_text(odds):
+    main_lines = ((odds.get("primary") or {}).get("main_lines") or {})
+    main_goals = main_lines.get("goals_over_under") or {}
+    if main_goals:
+        return f"{main_goals.get('line')}球：大 {main_goals.get('over', '-')} / 小 {main_goals.get('under', '-')}"
+    values = market_values(odds, "goals_over_under")
+    if values:
+        over = odd_lookup(values, "Over 2.5")
+        under = odd_lookup(values, "Under 2.5")
+        if over != "-" or under != "-":
+            return f"2.5球：大 {over} / 小 {under}"
+        top = sorted(values, key=lambda item: float(item.get("odd", "99") or 99))[:2]
+        return "、".join(f"{item.get('value')}({item.get('odd')})" for item in top) or "-"
+    return odds.get("goals") or "-"
+
+
+def odds_score_text(odds):
+    primary = odds.get("primary") or {}
+    market = ((primary.get("markets") or {}).get("exact_score") or {})
+    values = market.get("top_values") or market.get("values") or []
+    if values:
+        return "、".join(f"{item.get('value')}({item.get('odd')})" for item in values[:3])
+    return odds.get("score") or "-"
+
+
+def draw_odds_table(draw, odds, x, y, width):
+    rows = odds_table_rows(odds)
+
     row_h = px(52)
-    headers = ["玩法", "胜", "平", "负"]
+    headers = ["玩法", "主", "平", "客"]
     col_w = [width * 0.42, width * 0.19, width * 0.19, width * 0.20]
 
     draw.rounded_rectangle((x, y, x + width, y + row_h * 3), radius=px(16), fill="#f8fbff", outline=COLORS["line"], width=px(2))
@@ -457,9 +560,9 @@ def layout_metrics(draw, match):
 
     right_y = px(60) + px(156) + px(22)
     odds = match.get("odds", {})
-    h, _ = measure_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), right_w, FONTS["small"], 8)
+    h, _ = measure_wrapped(draw, "全场大小：" + odds_goals_text(odds), right_w, FONTS["small"], 8)
     right_y += h + px(10)
-    h, _ = measure_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), right_w, FONTS["small"], 8)
+    h, _ = measure_wrapped(draw, "波胆：" + odds_score_text(odds), right_w, FONTS["small"], 8)
     right_y += h + px(28)
     h, _ = measure_wrapped(draw, match.get("bet_advice", "-"), right_w - px(34), FONTS["body"], 9)
     right_y += px(60) + h + px(42)
@@ -624,11 +727,11 @@ def render_match_png(data, match, index, output_dir):
         for item in items:
             left_y = draw_wrapped(draw, "• " + item, left_x, left_y, left_w, FONTS["small"], fill=COLORS["ink"], gap=8) + px(8)
 
-    right_y = draw_section(draw, "竞彩赔率 / 建议", right_x, columns_y, right_w)
+    right_y = draw_section(draw, "欧洲盘口 / 建议", right_x, columns_y, right_w)
     odds = match.get("odds", {})
     right_y = draw_odds_table(draw, odds, right_x, right_y, right_w) + px(22)
-    right_y = draw_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), right_x, right_y, right_w, FONTS["small"], fill=COLORS["muted"], gap=8) + px(10)
-    right_y = draw_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), right_x, right_y, right_w, FONTS["small"], fill=COLORS["muted"], gap=8) + px(24)
+    right_y = draw_wrapped(draw, "全场大小：" + odds_goals_text(odds), right_x, right_y, right_w, FONTS["small"], fill=COLORS["muted"], gap=8) + px(10)
+    right_y = draw_wrapped(draw, "波胆：" + odds_score_text(odds), right_x, right_y, right_w, FONTS["small"], fill=COLORS["muted"], gap=8) + px(24)
 
     advice_top = right_y
     draw_text(draw, (right_x, right_y), "投注建议", FONTS["section"], COLORS["green"])

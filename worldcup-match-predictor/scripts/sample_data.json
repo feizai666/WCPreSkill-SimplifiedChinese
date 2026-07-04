@@ -19,10 +19,46 @@
         "塞尔维亚核心中场累计黄牌停赛风险"
       ],
       "odds": {
-        "spf": {"win": "1.45", "draw": "4.20", "lose": "6.80"},
-        "rspf": {"handicap": "-1", "win": "2.30", "draw": "3.40", "lose": "2.55"},
-        "goals": "2球(3.40)最低，3球(3.70)；市场预期 2-3 球",
-        "score": "2:0(5.5)、1:0(6.0)、2:1(7.0)"
+        "primary": {
+          "bookmaker": "Bet365",
+          "coverage": {"complete": true, "missing": []},
+          "main_lines": {
+            "match_winner": {
+              "best_value": "Home",
+              "values": [
+                {"value": "Home", "odd": "1.45"},
+                {"value": "Draw", "odd": "4.20"},
+                {"value": "Away", "odd": "6.80"}
+              ]
+            },
+            "handicap_result": {"line": "-1", "home": "2.30", "draw": "3.40", "away": "2.55"},
+            "goals_over_under": {"line": "2.5", "over": "1.90", "under": "1.95"},
+            "exact_score": {
+              "top_values": [
+                {"value": "2:0", "odd": "5.50"},
+                {"value": "1:0", "odd": "6.00"},
+                {"value": "2:1", "odd": "7.00"}
+              ]
+            }
+          },
+          "markets": {
+            "match_winner": {
+              "values": [
+                {"value": "Home", "odd": "1.45"},
+                {"value": "Draw", "odd": "4.20"},
+                {"value": "Away", "odd": "6.80"}
+              ]
+            },
+            "exact_score": {
+              "top_values": [
+                {"value": "2:0", "odd": "5.50"},
+                {"value": "1:0", "odd": "6.00"},
+                {"value": "2:1", "odd": "7.00"}
+              ]
+            }
+          }
+        },
+        "calibration": {"bookmaker": "Pinnacle", "coverage": {"complete": false, "missing": ["handicap_result"]}}
       },
       "bet_advice": "胜平负主胜价值一般；可博'胜+大2.5球'或波胆 2:0；让一球性价比尚可",
       "risk": "博胆"

@@ -15,6 +15,7 @@ and suspensions can be corrected before generating match cards.
 
 import argparse
 import csv
+import json
 import re
 import sys
 import urllib.request
@@ -27,6 +28,7 @@ ESPN_SQUADS_URL = (
     "https://www.espn.com/soccer/story/_/id/48757621/"
     "2026-world-cup-squad-lists-players-announced-all-48-teams"
 )
+ESPN_SQUADS_API_URL = "https://content.core.api.espn.com/v1/sports/news/48757621"
 
 TEAM_NAMES = [
     "Mexico",
@@ -151,6 +153,13 @@ ROSTER_FIELDS = [
     "last_checked_bj",
 ]
 
+MIN_PARSED_TEAMS = 40
+MIN_PARSED_ROWS = 1000
+
+
+class SourceFetchError(RuntimeError):
+    pass
+
 
 class TextExtractor(HTMLParser):
     def __init__(self):
@@ -191,10 +200,76 @@ def fetch_text(url):
             )
         },
     )
-    html = urllib.request.urlopen(request, timeout=30).read().decode("utf-8", "ignore")
+    response = urllib.request.urlopen(request, timeout=30)
+    raw = response.read()
+    status = getattr(response, "status", None)
+    waf_action = response.headers.get("x-amzn-waf-action", "")
+    if status and status != 200:
+        detail = f"HTTP {status}"
+        if waf_action:
+            detail += f", x-amzn-waf-action={waf_action}"
+        raise SourceFetchError(f"ESPN squad fetch blocked or incomplete ({detail}).")
+    if not raw:
+        detail = "empty response"
+        if waf_action:
+            detail += f", x-amzn-waf-action={waf_action}"
+        raise SourceFetchError(f"ESPN squad fetch blocked or incomplete ({detail}).")
+    html = raw.decode("utf-8", "ignore")
     parser = TextExtractor()
     parser.feed(html)
-    return parser.text()
+    text = parser.text()
+    if not text.strip():
+        raise SourceFetchError("ESPN squad fetch returned no readable article text.")
+    return text
+
+
+def fetch_json(url):
+    request = urllib.request.Request(
+        url,
+        headers={
+            "Accept": "application/json",
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+            ),
+        },
+    )
+    response = urllib.request.urlopen(request, timeout=30)
+    raw = response.read()
+    status = getattr(response, "status", None)
+    if status and status != 200:
+        raise SourceFetchError(f"ESPN API fetch failed (HTTP {status}).")
+    if not raw:
+        raise SourceFetchError("ESPN API fetch returned an empty response.")
+    return json.loads(raw.decode("utf-8", "ignore"))
+
+
+def extract_text_from_espn_api_payload(payload):
+    headlines = payload.get("headlines") or []
+    if not headlines:
+        raise SourceFetchError("ESPN API payload contains no headlines.")
+    story = headlines[0].get("story") or ""
+    if not story.strip():
+        raise SourceFetchError("ESPN API payload contains no story HTML.")
+    parser = TextExtractor()
+    parser.feed(story)
+    text = parser.text()
+    if not text.strip():
+        raise SourceFetchError("ESPN API story contains no readable text.")
+    return text
+
+
+def fetch_squad_source_text():
+    try:
+        return extract_text_from_espn_api_payload(fetch_json(ESPN_SQUADS_API_URL))
+    except (SourceFetchError, json.JSONDecodeError) as api_error:
+        try:
+            return fetch_text(ESPN_SQUADS_URL)
+        except SourceFetchError as html_error:
+            raise SourceFetchError(
+                f"ESPN API and HTML fetch failed. API error: {api_error}; "
+                f"HTML error: {html_error}"
+            ) from html_error
 
 
 def team_slug(team):
@@ -309,6 +384,39 @@ def parse_rosters(text, snapshot_date, last_checked):
     return rosters
 
 
+def validate_roster_source(text, rosters):
+    if not text.strip():
+        raise ValueError("ESPN squad source is empty. Refusing to overwrite roster outputs.")
+    parsed_teams = {row["team"] for row in rosters}
+    if len(parsed_teams) < MIN_PARSED_TEAMS or len(rosters) < MIN_PARSED_ROWS:
+        raise ValueError(
+            "ESPN squad source parsed too few teams/rows "
+            f"({len(parsed_teams)} teams, {len(rosters)} rows). "
+            "Refusing to overwrite roster outputs."
+        )
+
+
+def load_latest_valid_cached_source(output_root, snapshot_date, last_checked):
+    output_root = Path(output_root)
+    candidates = sorted(
+        output_root.glob("*/source_espn_squads.txt"),
+        key=lambda path: path.parent.name,
+        reverse=True,
+    )
+    errors = []
+    for path in candidates:
+        text = path.read_text(encoding="utf-8")
+        rosters = parse_rosters(text, snapshot_date, last_checked)
+        try:
+            validate_roster_source(text, rosters)
+        except ValueError as exc:
+            errors.append(f"{path}: {exc}")
+            continue
+        return text, rosters, path
+    detail = "; ".join(errors) if errors else "no cached source files found"
+    raise SourceFetchError(f"No valid cached ESPN squad source available ({detail}).")
+
+
 def load_overrides(path):
     if not path.exists():
         return []
@@ -375,6 +483,8 @@ def main():
     output_dir = Path(args.output_root) / args.date
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    rosters = None
+    source_path = None
     if args.source_text:
         text = Path(args.source_text).read_text(encoding="utf-8")
     elif args.source_html:
@@ -382,10 +492,24 @@ def main():
         parser_obj.feed(Path(args.source_html).read_text(encoding="utf-8", errors="ignore"))
         text = parser_obj.text()
     else:
-        text = fetch_text(ESPN_SQUADS_URL)
+        try:
+            text = fetch_squad_source_text()
+        except SourceFetchError as exc:
+            text, rosters, source_path = load_latest_valid_cached_source(
+                Path(args.output_root),
+                args.date,
+                last_checked,
+            )
+            print(
+                f"Warning: {exc} Using cached squad source: {source_path}",
+                file=sys.stderr,
+            )
+
+    if rosters is None:
+        rosters = parse_rosters(text, args.date, last_checked)
+    validate_roster_source(text, rosters)
 
     (output_dir / "source_espn_squads.txt").write_text(text, encoding="utf-8")
-    rosters = parse_rosters(text, args.date, last_checked)
     overrides = load_overrides(output_dir / "availability_overrides.csv")
     rosters = apply_overrides(rosters, overrides, args.date, last_checked)
     rosters.sort(key=lambda row: (row["team"], row["position_group"], row["player"]))

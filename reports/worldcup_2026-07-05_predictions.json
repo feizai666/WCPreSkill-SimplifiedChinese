@@ -1,0 +1,196 @@
+{
+  "date": "2026-07-05（北京时间）",
+  "summary": "目标口径：按北京时间 2026-07-05 统计，共 2 场世界杯 16 强淘汰赛；当地日期均为 2026-07-04。赛程为加拿大 vs 摩洛哥、巴拉圭 vs 法国。本版已运行 worldcup-match-predictor 自动准备流程：生成 data/rosters/2026-07-05/ 阵容台账，抓取 API-Football Bet365 主盘与 Pinnacle 校准盘口，抽取 48 条赛前来源。阵容覆盖层已修正：Ismaël Koné（CAN）伤缺，Alphonso Davies（CAN）恢复但仍按体能管理，Omar Alderete（PAR）伤疑，Aurélien Tchouaméni（FRA）大腿伤缺，Marcus Thuram（FRA）小腿伤缺。赛程、裁判、阵容和复盘参考 FIFA Match Centre、API-Football、RotoWire、Reuters/NST、Houston Chronicle、Lincoln Financial Field、FOX/ESPN/Guardian 等公开信息。投注有风险，仅供参考。",
+  "reflection": {
+    "title": "赛后复盘：低比分对了，弱队韧性仍要加权",
+    "subtitle": "复盘口径：对比北京时间 2026-07-04 三场 32 强淘汰赛真实赛果与昨日预测；今日校准重点是常规时间平局、加时方差、弱队抗压和强队让球风险。",
+    "sections": [
+      {
+        "title": "昨日赛果与预测对照",
+        "items": [
+          "澳大利亚 1-1 埃及，埃及点球 4-2 晋级。昨日首选常规 1-1、判断 Egypt（EGY）晋级，主方向命中；这说明对低事件淘汰赛、Salah（EGY）体能管理和 Australia（AUS）定位球抵抗的判断有效。",
+          "这场也提醒一点：常规时间平局不是保守废话，是真实分布。以后遇到两队都缺少稳定阵地战爆点时，不能为了给结论而硬选 90 分钟胜负。",
+          "阿根廷 3-2 佛得角（加时），昨日判断 Argentina（ARG）晋级正确，但首选 2-0 明显低估 Cape Verde（CPV）的抗压和二次追平能力。弱队如果纪律好、门将有状态、能把比赛拖进后段，强队的纸面优势会被加时和心理压力稀释。",
+          "哥伦比亚 1-0 加纳，昨日方向正确且次选 1-0 命中，但首选 2-0 高估了 Colombia（COL）晚段第二球。Ghana（GHA）低位纪律让比赛保持低比分，说明淘汰赛领先方更可能控风险，而不是为了穿盘继续打开。",
+          "今日校准：加拿大 vs 摩洛哥不能只看 Morocco（MAR）实力和赔率，必须把 Canada（CAN）主场、休息时间、Davies（CAN）体能和 Morocco（MAR）120 分钟消耗放进同一张图；巴拉圭 vs 法国不能只按 France（FRA）低赔写 3-0，极端高温、Tchouaméni（FRA）伤缺和 Paraguay（PAR）低位会压低无脑大胜概率。"
+        ]
+      }
+    ]
+  },
+  "matches": [
+    {
+      "home": "加拿大",
+      "away": "摩洛哥",
+      "group": "16 强 · 淘汰赛",
+      "time_bj": "2026-07-05 01:00",
+      "time_local": "休斯敦 2026-07-04 12:00（CDT）",
+      "venue": "Houston Stadium / NRG Stadium, Houston",
+      "predicted_score": "1-1",
+      "alt_score": "0-1",
+      "total_goals": "常规时间预计 1-2 球，偏小 2.5；若 Canada（CAN）高位压迫被 Hakimi（MAR）和 Saibari（MAR）连续打身后，可抬到 2-3 球",
+      "probability": {
+        "win": "24%",
+        "draw": "31%",
+        "lose": "45%"
+      },
+      "confidence": "低",
+      "key_factors": [
+        "Morocco（MAR）是实力和市场优势方：Bet365 常规时间客胜 1.85，Pinnacle 校准也接近；但这不是一场可以忽视 Canada（CAN）的盘。Canada（CAN）是东道主之一，已经拿到队史首次淘汰赛胜利，心理负担反而比传统强队小。",
+        "Canada（CAN）的核心变量是左路与中场。Davies（CAN）从腿筋问题恢复，可能迎来本届首次首发，但仍要按体能管理处理；Koné（CAN）断腿伤缺，Saliba（CAN）顶替后要面对 Morocco（MAR）三中场，二点球和转身保护压力很大。",
+        "Morocco（MAR）阵容更完整，RotoWire 口径显示无明显伤停。Bounou（MAR）点球经验、Hakimi（MAR）右路推进、Brahim Díaz（MAR）与 Saibari（MAR）的肋部连接，是他们常规时间赢球的主路径。",
+        "最大反向因素是体能：Morocco（MAR）刚经历对 Netherlands（NED）的 120 分钟和点球大战，Canada（CAN）休息时间更多。若前 30 分钟 Canada（CAN）能用主场气势和压迫把节奏拉高，Morocco（MAR）未必愿意全场对冲。",
+        "盘口和波胆都指向低比分：Bet365 最低波胆并列 1:1 与 0:1，Under 2.5 低于 Over 2.5。我的首选 1-1 不是刻意防冷，而是把 Morocco（MAR）实力优势和 Canada（CAN）体能/主场修正后，常规时间平局权重被抬高。",
+        "候选脚本：1-1 Canada（CAN）靠反击/定位球进一球，Morocco（MAR）靠中场质量回应；0-1 Morocco（MAR）右路或定位球解决；1-2 Morocco（MAR）下半场空间打开；0-0 双方谨慎拖入加时。最终选常规 1-1，Morocco（MAR）加时或点球晋级。"
+      ],
+      "weather": "休斯敦中午外部约 32°C、湿度约 59%，NRG Stadium 有可闭合屋顶但赛前屋顶状态未核验。若闭顶，技术条件更稳定；若开顶，高温会削弱 Canada（CAN）高压持续性，并放大补水暂停时 Marsch（CAN 主帅/USA）和 Ouahbi（MAR 主帅）的调整权重。",
+      "referee": {
+        "name": "Michael Oliver（ENG）",
+        "style": "英格兰裁判，通常允许一定身体对抗，但会处理持续拉拽、延误和转换犯规。Canada（CAN）高压与 Morocco（MAR）右路反击会制造不少战术犯规。",
+        "history": "FIFA Match Centre 与多家媒体显示本场主裁为 Oliver（ENG）。本地脚本曾把 country 解析成 NED，已按公开裁判身份更正为 ENG。"
+      },
+      "card_prediction": "预计黄牌 4-6 张，红牌概率约 8-12%，点球概率约 16-22%。Canada（CAN）防 Hakimi（MAR）/Brahim Díaz（MAR）转换，Morocco（MAR）防 Davies（CAN）和 Buchanan（CAN）速度，都是吃牌点。",
+      "coach_tactics": "Marsch（CAN 主帅/USA）会尝试用 4-4-2 压迫和快速纵向传球制造混乱，但若 Davies（CAN）不能打满，左路强度会掉。Ouahbi（MAR 主帅）更可能先用三中场控节奏，再靠 Hakimi（MAR）右路和 Saibari（MAR）中路跑动找 Canada（CAN）双中场身后。",
+      "bench_depth": "Morocco（MAR）替补质量和点球门将优势更好，但 120 分钟消耗是硬变量。Canada（CAN）若拖到 70 分钟后仍平，有主场情绪和 Davies（CAN）位置调整空间；若先丢球，替补破密防质量不如 Morocco（MAR）。",
+      "knockout": {
+        "regular_time": "1-1",
+        "extra_time": "Morocco（MAR）加时 2-1 或维持 1-1 进入点球",
+        "penalties": "概率约 25%，若进入点球 Morocco（MAR）54%-46% 微弱优势",
+        "advancer": "摩洛哥",
+        "advancement_prob": "摩洛哥 60% / 加拿大 40%"
+      },
+      "odds": {
+        "primary": {
+          "bookmaker": "Bet365",
+          "markets": {
+            "match_winner": {
+              "values": [
+                { "value": "Home", "odd": "4.75" },
+                { "value": "Draw", "odd": "3.40" },
+                { "value": "Away", "odd": "1.85" }
+              ]
+            },
+            "handicap_result": {
+              "values": [
+                { "value": "Home +1", "odd": "1.91" },
+                { "value": "Draw +1", "odd": "3.60" },
+                { "value": "Away +1", "odd": "3.50" },
+                { "value": "Home -1", "odd": "12.00" },
+                { "value": "Draw -1", "odd": "6.00" },
+                { "value": "Away -1", "odd": "1.18" }
+              ]
+            },
+            "goals_over_under": {
+              "values": [
+                { "value": "Over 1.5", "odd": "1.40" },
+                { "value": "Under 1.5", "odd": "3.00" },
+                { "value": "Over 2.5", "odd": "2.20" },
+                { "value": "Under 2.5", "odd": "1.67" },
+                { "value": "Over 3.5", "odd": "4.00" },
+                { "value": "Under 3.5", "odd": "1.25" }
+              ]
+            },
+            "exact_score": {
+              "top_values": [
+                { "value": "1:1", "odd": "6.50" },
+                { "value": "0:1", "odd": "6.50" },
+                { "value": "0:0", "odd": "8.00" },
+                { "value": "0:2", "odd": "8.50" },
+                { "value": "1:2", "odd": "9.50" }
+              ]
+            }
+          }
+        },
+        "calibration": "Pinnacle 与 Bet365 独赢/大小球接近；Pinnacle 缺三项让球胜平负，不能据此判断升降盘。"
+      },
+      "bet_advice": "主看常规平局/小比分，比分 1:1 防 0:1；Under 2.5 是主线但赔率不高。Morocco（MAR）晋级优于 90 分钟客胜，客胜 1.85 对我估计 45% 常规胜率不算便宜。三项让球 Canada +1 的 Home +1 可作防守方向，但不宜重仓。",
+      "risk": "博胆"
+    },
+    {
+      "home": "巴拉圭",
+      "away": "法国",
+      "group": "16 强 · 淘汰赛",
+      "time_bj": "2026-07-05 05:00",
+      "time_local": "费城 2026-07-04 17:00（EDT）",
+      "venue": "Philadelphia Stadium / Lincoln Financial Field, Philadelphia",
+      "predicted_score": "0-2",
+      "alt_score": "0-3",
+      "total_goals": "常规时间预计 2-3 球，偏大 1.5、谨慎大 2.5；若 France（FRA）早球，0-3/1-3 上升，若高温拖慢节奏则回到 0-1/0-2",
+      "probability": {
+        "win": "9%",
+        "draw": "16%",
+        "lose": "75%"
+      },
+      "confidence": "中",
+      "key_factors": [
+        "France（FRA）是本届最稳定的进攻队之一，前四场 12 球，Mbappé（FRA）、Dembélé（FRA）、Olise（FRA）和 Barcola（FRA）能同时拉开宽度、肋部和禁区终结。Bet365 客胜 1.18，市场强烈支持 France（FRA）常规时间晋级。",
+        "但不能把这场写成自动 4-0。Paraguay（PAR）刚用低位、门将和点球淘汰 Germany（GER），Alfaro（PAR 主帅/ARG）的队伍很清楚怎样把强队拖进低事件比赛。France（FRA）若前 25 分钟没进球，比赛会变成耐心破密防。",
+        "阵容边界清楚：Reuters/NST 与 RotoWire 都显示 Tchouaméni（FRA）大腿伤缺，RotoWire 还列出 Thuram（FRA）小腿伤缺；Manu Koné（FRA）预计顶上，与 Rabiot（FRA）组成双后腰。France（FRA）深度够，但中场屏障和定位球高度会有一点损耗。",
+        "Paraguay（PAR）这边 Diego Gómez（PAR）解禁回归能补中场跑动，Omar Alderete（PAR）仍按伤疑处理。若 Alderete（PAR）无法首发或状态不满，Paraguay（PAR）防 Mbappé（FRA）斜插和 Barcola（FRA）背身接应会更吃力。",
+        "费城 17:00 外部预测约 39°C、湿度低、风速约 17 km/h。高温更利于 Paraguay（PAR）压低节奏，也会降低 France（FRA）全场高压强度；但 France（FRA）替补深度更强，60 分钟后仍能用 Doué（FRA）、Cherki（FRA）或 Zaïre-Emery（FRA）改变节奏。",
+        "候选脚本：0-2 France（FRA）上半场耐心破门、下半场利用空间再进；0-3 France（FRA）早球后 Paraguay（PAR）被迫前压；0-1 France（FRA）高温和低位拖慢；1-2 Paraguay（PAR）定位球偷到一球但仍被 France（FRA）质量压过。最终选常规 0-2，France（FRA）晋级。"
+      ],
+      "weather": "费城开球时预计约 39°C、湿度约 23%、小风到中等风，Lincoln Financial Field 为开放球场。极端热环境会降低高位压迫时长，并让补水暂停、半场和 60 分钟后换人更关键；这也是我没有把 France（FRA）主线推到 0-4 的原因。",
+      "referee": {
+        "name": "Ilgiz Tantashev（UZB）",
+        "style": "AFC 裁判，公开任命显示他执法本场。面对 Paraguay（PAR）低位防守和 France（FRA）高速边锋，预计会重点处理转换犯规、禁区拉拽和抗议。",
+        "history": "FIFA Match Centre / 乌兹别克媒体显示 Tantashev（UZB）执法。公开赛前样本有限，出牌判断置信度低于赛果判断。"
+      },
+      "card_prediction": "预计黄牌 4-6 张，红牌概率约 9-13%，点球概率约 18-24%。Paraguay（PAR）防 Mbappé（FRA）和 Dembélé（FRA）单挑更容易吃牌；France（FRA）领先后犯规压力下降。",
+      "coach_tactics": "Alfaro（PAR 主帅/ARG）会先用 4-5-1/5-4-1 低位把中路堵死，靠 Enciso（PAR）、Almirón（PAR）和 Diego Gómez（PAR）打第一脚反击。Deschamps（FRA 主帅）需要耐心：先用 Olise（FRA）在十号位接球，再让 Mbappé（FRA）和 Barcola（FRA）轮流冲背后；若僵持，Doué（FRA）/Cherki（FRA）提供持球变化。",
+      "bench_depth": "France（FRA）替补深度决定性更强，尤其落入低位阵地战后还有技术型后手；Paraguay（PAR）更依赖 Gill（PAR）门将发挥和 Enciso（PAR）个人转换。若进入加时，高温和阵容深度都更偏 France（FRA）。",
+      "knockout": {
+        "regular_time": "0-2",
+        "extra_time": "若 90 分钟被拖成 0-0/1-1，France（FRA）加时仍有明显替补优势",
+        "penalties": "概率约 10%，若进入点球 France（FRA）57%-43% 优势",
+        "advancer": "法国",
+        "advancement_prob": "法国 86% / 巴拉圭 14%"
+      },
+      "odds": {
+        "primary": {
+          "bookmaker": "Bet365",
+          "markets": {
+            "match_winner": {
+              "values": [
+                { "value": "Home", "odd": "17.00" },
+                { "value": "Draw", "odd": "7.00" },
+                { "value": "Away", "odd": "1.18" }
+              ]
+            },
+            "handicap_result": {
+              "values": [
+                { "value": "Home +1", "odd": "5.00" },
+                { "value": "Draw +1", "odd": "4.00" },
+                { "value": "Away +1", "odd": "1.62" },
+                { "value": "Home +2", "odd": "2.30" },
+                { "value": "Draw +2", "odd": "4.00" },
+                { "value": "Away +2", "odd": "2.50" }
+              ]
+            },
+            "goals_over_under": {
+              "values": [
+                { "value": "Over 1.5", "odd": "1.22" },
+                { "value": "Under 1.5", "odd": "4.33" },
+                { "value": "Over 2.5", "odd": "1.67" },
+                { "value": "Under 2.5", "odd": "2.20" },
+                { "value": "Over 3.5", "odd": "2.75" },
+                { "value": "Under 3.5", "odd": "1.44" }
+              ]
+            },
+            "exact_score": {
+              "top_values": [
+                { "value": "0:2", "odd": "5.50" },
+                { "value": "0:3", "odd": "6.50" },
+                { "value": "0:1", "odd": "7.00" },
+                { "value": "1:2", "odd": "11.00" },
+                { "value": "0:4", "odd": "11.00" }
+              ]
+            }
+          }
+        },
+        "calibration": "Pinnacle 与 Bet365 独赢接近；大小球方向也支持 2-3 球区间。Pinnacle 缺三项让球胜平负，不能据此判断让球升降。"
+      },
+      "bet_advice": "主看 France（FRA）常规胜和 France（FRA）晋级，比分 0:2 防 0:3；Over 1.5 比 Over 2.5 更稳，Over 2.5 依赖 France（FRA）早球。三项让球 France -1 可接受但赔率被压低；France -2 更像比分博胆，0:2 对应让平，不适合重仓。",
+      "risk": "稳胆"
+    }
+  ]
+}
