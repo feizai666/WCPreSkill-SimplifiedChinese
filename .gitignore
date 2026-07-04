@@ -18,6 +18,12 @@ __pycache__/
 # Python env
 venv/
 .venv/
+.env
+.env.*
+
+# Local run outputs
+experiments/
+logs/
 
 # Editor
 .vscode/
