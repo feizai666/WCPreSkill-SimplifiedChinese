@@ -13,6 +13,33 @@ compatibility: 需要联网能力（web_search + Tavily Extract + API-Football�
 
 ---
 
+## 能力边界与调用协议（必须遵守）
+
+先阅读 `references/capability-boundaries.md`，并按其中的责任边界执行：
+
+- 脚本负责数据工程：抓取、过滤、校验、标准化、日志、渲染。
+- LLM 负责足球判断：证据权衡、冲突处理、概率、比分、风险、投注建议和最终表达。
+- 人工不属于正常数据路径；不得要求用户手动筛 URL、补赔率或拼中间 JSON，除非外部服务失败且无法自动恢复。
+
+关键数据状态：
+
+- `prediction_input.json` 是脚本给 LLM 的统一输入包，不是最终预测。
+- `availability_candidates.json/csv` 是候选伤停/停赛线索，不是确认结论。
+- `prediction_source_bundle.json` 是证据片段包，LLM 必须基于 snippets 和 source quality 判断可信度。
+- `main_lines`、`calibration_deltas`、`value_signals` 是市场信号，不是投注建议。
+- 最终 `predicted_score`、`probability`、`key_factors`、`bet_advice` 必须由 LLM 基于证据生成。
+
+标准调用顺序：
+
+1. 确认北京时间目标日期。
+2. 运行或读取 `prepare_prediction_inputs.py` 产物。
+3. 读取 `prediction_input.json`、roster CSV、`prediction_source_bundle.json`、odds JSON。
+4. LLM 进行证据权衡与预测建模。
+5. 写最终预测 JSON。
+6. 运行 `generate_report.py` 渲染 PNG。
+
+---
+
 ## 触发与输入
 
 - **默认行为**：预测「北京时间明天」的所有世界杯比赛。

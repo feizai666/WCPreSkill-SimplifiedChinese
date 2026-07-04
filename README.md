@@ -24,6 +24,7 @@
 worldcup-match-predictor/
 ├── SKILL.md                          # 技能主指令
 ├── references/
+│   ├── capability-boundaries.md      # 脚本/LLM/人工/API 能力边界
 │   └── prediction-framework.md       # 预测方法论与权重框架
 └── scripts/
     ├── generate_report.py            # PNG 报告卡片生成脚本
@@ -38,6 +39,16 @@ worldcup-match-predictor/
 ## 使用方式
 
 可以将 `worldcup-match-predictor/` 作为 Codex skill 使用，也可以直接在本仓库中按 `SKILL.md` 的流程准备 JSON 数据并渲染 PNG。
+
+能力边界：
+
+- 脚本只负责抓取、过滤、校验、标准化、日志和渲染。
+- LLM 负责证据权衡、冲突处理、比分、概率、风险和投注建议。
+- `prediction_input.json` 是输入包，不是最终预测。
+- `availability_candidates.json/csv` 是候选线索，不是确认伤停。
+- `main_lines`、`calibration_deltas`、`value_signals` 是市场信号，不是投注结论。
+
+详细协议见 `worldcup-match-predictor/references/capability-boundaries.md`。
 
 常见触发语义：
 
