@@ -10,6 +10,7 @@ import re
 import ssl
 import sys
 import time
+import unicodedata
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -39,6 +40,49 @@ DEFAULT_TERMS = [
 
 MAX_SNIPPETS_PER_URL = 8
 DEFAULT_SNIPPET_CONTEXT_CHARS = 260
+
+COMMON_SINGLE_TOKEN_NAMES = {
+    "aaron",
+    "alex",
+    "andre",
+    "andrew",
+    "anthony",
+    "ben",
+    "bruno",
+    "carlos",
+    "chris",
+    "christian",
+    "daniel",
+    "david",
+    "diego",
+    "eric",
+    "frank",
+    "gabriel",
+    "harry",
+    "james",
+    "john",
+    "jose",
+    "juan",
+    "junior",
+    "kevin",
+    "leon",
+    "luis",
+    "marco",
+    "marcus",
+    "mario",
+    "martin",
+    "michael",
+    "mohamed",
+    "mohammed",
+    "nicolas",
+    "oscar",
+    "paul",
+    "peter",
+    "robert",
+    "samuel",
+    "thomas",
+    "victor",
+}
 
 OFFICIAL_DOMAINS = (
     "fifa.com",
@@ -131,6 +175,15 @@ def normalize_text(value):
     return re.sub(r"\s+", " ", value or "").strip()
 
 
+def ascii_fold(value):
+    return (
+        unicodedata.normalize("NFKD", value or "")
+        .encode("ascii", "ignore")
+        .decode("ascii")
+        .lower()
+    )
+
+
 def source_quality(record):
     url = normalize_text(record.get("url"))
     title = normalize_text(record.get("title"))
@@ -221,8 +274,60 @@ def confidence_for_candidate(event, evidence):
     return "low"
 
 
+def has_availability_signal(evidence):
+    terms = set(evidence.get("terms") or [])
+    text = ascii_fold(evidence.get("text") or "")
+    strong_terms = {
+        "injury",
+        "injured",
+        "hamstring",
+        "suspended",
+        "suspension",
+        "fitness",
+        "doubt",
+        "unavailable",
+        "out injured",
+        "trained",
+        "available",
+    }
+    if terms & strong_terms:
+        return True
+    if "fit" in terms and re.search(r"\bfit\b", text):
+        return True
+    if "ruled out" in terms:
+        return any(
+            phrase in text
+            for phrase in (
+                "injury",
+                "injured",
+                "thigh",
+                "hamstring",
+                "unavailable",
+                "suspended",
+                "suspension",
+                "ruled out of",
+                "ruled out for",
+            )
+        )
+    if "knock" in terms:
+        return re.search(r"\b(took|picked up|suffered|carrying|with|after)\s+(a\s+)?knock\b", text) is not None
+    return False
+
+
+def player_evidence_context(player, text, before_chars=20, after_chars=160):
+    folded_text = ascii_fold(text)
+    for alias in player_aliases(player):
+        match = re.search(rf"(?<![a-z0-9]){re.escape(alias)}(?![a-z0-9])", folded_text)
+        if match:
+            start = max(0, match.start() - before_chars)
+            end = min(len(text), match.end() + after_chars)
+            return text[start:end]
+    return ""
+
+
 def availability_candidates(events):
     candidates = []
+    seen = set()
     for event in events:
         if not event.get("ok"):
             continue
@@ -231,19 +336,30 @@ def availability_candidates(events):
             if not players:
                 continue
             for player in players:
+                context = player_evidence_context(player, evidence.get("text") or "")
+                scoped_evidence = {"terms": term_hits(context), "text": context}
+                if not context or not has_availability_signal(scoped_evidence):
+                    continue
+                status = infer_availability_status(scoped_evidence.get("terms") or [], context)
+                key = (
+                    ";".join(event.get("teams") or []),
+                    player,
+                    event.get("url"),
+                    status,
+                )
+                if key in seen:
+                    continue
+                seen.add(key)
                 candidates.append(
                     {
                         "team": ";".join(event.get("teams") or []),
                         "player": player,
-                        "availability_status": infer_availability_status(
-                            evidence.get("terms") or [],
-                            evidence.get("text") or "",
-                        ),
+                        "availability_status": status,
                         "confidence": confidence_for_candidate(event, evidence),
                         "source_url": event.get("url"),
                         "source_quality_score": (event.get("source_quality") or {}).get("score"),
                         "source_quality_tier": (event.get("source_quality") or {}).get("tier"),
-                        "evidence": evidence.get("text") or "",
+                        "evidence": context,
                     }
                 )
     return candidates
@@ -260,14 +376,27 @@ def load_source_targets(csv_path):
     return list(targets.values())
 
 
+def player_aliases(player):
+    folded = ascii_fold(player)
+    tokens = [token for token in re.split(r"\s+", folded) if len(token) >= 4]
+    aliases = {folded}
+    if len(tokens) >= 2:
+        last = tokens[-1]
+        if len(last) >= 5 and last not in COMMON_SINGLE_TOKEN_NAMES:
+            aliases.add(last)
+    return sorted(alias for alias in aliases if alias)
+
+
+def contains_alias(haystack, alias):
+    return re.search(rf"(?<![a-z0-9]){re.escape(alias)}(?![a-z0-9])", haystack) is not None
+
+
 def player_matches(text, players):
-    haystack = text.lower()
+    haystack = ascii_fold(text)
     hits = []
     misses = []
     for player in players:
-        player_l = player.lower()
-        tokens = [token for token in re.split(r"\s+", player_l) if len(token) >= 4]
-        if player_l in haystack or any(token in haystack for token in tokens):
+        if any(contains_alias(haystack, alias) for alias in player_aliases(player)):
             hits.append(player)
         else:
             misses.append(player)
@@ -275,19 +404,59 @@ def player_matches(text, players):
 
 
 def term_hits(text, terms=DEFAULT_TERMS):
-    haystack = text.lower()
-    return [term for term in terms if term in haystack]
+    haystack = ascii_fold(text)
+    hits = []
+    for term in terms:
+        folded = ascii_fold(term)
+        if not folded:
+            continue
+        if contains_alias(haystack, folded):
+            hits.append(term)
+    return hits
 
 
 def player_tokens(player):
-    tokens = [token for token in re.split(r"\s+", player.lower()) if len(token) >= 4]
-    return [player.lower(), *tokens]
+    return player_aliases(player)
+
+
+def is_boilerplate_snippet(text):
+    folded = ascii_fold(text)
+    hard_boilerplate = (
+        "redirecturl",
+        "#main-content",
+        "skip to main content",
+        "exclusive news data",
+        "my news",
+        "subscribe -",
+        "press releases",
+        "location=article-paragraph",
+        "%2f",
+        "ago soccer[",
+    )
+    if any(term in folded for term in hard_boilerplate):
+        return True
+    nav_terms = (
+        "top stories",
+        "nfl",
+        "nhl",
+        "tennis",
+        "golf",
+        "free agency",
+        "navigation",
+        "skip to main content",
+        "sign in",
+        "subscribe",
+        "press releases",
+        "exclusive news data",
+        "my news",
+    )
+    return sum(1 for term in nav_terms if term in folded) >= 3
 
 
 def evidence_snippets(text, target, context_chars=DEFAULT_SNIPPET_CONTEXT_CHARS, max_snippets=MAX_SNIPPETS_PER_URL):
     snippets = []
     seen_ranges = []
-    haystack = text.lower()
+    haystack = ascii_fold(text)
     needles = []
     for player in target.players:
         for token in player_tokens(player):
@@ -297,17 +466,28 @@ def evidence_snippets(text, target, context_chars=DEFAULT_SNIPPET_CONTEXT_CHARS,
         needles.append(("term", term, term))
 
     for kind, label, needle in needles:
-        for match in re.finditer(re.escape(needle), haystack):
+        pattern = rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])"
+        for match in re.finditer(pattern, haystack):
             start = max(0, match.start() - context_chars)
             end = min(len(text), match.end() + context_chars)
             if any(start <= old_end and end >= old_start for old_start, old_end in seen_ranges):
                 continue
             snippet_text = text[start:end].strip()
-            snippet_lower = snippet_text.lower()
+            if is_boilerplate_snippet(snippet_text):
+                continue
+            snippet_lower = ascii_fold(snippet_text)
             matched_players = [
                 player for player in target.players if any(token in snippet_lower for token in player_tokens(player))
             ]
-            matched_terms = [term for term in DEFAULT_TERMS if term in snippet_lower]
+            matched_terms = term_hits(snippet_text)
+            if kind == "player" and not matched_terms:
+                continue
+            if kind == "term" and not matched_players:
+                continue
+            if matched_players and matched_terms and not has_availability_signal(
+                {"terms": matched_terms, "text": snippet_text}
+            ):
+                continue
             snippets.append(
                 {
                     "text": snippet_text,

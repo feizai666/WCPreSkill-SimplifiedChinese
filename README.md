@@ -133,13 +133,18 @@ python worldcup-match-predictor/scripts/prepare_prediction_inputs.py \
 
 该脚本会自动完成赛程发现、Tavily 新闻发现与抽取、候选可用性生成、API-Football 欧赔抓取，并输出：
 
+- `fixtures_api_window.json`：API-Football 前后日期窗口原始赛程，用于审计跨 UTC/北京时间边界。
 - `fixtures.json`
 - `odds_by_fixture.json`
+- `network/discovered_sources.json`
 - `network/prediction_source_bundle.json`
 - `network/availability_candidates.json`
+- `network/<fixture_id>/discovered_sources.json`
+- `network/<fixture_id>/prediction_source_bundle.json`
+- `network/<fixture_id>/availability_candidates.json`
 - `prediction_input.json`
 
-`prediction_input.json` 是后续写预测 JSON 和渲染 PNG 的统一输入；其中 `manual_action_required` 固定为 `false`，中间步骤不再要求人工筛 URL 或拼赔率。
+`prediction_input.json` 是后续写预测 JSON 和渲染 PNG 的统一输入；其中 `manual_action_required` 固定为 `false`，中间步骤不再要求人工筛 URL 或拼赔率。脚本会先用 API-Football 的 UTC 日期窗口补齐凌晨比赛，再按目标北京时间过滤 `fixtures.json`；新闻、候选伤停和 source refs 按 `fixture_id` 单独生成，避免把不同比赛的球员与新闻混在一起。
 
 默认情况下，若 `data/rosters/YYYY-MM-DD/all_rosters.csv` 不存在，脚本会先自动运行 `update_rosters.py` 创建 roster snapshot；调试时可传 `--no-update-rosters` 跳过。
 
@@ -154,7 +159,7 @@ python worldcup-match-predictor/scripts/api_football_odds.py \
   --out /tmp/api_football_odds.json
 ```
 
-脚本会读取项目根目录 `.env` 中的 `API_FOOTBALL_KEY`（也兼容 `APISPORTS_KEY`、`API_SPORTS_KEY`、`FOOTBALL_API_KEY`），调用 API-Football 的 fixtures 与 odds 接口。日期解析会检查目标日期前后一天，避免北京时间凌晨比赛落在 UTC 前一天。
+脚本会读取项目根目录 `.env` 中的 `API_FOOTBALL_KEY`（也兼容 `APISPORTS_KEY`、`API_SPORTS_KEY`、`FOOTBALL_API_KEY`），调用 API-Football 的 fixtures 与 odds 接口。日期解析会检查目标日期前后一天，避免北京时间凌晨比赛落在 UTC 前一天；全链路准备脚本会在拿到窗口结果后再按北京时间过滤。
 
 输出标准化 JSON：
 
@@ -171,7 +176,7 @@ python worldcup-match-predictor/scripts/api_football_odds.py \
   --out /tmp/api_football_odds.json
 ```
 
-旧竞彩赔率抓取（非主路径）：
+旧竞彩赔率抓取（legacy 诊断工具，非主路径）：
 
 ```bash
 node worldcup-match-predictor/scripts/sporttery_odds.js \
@@ -179,12 +184,14 @@ node worldcup-match-predictor/scripts/sporttery_odds.js \
   --out /tmp/sporttery_odds.json
 ```
 
-该脚本会用 Playwright 抓取中国体育彩票竞彩官方动态页面，并解析胜平负、让球胜平负、总进球数和比分赔率。如果 Playwright 自带浏览器未安装，脚本会尝试使用本机已安装的 Chrome/Chromium/Edge。可通过 `PLAYWRIGHT_CHROME_EXECUTABLE` 指定浏览器路径。
+该脚本会用 Playwright 抓取中国体育彩票竞彩官方动态页面，并解析胜平负、让球胜平负、总进球数和比分赔率。如果 Playwright 自带浏览器未安装，脚本会尝试使用本机已安装的 Chrome/Chromium/Edge。可通过 `PLAYWRIGHT_CHROME_EXECUTABLE` 指定浏览器路径。正常预测管线不依赖该脚本；赔率主路径只使用 API-Football 的 Bet365 主盘口与 Pinnacle 校准。
 
 ## 数据与报告口径
 
 - 日期口径统一使用北京时间。
 - 生成比赛卡前必须先更新阵容台账；未入选、已被替换、伤缺、停赛或来源冲突未确认的球员不得写成首发、替补后手或点球手。
+- 自动新闻证据按比赛隔离；`availability_candidates` 是候选线索，不是确认伤停，不能跨比赛复用。
+- 天气和裁判以结构化字段给出获取状态；`未核验` 或 `未公布` 时必须在报告里保留不确定性。
 - 已知赛前新闻 URL 的正文抽取默认使用 Tavily Extract；普通搜索仍用于发现 URL，动态结构化页面不走 Tavily。
 - 赔率主路径使用 API-Football 欧洲盘口：Bet365 完整主盘口，Pinnacle 校准；体彩竞彩仅作为旧工具或人工对照。
 - 淘汰赛卡片中，`预测比分`默认指常规时间比分；最终晋级判断单独写在淘汰赛预测区块。

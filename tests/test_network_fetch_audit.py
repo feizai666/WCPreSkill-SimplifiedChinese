@@ -53,6 +53,49 @@ class NetworkFetchAuditTests(unittest.TestCase):
         self.assertIn("hamstring", metrics["term_hits"])
         self.assertIn("ruled out", metrics["term_hits"])
 
+    def test_player_matching_does_not_match_common_first_name_only(self):
+        module = self.load_module()
+
+        hits, misses = module.player_matches(
+            "TOP STORIES: LeBron hits free agency. James will not return to the Lakers.",
+            ["James Rodriguez"],
+        )
+
+        self.assertEqual(hits, [])
+        self.assertEqual(misses, ["James Rodriguez"])
+
+    def test_player_matching_accepts_last_name_and_ascii_alias(self):
+        module = self.load_module()
+
+        hits, _ = module.player_matches(
+            "Rodriguez trained with Colombia after a knock.",
+            ["James Rodríguez"],
+        )
+
+        self.assertEqual(hits, ["James Rodríguez"])
+
+    def test_availability_terms_do_not_match_inside_unrelated_words(self):
+        module = self.load_module()
+
+        self.assertNotIn("knock", module.term_hits("Paraguay won a knockout match on penalties."))
+        self.assertIn("knock", module.term_hits("The forward took a knock in training."))
+
+    def test_evidence_snippets_skip_navigation_boilerplate(self):
+        module = self.load_module()
+        target = module.SourceTarget(
+            url="https://example.test/a",
+            rows=[{"player": "James Rodriguez", "team": "Colombia"}],
+        )
+        text = (
+            "TOP STORIES NFL NHL Tennis Golf Soccer LeBron James free agency knock "
+            "unrelated navigation block. Colombia confirmed James Rodriguez trained after a knock."
+        )
+
+        snippets = module.evidence_snippets(text, target, context_chars=20)
+
+        self.assertEqual(len(snippets), 1)
+        self.assertIn("Colombia confirmed", snippets[0]["text"])
+
     def test_evidence_snippets_keep_relevant_context_only(self):
         module = self.load_module()
         target = module.SourceTarget(
@@ -300,6 +343,54 @@ class NetworkFetchAuditTests(unittest.TestCase):
         self.assertEqual(candidates[0]["player"], "Alphonso Davies")
         self.assertEqual(candidates[0]["availability_status"], "ruled_out")
         self.assertEqual(candidates[0]["confidence"], "medium")
+
+    def test_availability_candidates_skip_match_event_false_positives(self):
+        module = self.load_module()
+        events = [
+            {
+                "url": "https://www.skysports.com/football/match-report",
+                "ok": True,
+                "teams": ["Paraguay;France"],
+                "evidence": [
+                    {
+                        "players": ["Julio Enciso"],
+                        "terms": ["ruled out", "knock"],
+                        "text": "Julio Enciso scored before Jonathan Tah had a goal ruled out by VAR in a knockout tie.",
+                    }
+                ],
+                "source_quality": {"score": 60, "tier": "mainstream"},
+            }
+        ]
+
+        candidates = module.availability_candidates(events)
+
+        self.assertEqual(candidates, [])
+
+    def test_availability_candidates_do_not_apply_status_to_replacement_player(self):
+        module = self.load_module()
+        events = [
+            {
+                "url": "https://www.reuters.com/sports/soccer/france-team-news",
+                "ok": True,
+                "teams": ["Paraguay;France"],
+                "evidence": [
+                    {
+                        "players": ["Aurélien Tchouaméni", "Manu Koné"],
+                        "terms": ["ruled out", "injury", "replacement"],
+                        "text": (
+                            "Aurelien Tchouameni has been ruled out of the World Cup clash against "
+                            "Paraguay with a thigh injury and is expected to be replaced by Manu Kone."
+                        ),
+                    }
+                ],
+                "source_quality": {"score": 75, "tier": "mainstream"},
+            }
+        ]
+
+        candidates = module.availability_candidates(events)
+
+        self.assertEqual([candidate["player"] for candidate in candidates], ["Aurélien Tchouaméni"])
+        self.assertEqual(candidates[0]["availability_status"], "ruled_out")
 
     def test_write_outputs_creates_jsonl_and_summary(self):
         module = self.load_module()

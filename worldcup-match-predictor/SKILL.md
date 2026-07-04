@@ -290,7 +290,7 @@ python worldcup-match-predictor/scripts/prepare_prediction_inputs.py \
    ```
 
 2. 脚本读取 `.env` 的 `API_FOOTBALL_KEY`（兼容 `APISPORTS_KEY`、`API_SPORTS_KEY`、`FOOTBALL_API_KEY`）。
-3. 目标日期解析会检查目标日期前后一天，避免北京时间凌晨比赛落在 UTC 前一天。
+3. 目标日期解析会检查目标日期前后一天，避免北京时间凌晨比赛落在 UTC 前一天；全链路脚本随后必须按目标北京时间过滤最终 `fixtures.json`。
 4. 主路径要求 Bet365 覆盖：
    - `Match Winner`：全场独赢胜平负。
    - `Handicap Result`：让球胜平负（三项式，不是亚洲盘口二项式）。
@@ -385,6 +385,10 @@ PNG 输出规则：
 - Tavily Search 结果必须经过 source quality 过滤；官方/足协/FIFA/主流媒体优先，博彩 SEO 和低质量预测站降权或剔除。
 - 写预测 JSON 时优先用 `prediction_source_bundle.json` 的证据片段；不要把 Tavily 全文无筛选地塞进分析。
 - 赔率主路径使用 API-Football；Bet365 必须覆盖四项，Pinnacle 只做共有市场校准。
+- 全链路输入必须优先使用 `network/<fixture_id>/...` 的 match-scoped 证据；聚合 `network/*` 只作总览审计。
+- `availability_candidates` 只是线索；同一候选必须有本场 source snippet 支撑，不能跨比赛复用。
+- `weather` 和 `referee` 字段带获取状态；若为 `未核验` 或 `未公布`，报告中必须保留不确定性，不能补写确定值。
+- `sporttery_odds.js` 是 legacy 诊断工具，不属于正常赔率主路径。
 - 区分 `Match Winner`、`Handicap Result`、`Asian Handicap`，不要把三项式让球胜平负和二项式亚洲盘口混用。
 - 全场大小取赔率最低档作为市场预期；波胆取赔率最低的几个作为市场最看好比分。
 - 不要让比分预测过度趋同；每场都要评估大比分、冷门、弱队进球和早球打开局面的概率。

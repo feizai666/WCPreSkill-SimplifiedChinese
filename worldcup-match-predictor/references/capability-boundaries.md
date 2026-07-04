@@ -18,10 +18,12 @@ This skill is an LLM-led football analysis workflow backed by deterministic data
 | `availability_candidates.json/csv` | `network_fetch_audit.py` or `prepare_prediction_inputs.py` | Candidate status extracted from snippets | Use as leads only. Confirm with evidence snippets before writing a player as out, suspended, fit, or doubtful. |
 | `prediction_source_bundle.json` | `network_fetch_audit.py` | Evidence package with snippets and source quality | Use snippets as source-grounded evidence. Do not paste full articles into reasoning unless needed. |
 | `discovered_sources.json` | `network_fetch_audit.py` | Ranked URL candidates | Use as source discovery output, not as evidence until extracted. |
+| `network/<fixture_id>/...` | `prepare_prediction_inputs.py` | Per-fixture discovered sources, extracted snippets, and candidate availability | Prefer this match-scoped evidence over aggregate files. Do not mix candidates across fixtures. |
 | `odds_by_fixture.json` | `prepare_prediction_inputs.py` | API-Football odds normalized by fixture | Use as market data. It is not a prediction by itself. |
 | `primary.main_lines` | `api_football_odds.py` | Selected Bet365 display lines | Use as the main market view; do not treat it as a recommended bet. |
 | `value_signals` | `api_football_odds.py` | Mechanical comparison of market odds against model probabilities when provided | Use as a diagnostic signal only. The LLM must decide final betting advice. |
 | `prediction_input.json` | `prepare_prediction_inputs.py` | Unified input package | Primary handoff from scripts to LLM. It is not the final prediction report. |
+| `weather` / `referee` fields | `prepare_prediction_inputs.py` | Structured fetch status and available data | Use when status is available; if status is `未核验` or `未公布`, keep uncertainty visible. |
 | `reports/worldcup_*.json` | LLM-authored workflow | Final structured prediction source | Use for rendering and future calibration. |
 | PNG report cards | `generate_report.py` | Rendered artifact | Presentation only. Do not infer new analysis from the image. |
 
@@ -72,6 +74,7 @@ Must:
 - Prefer official and mainstream sources.
 - Penalize low-quality betting SEO and prediction pages.
 - Keep snippets small and relevant.
+- Match player names conservatively, avoiding common first-name-only false positives and navigation boilerplate.
 - Log failures and fallback paths.
 
 Must not:
@@ -111,16 +114,25 @@ Inputs:
 - Roster root.
 
 Outputs:
+- `fixtures_api_window.json`
 - `fixtures.json`
 - `odds_by_fixture.json`
+- `network/discovered_sources.json`
 - `network/prediction_source_bundle.json`
 - `network/availability_candidates.json`
+- `network/<fixture_id>/discovered_sources.json`
+- `network/<fixture_id>/prediction_source_bundle.json`
+- `network/<fixture_id>/availability_candidates.json`
 - `prediction_input.json`
 
 Must:
 - Auto-create roster snapshot if missing.
+- Query the API-Football UTC date window, then filter final fixtures back to the target Beijing date.
 - Auto-discover and extract news sources when network mode is enabled.
-- Attach roster players to source targets so evidence can match named players.
+- Keep source discovery, extracted snippets, and availability candidates scoped to each fixture.
+- Attach only the two fixture teams' roster players to that fixture's source targets.
+- Exclude manager rows from player matching.
+- Add structured referee status from API-Football and structured weather status from Open-Meteo when available.
 - Set `manual_action_required` to `false` for normal successful preparation.
 
 Must not:
@@ -145,6 +157,18 @@ Must not:
 - Add new analysis.
 - Change predictions, risks, odds, or player status.
 
+### `sporttery_odds.js`
+
+Legacy diagnostic tool only.
+
+Must:
+- Stay outside the primary odds path.
+- Be treated as an optional manual comparison tool if explicitly invoked.
+
+Must not:
+- Replace API-Football Bet365/Pinnacle odds in normal prediction input preparation.
+- Be required for automated pipeline success.
+
 ## LLM Responsibilities
 
 The LLM must:
@@ -155,7 +179,7 @@ The LLM must:
 4. Treat `main_lines`, `calibration_deltas`, and `value_signals` as market signals, not betting advice.
 5. Resolve conflicts explicitly. If evidence conflicts, write the uncertainty instead of choosing a side silently.
 6. Generate the final prediction fields: predicted score, alternate score, probability, total goals, key factors, confidence, card risk, coach/bench analysis, and betting advice.
-7. Mark unverified referee, weather, lineup, or injury information as uncertain.
+7. Mark unverified or unpublished referee, weather, lineup, or injury information as uncertain.
 8. Ensure final JSON can be rendered by `generate_report.py`.
 
 The LLM must not:
@@ -203,6 +227,6 @@ When Tavily or source extraction fails:
 1. Confirm target Beijing date.
 2. Run `prepare_prediction_inputs.py`.
 3. Inspect `prediction_input.json`.
-4. Use evidence snippets, roster rows, and odds JSON to generate final prediction JSON.
+4. Use match-scoped evidence snippets, roster rows, weather/referee status, and odds JSON to generate final prediction JSON.
 5. Run `generate_report.py`.
 6. Report files, key uncertainties, and failed data sources.
