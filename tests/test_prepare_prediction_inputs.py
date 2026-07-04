@@ -63,6 +63,7 @@ class PreparePredictionInputsTests(unittest.TestCase):
 
         self.assertTrue(any("team news" in query for query in queries))
         self.assertTrue(any("referee" in query for query in queries))
+        self.assertTrue(any("site:fifa.com/en/match-centre/match" in query for query in queries))
         self.assertTrue(any("weather" in query for query in queries))
 
     def test_filter_fixtures_keeps_only_target_beijing_date(self):
@@ -275,6 +276,47 @@ class PreparePredictionInputsTests(unittest.TestCase):
 
         self.assertEqual([record["url"] for record in result["records"]], ["https://www.reuters.com/sports/soccer/france-paraguay-team-news"])
 
+    def test_discover_and_extract_sources_uses_advanced_general_for_referee_queries(self):
+        module = self.load_module()
+        old_search = module.network.tavily_search
+        old_audit = module.network.audit_tavily
+        calls = []
+        try:
+            def fake_search(*args, **kwargs):
+                calls.append(kwargs)
+                return {
+                    "results": [
+                        {
+                            "title": "Michael Oliver to Referee Morocco-Canada World Cup Last-16 Match",
+                            "url": "https://www.moroccoworldnews.com/2026/07/326897/michael-oliver-to-referee-morocco-canada-world-cup-last-16-match",
+                            "content": "FIFA has appointed English referee Michael Oliver to officiate Morocco’s World Cup round-of-16 match against Canada.",
+                            "score": 0.9,
+                        }
+                    ],
+                    "usage": {"credits": 1},
+                }
+
+            module.network.tavily_search = fake_search
+            module.network.audit_tavily = lambda targets, out_dir, **kwargs: ([], {"usage": {"credits": 1}, "response_time": 0.1})
+            with tempfile.TemporaryDirectory() as tmp:
+                result = module.discover_and_extract_sources(
+                    ["Canada Morocco referee appointment World Cup"],
+                    Path(tmp),
+                    api_key="tvly-test",
+                    match_label="Canada;Morocco",
+                    fixture_id=1567824,
+                    home="Canada",
+                    away="Morocco",
+                )
+
+        finally:
+            module.network.tavily_search = old_search
+            module.network.audit_tavily = old_audit
+
+        self.assertEqual(calls[0]["search_depth"], "advanced")
+        self.assertEqual(calls[0]["topic"], "general")
+        self.assertEqual(result["records"][0]["url"], "https://www.moroccoworldnews.com/2026/07/326897/michael-oliver-to-referee-morocco-canada-world-cup-last-16-match")
+
     def test_weather_context_uses_structured_forecast(self):
         module = self.load_module()
 
@@ -302,6 +344,134 @@ class PreparePredictionInputsTests(unittest.TestCase):
         self.assertEqual(context["status"], "已获取")
         self.assertEqual(context["city"], "Houston")
         self.assertEqual(context["temperature_c"], 36.0)
+
+    def test_referee_context_prefers_api_football_referee(self):
+        module = self.load_module()
+        calls = []
+        fixture = {
+            "fixture": {
+                "id": 1567824,
+                "referee": "Michael Oliver, England",
+                "date": "2026-07-04T17:00:00+00:00",
+            }
+        }
+
+        context = module.referee_context(
+            fixture,
+            home="Canada",
+            away="Morocco",
+            target_date="2026-07-05",
+            fetch_html=lambda *args, **kwargs: calls.append(args) or "",
+        )
+
+        self.assertEqual(context["status"], "已获取")
+        self.assertEqual(context["name"], "Michael Oliver")
+        self.assertEqual(context["country"], "ENG")
+        self.assertEqual(context["source"], "API-Football fixture")
+        self.assertFalse(context["fallback_used"])
+        self.assertEqual(calls, [])
+
+    def test_referee_context_falls_back_to_fifa_match_centre_html(self):
+        module = self.load_module()
+        fixture = {
+            "fixture": {
+                "id": 1567824,
+                "referee": None,
+                "date": "2026-07-04T17:00:00+00:00",
+            }
+        }
+        html = """
+        <html>
+          <body>
+            <h1>Canada v Morocco</h1>
+            <dl>
+              <dt>Referee</dt>
+              <dd>Michael Oliver</dd>
+            </dl>
+            <span>Competition</span><span>FIFA World Cup</span>
+          </body>
+        </html>
+        """
+
+        context = module.referee_context(
+            fixture,
+            home="Canada",
+            away="Morocco",
+            target_date="2026-07-05",
+            fetch_html=lambda *args, **kwargs: html,
+        )
+
+        self.assertEqual(context["status"], "已获取")
+        self.assertEqual(context["name"], "Michael Oliver")
+        self.assertEqual(context["source"], "FIFA Match Centre")
+        self.assertEqual(context["confidence"], "high")
+        self.assertTrue(context["fallback_used"])
+        self.assertIn("fifa.com/en/match-centre/match", context["source_url"])
+
+    def test_referee_context_extracts_official_search_record_without_html_fetch(self):
+        module = self.load_module()
+        fixture = {
+            "fixture": {
+                "id": 1567824,
+                "referee": "",
+                "date": "2026-07-04T17:00:00+00:00",
+            }
+        }
+        records = [
+            {
+                "title": "Canada v Morocco: Line-ups, Score & Live Updates | Round of 16",
+                "url": "https://www.fifa.com/en/match-centre/match/17/285023/289288/400021530",
+                "content": "Canada vs. Morocco Competition FIFA World Cup Kick Off 4 July 2026, 17:00 Location Houston Stadium City Houston Referee. Michael Oliver.",
+            }
+        ]
+
+        context = module.referee_context(
+            fixture,
+            home="Canada",
+            away="Morocco",
+            target_date="2026-07-05",
+            source_records=records,
+            fetch_html=lambda *args, **kwargs: self.fail("HTML fetch should not be called when records contain referee"),
+        )
+
+        self.assertEqual(context["status"], "已获取")
+        self.assertEqual(context["name"], "Michael Oliver")
+        self.assertEqual(context["source"], "FIFA Match Centre")
+        self.assertEqual(context["source_url"], records[0]["url"])
+        self.assertTrue(context["fallback_used"])
+
+    def test_referee_context_uses_non_social_media_record_as_medium_confidence(self):
+        module = self.load_module()
+        fixture = {
+            "fixture": {
+                "id": 1567824,
+                "referee": "",
+                "date": "2026-07-04T17:00:00+00:00",
+            }
+        }
+        records = [
+            {
+                "title": "Michael Oliver to Referee Morocco-Canada World Cup Last-16 Match",
+                "url": "https://www.moroccoworldnews.com/2026/07/326897/michael-oliver-to-referee-morocco-canada-world-cup-last-16-match",
+                "content": "FIFA has appointed English referee Michael Oliver to officiate Morocco’s World Cup round-of-16 match against Canada.",
+            }
+        ]
+
+        context = module.referee_context(
+            fixture,
+            home="Canada",
+            away="Morocco",
+            target_date="2026-07-05",
+            source_records=records,
+            fetch_html=None,
+        )
+
+        self.assertEqual(context["status"], "已获取")
+        self.assertEqual(context["name"], "Michael Oliver")
+        self.assertEqual(context["source"], "Media referee report")
+        self.assertEqual(context["confidence"], "medium")
+        self.assertEqual(context["country"], "ENG")
+        self.assertEqual(context["source_url"], records[0]["url"])
 
     def test_ensure_rosters_skips_existing_snapshot(self):
         module = self.load_module()

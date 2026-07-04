@@ -4,9 +4,11 @@
 import argparse
 import csv
 import datetime as dt
+import html
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 import urllib.parse
@@ -37,6 +39,9 @@ network = load_module("network_fetch_audit", script_dir() / "network_fetch_audit
 def match_search_queries(home, away, competition, target_date):
     base = f"{home} {away} {competition} {target_date}"
     return [
+        f"site:fifa.com/en/match-centre/match {home} {away} {competition} referee",
+        f"{home} v {away} referee {competition}",
+        f"{home} {away} referee appointment {competition}",
         f"{base} team news injuries suspensions predicted lineup",
         f"{base} press conference squad availability",
         f"{base} referee appointment cards",
@@ -182,7 +187,15 @@ def discover_and_extract_sources(
     records = []
     usage = []
     for query in queries:
-        payload = network.tavily_search(query, api_key=api_key, timeout=timeout, max_results=max_results)
+        referee_query = "referee" in network.ascii_fold(query)
+        payload = network.tavily_search(
+            query,
+            api_key=api_key,
+            timeout=timeout,
+            max_results=max_results,
+            search_depth="advanced" if referee_query else "basic",
+            topic="general" if referee_query else "news",
+        )
         for record in network.search_candidate_records(query, payload):
             if not record_matches_fixture(record, home=home, away=away):
                 continue
@@ -197,6 +210,18 @@ def discover_and_extract_sources(
             records.append(record)
         usage.append({"query": query, "usage": payload.get("usage")})
     ranked = network.rank_candidate_records(records, min_quality_score=min_quality_score)
+    referee_records = [
+        record
+        for record in records
+        if "referee" in network.ascii_fold(" ".join([record.get("title", ""), record.get("content", ""), record.get("query", "")]))
+    ]
+    relaxed_referee_ranked = network.rank_candidate_records(referee_records, min_quality_score=min(30, min_quality_score))
+    seen_urls = {record.get("url") for record in ranked}
+    for record in relaxed_referee_ranked:
+        if record.get("url") not in seen_urls:
+            ranked.append(record)
+            seen_urls.add(record.get("url"))
+    ranked = sorted(ranked, key=lambda item: (-item["quality_score"], item.get("score") or 0, item.get("url", "")))
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "discovered_sources.json").write_text(
@@ -233,6 +258,12 @@ def fetch_json_url(url, timeout=30):
     request = urllib.request.Request(url, headers={"User-Agent": "WCPreSkill/1.0"})
     with urllib.request.urlopen(request, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
+
+
+def fetch_text_url(url, timeout=30):
+    request = urllib.request.Request(url, headers={"User-Agent": "WCPreSkill/1.0"})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        return response.read().decode("utf-8", errors="replace")
 
 
 def nearest_hour_index(times, target_time):
@@ -297,11 +328,234 @@ def fetch_weather_context(venue, kickoff_utc, timezone_name="UTC", timeout=30, f
         return {"status": "未核验", "city": city, "error": f"{type(exc).__name__}: {exc}"}
 
 
-def referee_context(fixture):
+COUNTRY_TO_CODE = {
+    "argentina": "ARG",
+    "australia": "AUS",
+    "brazil": "BRA",
+    "canada": "CAN",
+    "china": "CHN",
+    "england": "ENG",
+    "france": "FRA",
+    "germany": "GER",
+    "italy": "ITA",
+    "mexico": "MEX",
+    "netherlands": "NED",
+    "portugal": "POR",
+    "spain": "ESP",
+    "united states": "USA",
+    "usa": "USA",
+    "uruguay": "URU",
+}
+NATIONALITY_TO_CODE = {
+    "argentine": "ARG",
+    "australian": "AUS",
+    "brazilian": "BRA",
+    "canadian": "CAN",
+    "chinese": "CHN",
+    "dutch": "NED",
+    "english": "ENG",
+    "french": "FRA",
+    "german": "GER",
+    "italian": "ITA",
+    "mexican": "MEX",
+    "portuguese": "POR",
+    "spanish": "ESP",
+    "uruguayan": "URU",
+}
+SOCIAL_REFEREE_DOMAINS = {
+    "facebook.com",
+    "instagram.com",
+    "x.com",
+    "twitter.com",
+}
+
+
+def normalize_referee_name(value):
+    value = html.unescape(network.normalize_text(value or ""))
+    value = re.sub(r"\s*\([^)]*\)\s*$", "", value).strip()
+    if "," in value:
+        value = value.split(",", 1)[0].strip()
+    return value.rstrip(" .;:，。；：")
+
+
+def is_plausible_referee_name(value):
+    value = normalize_referee_name(value)
+    if not value or value.upper() in {"TBC", "TBD", "VAR", "FIFA"}:
+        return False
+    words = value.split()
+    return 2 <= len(words) <= 4 and all(re.search(r"[A-Za-zÀ-ÖØ-öø-ÿ]", word) for word in words)
+
+
+def referee_country_code(value):
+    value = html.unescape(network.normalize_text(value or ""))
+    paren = re.search(r"\(([A-Z]{3})\)\s*$", value)
+    if paren:
+        return paren.group(1)
+    if "," in value:
+        country = value.split(",", 1)[1].strip().lower()
+        return COUNTRY_TO_CODE.get(country, country[:3].upper() if country else "")
+    return ""
+
+
+def referee_country_code_from_text(value):
+    folded = network.ascii_fold(value or "")
+    for nationality, code in NATIONALITY_TO_CODE.items():
+        if re.search(rf"\b{re.escape(nationality)}\s+referee\b", folded):
+            return code
+    return ""
+
+
+def referee_base_context(status, name="", source="API-Football fixture", **extra):
+    context = {
+        "status": status,
+        "name": normalize_referee_name(name),
+        "country": referee_country_code(name),
+        "source": source,
+        "confidence": "high" if status == "已获取" else "none",
+        "fallback_used": False,
+    }
+    context.update(extra)
+    return context
+
+
+def fifa_match_centre_search_url(home="", away="", target_date=""):
+    query = urllib.parse.urlencode(
+        {
+            "q": f"site:fifa.com/en/match-centre/match {home} {away} {target_date} referee",
+        }
+    )
+    return f"https://www.fifa.com/en/match-centre/match?{query}"
+
+
+def strip_html_tags(value):
+    value = re.sub(r"<script\b[^>]*>.*?</script>", " ", value, flags=re.I | re.S)
+    value = re.sub(r"<style\b[^>]*>.*?</style>", " ", value, flags=re.I | re.S)
+    value = re.sub(r"<[^>]+>", " ", value)
+    return network.normalize_text(html.unescape(value))
+
+
+def extract_referee_from_html(value):
+    if not value:
+        return ""
+    patterns = [
+        r">\s*Referee\s*</[^>]+>\s*<[^>]+>\s*([^<]{3,80})\s*<",
+        r'"referee"\s*:\s*"([^"]{3,80})"',
+        r'"name"\s*:\s*"([^"]{3,80})"\s*,\s*"role"\s*:\s*"Referee"',
+        r"([A-Z][A-Za-zÀ-ÖØ-öø-ÿ' .-]{2,80})\s+to\s+Referee\b",
+        r"appointed\s+(?:English|French|Spanish|Italian|Portuguese|Argentine|Brazilian|German|Dutch|Uruguayan|Canadian|American)?\s*referee\s+([A-Z][A-Za-zÀ-ÖØ-öø-ÿ' .-]{2,80})\s+to\s+officiate",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, value, flags=re.I | re.S)
+        if match and is_plausible_referee_name(match.group(1)):
+            return normalize_referee_name(match.group(1))
+    text = strip_html_tags(value)
+    match = re.search(r"\bReferee\b[.:]?\s+([A-Z][A-Za-zÀ-ÖØ-öø-ÿ' .-]{2,80})", text)
+    if match:
+        name = re.split(r"\b(?:Assistant|VAR|Fourth|Competition|Kick|Location|City)\b", match.group(1))[0]
+        if is_plausible_referee_name(name):
+            return normalize_referee_name(name)
+    return ""
+
+
+def extract_referee_from_records(records):
+    media_candidate = None
+    for record in records or []:
+        url = record.get("url", "")
+        quality = network.source_quality(record)
+        record_text = " ".join([record.get("title", ""), record.get("content", "")])
+        name = extract_referee_from_html(record_text)
+        if not name:
+            continue
+        domain = quality.get("domain", "")
+        country = referee_country_code_from_text(record_text)
+        if quality.get("tier") == "official" or domain.endswith("fifa.com"):
+            return name, url, quality, "FIFA Match Centre", country
+        if domain in SOCIAL_REFEREE_DOMAINS:
+            continue
+        folded = network.ascii_fold(record_text)
+        if "referee" in folded and ("fifa has appointed" in folded or "appointed" in folded):
+            media_candidate = (name, url, quality, "Media referee report", country)
+    if media_candidate:
+        return media_candidate
+    return "", "", {}, "", ""
+
+
+def referee_context(
+    fixture,
+    home="",
+    away="",
+    target_date="",
+    source_records=None,
+    fetch_html=fetch_text_url,
+    timeout=30,
+):
     name = ((fixture.get("fixture") or {}).get("referee") or "").strip()
     if name:
-        return {"status": "已获取", "name": name, "source": "API-Football fixture"}
-    return {"status": "未公布", "name": "", "source": "API-Football fixture"}
+        return referee_base_context(
+            "已获取",
+            name,
+            "API-Football fixture",
+            api_football_referee=name,
+            fallback_used=False,
+        )
+
+    record_name, record_url, quality, record_source, record_country = extract_referee_from_records(source_records)
+    if record_name:
+        return referee_base_context(
+            "已获取",
+            record_name,
+            record_source,
+            country=record_country or referee_country_code(record_name),
+            source_url=record_url,
+            confidence="high" if record_source == "FIFA Match Centre" else "medium",
+            api_football_referee="",
+            fallback_used=True,
+        )
+
+    source_url = fifa_match_centre_search_url(home, away, target_date)
+    if fetch_html is None:
+        return referee_base_context(
+            "未公布",
+            "",
+            "API-Football fixture",
+            source_url=source_url,
+            confidence="none",
+            api_football_referee="",
+            fallback_used=True,
+        )
+    try:
+        fifa_html = fetch_html(source_url, timeout=timeout)
+    except Exception as exc:
+        return referee_base_context(
+            "未公布",
+            "",
+            "API-Football fixture",
+            source_url=source_url,
+            confidence="none",
+            api_football_referee="",
+            fallback_used=True,
+            error=f"{type(exc).__name__}: {exc}",
+        )
+    html_name = extract_referee_from_html(fifa_html)
+    if html_name:
+        return referee_base_context(
+            "已获取",
+            html_name,
+            "FIFA Match Centre",
+            source_url=source_url,
+            confidence="high",
+            api_football_referee="",
+            fallback_used=True,
+        )
+    return referee_base_context(
+        "未公布",
+        "",
+        "API-Football fixture",
+        source_url=source_url,
+        confidence="none",
+        api_football_referee="",
+        fallback_used=True,
+    )
 
 
 def merge_source_results(out_dir, source_by_fixture):
@@ -451,7 +705,16 @@ def main(argv=None):
         competition = (fixture.get("league") or {}).get("name", "World Cup")
         match_label = f"{home};{away}"
         roster_players = load_roster_players(args.roster_root, args.date, [home, away])
-        context_by_fixture[fixture_id] = {"referee": referee_context(fixture)}
+        context_by_fixture[fixture_id] = {
+            "referee": referee_context(
+                fixture,
+                home=home,
+                away=away,
+                target_date=args.date,
+                fetch_html=None,
+                timeout=args.timeout,
+            )
+        }
         if not args.skip_weather:
             context_by_fixture[fixture_id]["weather"] = fetch_weather_context(
                 (fixture.get("fixture") or {}).get("venue") or {},
@@ -479,6 +742,16 @@ def main(argv=None):
                 away=away,
             )
             source_by_fixture[fixture_id] = source_result
+            if context_by_fixture[fixture_id]["referee"].get("status") != "已获取":
+                context_by_fixture[fixture_id]["referee"] = referee_context(
+                    fixture,
+                    home=home,
+                    away=away,
+                    target_date=args.date,
+                    source_records=source_result.get("records"),
+                    fetch_html=None,
+                    timeout=args.timeout,
+                )
 
     source_bundle = {"summary": {"skipped": args.skip_network}, "sources": []}
     availability_candidates = []
