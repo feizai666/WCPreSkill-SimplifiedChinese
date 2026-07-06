@@ -1,0 +1,149 @@
+{
+  "date": "2026-07-06（北京时间）",
+  "summary": "目标口径：按北京时间 2026-07-06 统计，共 2 场世界杯 16 强淘汰赛；当地日期均为 2026-07-05。赛程为巴西 vs 挪威、墨西哥 vs 英格兰。本版先更新并读取阵容台账 data/rosters/2026-07-06/：Raphinha（BRA）和 Lucas Paquetá（BRA）确定伤缺，Casemiro（BRA）伤疑，Neymar（BRA）可用但需管理；Julian Ryerson（NOR）伤疑且不预计首发；Reece James（ENG）仍大概率不首发，Jarell Quansah（ENG）回到训练但不锁定，Saka（ENG）按可用但角色非自动核心处理，Foden（ENG）未在台账中出现。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-07-05 14:15。赛程、裁判、阵容和复盘参考 FIFA Match Centre、RotoWire、Guardian、Opta Analyst、Al Jazeera、ESPN/AP、NWS、Sporttery 与公开天气信息。投注有风险，仅供参考。",
+  "reflection": {
+    "title": "赛后复盘：别被结果骗过过程",
+    "subtitle": "复盘口径：对比北京时间 2026-07-04 三场 32 强预测与真实赛果，并把北京时间 2026-07-05 已出的 16 强信号纳入校准；今日重点是名单硬约束、补水暂停后的教练调整、以及淘汰赛平局/加时权重。",
+    "sections": [
+      {
+        "title": "07-04 预测对照",
+        "items": [
+          "澳大利亚 1-1 埃及，埃及点球 4-2 晋级；昨日首选 1-1、判断 Egypt（EGY）晋级命中。这场正确点不是猜点球，而是把 Australia（AUS）的低位高点、Egypt（EGY）的 Salah（EGY）状态不确定和竞彩最低波胆 1:1 合在一起，承认常规时间平局是主路径。",
+          "需要保留的好习惯：当竞彩把平局和 1:1 压到很低，同时双方都缺少稳定阵地战终结时，不能为了“选边”硬给 0-1 或 1-0。淘汰赛的 90 分钟预测必须和晋级预测分开写，这次就是正确收益。",
+          "阿根廷 3-2 佛得角，加时晋级；昨日首选 2-0，只判断 Argentina（ARG）晋级正确，但过程明显错。Cape Verde（CPV）两次追平，Sidny Lopes Cabral（CPV）加时还能打出高质量终结，说明我低估了他们在落后后的心态稳定和二次冲击，而不是只会低位死守。",
+          "这场最该反思的是：我把 Argentina（ARG）的控场能力和 26 人深度看得太线性，忽略了强队领先后坐回去、丢失球权、被弱队情绪和球迷能量拖进高方差脚本。以后即使方向很稳，也要把“领先后不继续压制”的风险写进候选比分。",
+          "哥伦比亚 1-0 加纳；昨日首选 2-0、次选 1-0，方向和低比分结构正确，首选高估了晚段第二球。Colombia（COL）确实通过 Jhon Arias（COL）的单点解决比赛，但 Ghana（GHA）的低位纪律和身体对抗把比赛拖得比我预估更窄。",
+          "这场要保留的思路是：不是每个优势方都需要打穿让球。Colombia（COL）这类控节奏球队在淘汰赛领先后会主动降速，2-0 可以是上限分支，1-0 才是更接近比赛气质的保护项。"
+        ]
+      },
+      {
+        "title": "07-05 信号与今日校准",
+        "items": [
+          "北京时间 2026-07-05 已出的 16 强信号很有价值：Morocco（MAR）3-0 Canada（CAN）说明主场/热门故事线不是护身符，若中场控制和后手被压住，比分会突然打开；France（FRA）1-0 Paraguay（PAR）则说明顶级强队也可能被身体对抗和低位防守拖成肮脏小胜。",
+          "本仓库没有生成 2026-07-05 的独立预测 JSON，所以这两场不做命中率结算，只作为今天的模型校准：巴西 vs 挪威不能只按牌面给 Brazil（BRA）大胜，墨西哥 vs 英格兰也不能只按 English squad value 给 England（ENG）常规时间胜。",
+          "阵容幻觉继续硬控：Raphinha（BRA）/Lucas Paquetá（BRA）不得写进 Brazil（BRA）的首发、定位球或点球后手；Reece James（ENG）和 Jarell Quansah（ENG）只能作为伤疑变量；Saka（ENG）不是自动核心；Foden（ENG）不在本日 ENG 台账中，不写入任何战术判断。",
+          "今日两场都提高补水暂停权重。Ancelotti（BRA 主帅/ITA）若发现 Norway（NOR）反击打到身后，可以在补水时降低边后卫同时压上的频率；Aguirre（MEX 主帅）和 Tuchel（ENG 主帅/GER）在墨西哥城海拔下的节奏管理，可能比纸面阵容差距更重要。",
+          "比分分布校准：巴西 vs 挪威主路径是 2-1，而不是强队模板 3-0；墨西哥 vs 英格兰主路径是 1-1，英格兰晋级略优但常规时间平局权重最高。"
+        ]
+      }
+    ]
+  },
+  "matches": [
+    {
+      "home": "巴西",
+      "away": "挪威",
+      "group": "16 强 · 淘汰赛",
+      "time_bj": "2026-07-06 04:00",
+      "time_local": "东卢瑟福/纽约新泽西 2026-07-05 16:00（EDT）",
+      "venue": "New York New Jersey Stadium / MetLife Stadium, East Rutherford",
+      "predicted_score": "2-1",
+      "alt_score": "2-2",
+      "total_goals": "常规时间预计 2-4 球，核心落点 3 球；竞彩最低档为 3 球，挪威进球权重较高",
+      "probability": {
+        "win": "52%",
+        "draw": "27%",
+        "lose": "21%"
+      },
+      "confidence": "中",
+      "key_factors": [
+        "竞彩主胜 1.53 仍把 Brazil（BRA）放在优势方，但让球(-1)负 2.15 是最低项，市场并不支持 Brazil（BRA）轻松赢 2 球以上。我的首选 2-1 与最低波胆一致，核心逻辑是 Brazil（BRA）赢面更大，但 Norway（NOR）有真实进球路径。",
+        "Brazil（BRA）的伤停不是背景噪音：Raphinha（BRA）和 Lucas Paquetá（BRA）都确定缺席，Casemiro（BRA）伤疑，Neymar（BRA）可能因 Paquetá（BRA）缺阵获得更靠前的角色，但仍是分钟管理变量。Ancelotti（BRA 主帅/ITA）必须重组中前场连接，而不是照搬健康阵容。",
+        "Norway（NOR）的威胁非常集中却足够致命。Haaland（NOR）本届已经持续进球，Odegaard（NOR）只要在 Brazil（BRA）中场身后获得转身空间，就能第一时间找 Haaland（NOR）或 Nusa（NOR）冲巴西防线身后。",
+        "战术相性上，Brazil（BRA）会依赖 Vinicius Junior（BRA）左路一对一、Matheus Cunha（BRA）中路支点和 Bruno Guimaraes（BRA）的推进；Norway（NOR）则会用 Berg（NOR）/Berge（NOR）保护中路，把比赛压成中低位反击。若 Brazil（BRA）边后卫同时压太高，Haaland（NOR）的一次冲刺就足以改写比分。",
+        "RotoWire 预测 Brazil（BRA）仍用 4-3-3，Vinicius Junior（BRA）、Matheus Cunha（BRA）、Rayan（BRA）在前场；Norway（NOR）预计沿用 Nyland（NOR）、Ajer（NOR）、Heggem（NOR）、Pedersen（NOR）、Moller Wolfe（NOR）保护 Haaland（NOR）。Julian Ryerson（NOR）伤疑且不预计首发。",
+        "候选脚本：2-1 Brazil（BRA）靠边路质量和后手赢下常规时间；2-2 Norway（NOR）抓到一次身后和一次定位球/二点；1-1 如果 Casemiro（BRA）缺阵且 Neymar（BRA）无法高强度首发；3-1 则要求 Brazil（BRA）早球并迫使 Norway（NOR）前压。"
+      ],
+      "weather": "东卢瑟福下午开放球场预计温暖潮湿，并有阵雨/雷暴风险；NWS 对当地周日给出下午雷阵雨概率。若出现雨战或短暂停，Brazil（BRA）的传控稳定性会下降，补水和天气暂停反而给 Ancelotti（BRA 主帅/ITA）与 Solbakken（NOR 主帅）更多重置站位的机会。",
+      "referee": {
+        "name": "Ismail Elfath（USA）",
+        "style": "FIFA Match Centre 显示本场主裁为 Elfath（USA）。他有 CONCACAF 高强度比赛经验，通常愿意先让比赛流动，但转换犯规、禁区拉拽和持续抗议会进入用牌区。",
+        "history": "Brazil（BRA）的边路突破和 Norway（NOR）的反击保护会制造较多战术犯规。若早牌给到 Norway（NOR）右路，Vinicius Junior（BRA）的单点权重会上升；若 Elfath（USA）尺度宽，Haaland（NOR）的身体对抗会更舒服。"
+      },
+      "card_prediction": "预计黄牌 4-6 张，红牌概率约 8-12%，点球概率约 18-24%。Norway（NOR）防 Vinicius Junior（BRA）和 Rayan（BRA）更容易吃牌，Brazil（BRA）防 Haaland（NOR）反越位时也有拉拽/阻挡风险。",
+      "coach_tactics": "Ancelotti（BRA 主帅/ITA）不会只追求漂亮控球，Raphinha（BRA）和 Paquetá（BRA）缺席后，Brazil（BRA）更可能增加 45 度传中、二点争夺和 Vinicius Junior（BRA）提前拿球的比例。Solbakken（NOR 主帅）会接受长时间无球，把 Odegaard（NOR）藏在反击第一传位置，等 Brazil（BRA）边后卫压上后的身后空间。",
+      "bench_depth": "Brazil（BRA）替补深度仍明显更好，Neymar（BRA）、Endrick（BRA）、Martinelli（BRA）或 Igor Thiago（BRA）都能改变节奏，但前提是别把伤缺球员误当后手。Norway（NOR）的后手更偏功能型，若 70 分钟后仍平，Sorloth（NOR）和 Bobb（NOR）能增加冲击，但中场控局能力不如 Brazil（BRA）。",
+      "knockout": {
+        "regular_time": "2-1",
+        "extra_time": "若常规时间 2-2，Brazil（BRA）加时替补深度略优，但 Norway（NOR）会继续押 Haaland（NOR）单点",
+        "penalties": "点球大战概率约 15%，若进入点球 Brazil（BRA）55%-45% 微弱优势",
+        "advancer": "巴西",
+        "advancement_prob": "巴西 64% / 挪威 36%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.53",
+          "draw": "3.74",
+          "lose": "4.80"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "3.00",
+          "draw": "3.02",
+          "lose": "2.15"
+        },
+        "goals": "3球(3.35)、2球(4.00)、4球(4.40)、1球(6.45)、5球(8.00)、6球(12.00)",
+        "score": "2:1(4.85)、1:1(7.00)、1:0(8.75)、2:2(9.00)、2:0(9.25)、3:1(10.00)、1:2(13.50)、3:2(13.50)"
+      },
+      "bet_advice": "主看 Brazil（BRA）常规时间不败并小胜，比分 2:1 防 2:2；让球(-1)更偏向让负/让平，不建议重压 Brazil（BRA）打穿。总进球 3 球是主线，若赛前 Casemiro（BRA）确认缺阵，Norway（NOR）进球和 2:2 权重上调。",
+      "risk": "博胆"
+    },
+    {
+      "home": "墨西哥",
+      "away": "英格兰",
+      "group": "16 强 · 淘汰赛",
+      "time_bj": "2026-07-06 08:00",
+      "time_local": "墨西哥城 2026-07-05 18:00（当地时间）",
+      "venue": "Mexico City Stadium / Estadio Azteca, Mexico City",
+      "predicted_score": "1-1",
+      "alt_score": "1-2",
+      "total_goals": "常规时间预计 1-3 球，核心落点 2 球；竞彩最低档为 2 球，90 分钟平局权重最高",
+      "probability": {
+        "win": "28%",
+        "draw": "33%",
+        "lose": "39%"
+      },
+      "confidence": "低",
+      "key_factors": [
+        "这场不能按英格兰名气直接给客胜。竞彩客胜 2.02，但最低波胆是 1:1，Mexico（MEX）+1 只有 1.62，市场明确承认 Azteca、海拔和主场氛围能把 England（ENG）的纸面优势压窄。",
+        "Mexico（MEX）本届四场不丢球，Aguirre（MEX 主帅）把中前场压迫做得很紧。Quinones（MEX）、Raúl Jiménez（MEX）和 Alvarado（MEX）能在抢回球后立刻向肋部推进，Mora（MEX）、Lira（MEX）和 Romo（MEX）负责把第二点留住。",
+        "England（ENG）不是没机会，Kane（ENG）和 Bellingham（ENG）有足够质量在一次禁区前串联中解决问题；但 Tuchel（ENG 主帅/GER）必须让 Rice（ENG）和 Anderson（ENG）控制节奏，不能像对 Congo DR（COD）那样前 20 分钟情绪化乱压。",
+        "阵容硬约束：Reece James（ENG）仍远未锁定可出场，Jarell Quansah（ENG）虽恢复训练但不等于确定首发，Djed Spence（ENG）右路会面对 Quinones（MEX）的高强度冲击。Saka（ENG）可用但本届角色起伏，不按自动主力处理；Foden（ENG）不在本日台账中，不写入首发或后手。",
+        "墨西哥城 2,240 米海拔会放大补水暂停和换人窗口。Guardian 报道 Tuchel（ENG 主帅/GER）承认英格兰难以真正适应海拔，Mexico（MEX）预计前 20 分钟会主动提速；如果 England（ENG）能撑过开局并用控球给自己回血，后 30 分钟个人能力才更可能兑现。",
+        "候选脚本：1-1 是 Mexico（MEX）前段压出一球或制造高压混乱，England（ENG）靠 Kane（ENG）/Bellingham（ENG）回应；1-2 是 England（ENG）熬过海拔冲击后替补提速；1-0 是 Mexico（MEX）利用主场和雷雨中断守住；0-1 则要求 England（ENG）早早把比赛降速。"
+      ],
+      "weather": "墨西哥城傍晚处于雨季，赛前多家媒体报道雷雨和积水风险曾引发改开球时间讨论，最终仍按 18:00 当地时间进行。温度不算极端，但 2,240 米海拔、湿滑草皮和可能的天气暂停会让比赛断续，补水/雷雨停顿都会提高 Aguirre（MEX 主帅）和 Tuchel（ENG 主帅/GER）的临场调整权重。",
+      "referee": {
+        "name": "Alireza Faghani（AUS）",
+        "style": "FIFA Match Centre 显示本场主裁为 Faghani（AUS）。他经验很足，通常不害怕大场面，也会允许一定身体对抗；但 Mexico（MEX）高压、England（ENG）反抢和主场情绪叠加后，比赛很可能偏碎。",
+        "history": "Faghani（AUS）执法大赛经验丰富，越是强对抗淘汰赛越倾向用沟通和关键牌控制节奏。若他早期尺度宽，Mexico（MEX）前压收益更大；若早牌给到边后卫，双方边路都会明显收敛。"
+      },
+      "card_prediction": "预计黄牌 5-7 张，红牌概率约 10-15%，点球概率约 20-28%。Mexico（MEX）主场情绪和高位反抢会带来更多对抗，England（ENG）若在海拔下回追慢半拍，禁区前战术犯规会增加。",
+      "coach_tactics": "Aguirre（MEX 主帅）会要求 Mexico（MEX）开场先压 15-20 分钟，尽量让 England（ENG）在缺氧感最强时犯错；若领先，会把 Edson Álvarez（MEX）的位置选择变成防守加固。Tuchel（ENG 主帅/GER）最重要的是降速控球和节能，不要让 Bellingham（ENG）与前场一起盲目冲出去；补水暂停后他可能用 Eze（ENG）、Gordon（ENG）或 Toney（ENG）改变最后一击。",
+      "bench_depth": "England（ENG）26 人深度更好，Eze（ENG）、Gordon（ENG）、Toney（ENG）和 Watkins（ENG）能让比赛后段出现不同解法；Mexico（MEX）的优势是所有球员都更适应当地条件，并且已经大范围轮换过。若进入加时，England（ENG）纸面后手略优，但 Mexico（MEX）的主场和海拔会让差距变小。",
+      "knockout": {
+        "regular_time": "1-1",
+        "extra_time": "加时仍可能 1-1，若有进球更偏 England（ENG）替补制造的 1-2",
+        "penalties": "点球大战概率约 24%，若进入点球 England（ENG）53%-47% 微弱优势，压力变量很大",
+        "advancer": "英格兰",
+        "advancement_prob": "英格兰 55% / 墨西哥 45%"
+      },
+      "odds": {
+        "spf": {
+          "win": "3.23",
+          "draw": "3.08",
+          "lose": "2.02"
+        },
+        "rspf": {
+          "handicap": "+1",
+          "win": "1.62",
+          "draw": "3.32",
+          "lose": "4.75"
+        },
+        "goals": "2球(2.90)、3球(3.60)、1球(4.15)、4球(7.30)、0球(8.00)、5球(15.00)",
+        "score": "1:1(5.00)、1:2(6.00)、0:1(6.30)、0:0(8.00)、1:0(9.35)、0:2(9.50)、2:1(10.00)、2:2(12.50)"
+      },
+      "bet_advice": "主看 90 分钟平局和 Mexico（MEX）+1 方向，比分 1:1 防 1:2；England（ENG）晋级可以小注但不等同于常规时间胜。若临场确认 Quansah（ENG）首发且右路更稳，0:1/1:2 权重上调；若赛前雨势明显、草皮变滑，1:1/1:0 权重上调。",
+      "risk": "高风险"
+    }
+  ]
+}

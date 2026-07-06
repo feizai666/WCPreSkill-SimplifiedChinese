@@ -378,6 +378,13 @@ def knockout_summary(match):
 
 def match_extra_sections(match):
     sections = []
+    other_factors = match.get("other_factors")
+    if other_factors:
+        if isinstance(other_factors, list):
+            sections.append(("其他因素", other_factors))
+        else:
+            sections.append(("其他因素", [str(other_factors)]))
+
     if match.get("weather"):
         sections.append(("天气/场地", [match["weather"]]))
 
@@ -412,6 +419,35 @@ def match_extra_sections(match):
     return sections
 
 
+def measure_odds_advice(draw, match, width):
+    odds = match.get("odds", {})
+    height = px(60)
+    height += px(156) + px(22)
+    h, _ = measure_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), width, FONTS["small"], 8)
+    height += h + px(10)
+    h, _ = measure_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), width, FONTS["small"], 8)
+    height += h + px(24)
+    h, _ = measure_wrapped(draw, match.get("bet_advice", "-"), width - px(36), FONTS["body"], 9)
+    height += px(60) + h + px(42)
+    return height
+
+
+def draw_odds_advice(draw, match, x, y, width):
+    y = draw_section(draw, "竞彩赔率 / 建议", x, y, width)
+    odds = match.get("odds", {})
+    y = draw_odds_table(draw, odds, x, y, width) + px(22)
+    y = draw_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), x, y, width, FONTS["small"], fill=COLORS["muted"], gap=8) + px(10)
+    y = draw_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), x, y, width, FONTS["small"], fill=COLORS["muted"], gap=8) + px(24)
+
+    advice_top = y
+    draw_text(draw, (x, y), "投注建议", FONTS["section"], COLORS["green"])
+    y += px(46)
+    advice_y = draw_wrapped(draw, match.get("bet_advice", "-"), x + px(18), y + px(16), width - px(36), FONTS["body"], fill=COLORS["ink"], gap=9)
+    y = advice_y + px(20)
+    draw.rounded_rectangle((x, advice_top + px(40), x + width, y), radius=px(18), outline="#95e7b2", width=px(2))
+    return y
+
+
 def safe_filename(text):
     text = re.sub(r"[\\/:*?\"<>|]+", "_", text)
     text = re.sub(r"\s+", "_", text)
@@ -421,8 +457,6 @@ def safe_filename(text):
 def layout_metrics(draw, match):
     card_w = WIDTH - MARGIN * 2
     inner_w = card_w - px(76)
-    left_w = int(inner_w * 0.58)
-    right_w = inner_w - left_w - GAP
 
     y = 0
     y += px(78)
@@ -445,32 +479,22 @@ def layout_metrics(draw, match):
         knockout_h, _ = measure_wrapped(draw, "淘汰赛预测：" + knockout, inner_w, FONTS["body"], 9)
     y += prob_h + goals_h + knockout_h + px(28)
 
-    left_y = px(60)
+    y += measure_odds_advice(draw, match, inner_w) + px(32)
+
+    y += px(60)
     for factor in match.get("key_factors", []):
-        h, _ = measure_wrapped(draw, "• " + factor, left_w, FONTS["body"], 8)
-        left_y += h + px(10)
+        h, _ = measure_wrapped(draw, "• " + factor, inner_w, FONTS["body"], 8)
+        y += h + px(10)
     for title, items in match_extra_sections(match):
-        left_y += px(54)
+        y += px(74)
         for item in items:
-            h, _ = measure_wrapped(draw, "• " + item, left_w, FONTS["small"], 8)
-            left_y += h + px(8)
+            h, _ = measure_wrapped(draw, "• " + item, inner_w, FONTS["small"], 8)
+            y += h + px(8)
 
-    right_y = px(60) + px(156) + px(22)
-    odds = match.get("odds", {})
-    h, _ = measure_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), right_w, FONTS["small"], 8)
-    right_y += h + px(10)
-    h, _ = measure_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), right_w, FONTS["small"], 8)
-    right_y += h + px(28)
-    h, _ = measure_wrapped(draw, match.get("bet_advice", "-"), right_w - px(34), FONTS["body"], 9)
-    right_y += px(60) + h + px(42)
-
-    bottom_pad = px(160) if match_extra_sections(match) else px(72)
-    content_h = y + max(left_y, right_y) + bottom_pad
+    content_h = y + px(150)
     return {
         "card_h": content_h,
         "inner_w": inner_w,
-        "left_w": left_w,
-        "right_w": right_w,
         "top_after_intro": y,
     }
 
@@ -566,8 +590,6 @@ def render_match_png(data, match, index, output_dir):
     inner_x = x + px(38)
     inner_y = card_y + px(34)
     inner_w = metrics["inner_w"]
-    left_w = metrics["left_w"]
-    right_w = metrics["right_w"]
 
     title = f"{match.get('home', '?')} vs {match.get('away', '?')}"
     draw_text(draw, (inner_x, inner_y), title, FONTS["teams"], COLORS["ink"])
@@ -608,34 +630,16 @@ def render_match_png(data, match, index, output_dir):
     if knockout:
         inner_y = draw_wrapped(draw, "淘汰赛预测：" + knockout, inner_x, inner_y - px(18), inner_w, FONTS["body"], fill=COLORS["green"]) + px(24)
 
-    left_x = inner_x
-    right_x = inner_x + left_w + GAP
-    columns_y = inner_y
+    inner_y = draw_odds_advice(draw, match, inner_x, inner_y, inner_w) + px(32)
 
-    left_y = draw_section(draw, "关键分析", left_x, columns_y, left_w)
+    inner_y = draw_section(draw, "关键分析", inner_x, inner_y, inner_w)
     for factor in match.get("key_factors", []):
-        left_y = draw_wrapped(draw, "• " + factor, left_x, left_y, left_w, FONTS["body"], fill=COLORS["ink"], gap=8) + px(10)
+        inner_y = draw_wrapped(draw, "• " + factor, inner_x, inner_y, inner_w, FONTS["body"], fill=COLORS["ink"], gap=8) + px(10)
     for title, items in match_extra_sections(match):
-        left_y += px(14)
-        draw_text(draw, (left_x, left_y), title, FONTS["small"], COLORS["blue"])
-        left_y += px(36)
-        draw.line((left_x, left_y, left_x + left_w, left_y), fill=COLORS["line"], width=px(1))
-        left_y += px(14)
+        inner_y += px(14)
+        inner_y = draw_section(draw, title, inner_x, inner_y, inner_w)
         for item in items:
-            left_y = draw_wrapped(draw, "• " + item, left_x, left_y, left_w, FONTS["small"], fill=COLORS["ink"], gap=8) + px(8)
-
-    right_y = draw_section(draw, "竞彩赔率 / 建议", right_x, columns_y, right_w)
-    odds = match.get("odds", {})
-    right_y = draw_odds_table(draw, odds, right_x, right_y, right_w) + px(22)
-    right_y = draw_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), right_x, right_y, right_w, FONTS["small"], fill=COLORS["muted"], gap=8) + px(10)
-    right_y = draw_wrapped(draw, "比分/波胆：" + (odds.get("score") or "-"), right_x, right_y, right_w, FONTS["small"], fill=COLORS["muted"], gap=8) + px(24)
-
-    advice_top = right_y
-    draw_text(draw, (right_x, right_y), "投注建议", FONTS["section"], COLORS["green"])
-    right_y += px(46)
-    advice_y = draw_wrapped(draw, match.get("bet_advice", "-"), right_x + px(18), right_y + px(16), right_w - px(36), FONTS["body"], fill=COLORS["ink"], gap=9)
-    right_y = advice_y + px(20)
-    draw.rounded_rectangle((right_x, advice_top + px(40), right_x + right_w, right_y), radius=px(18), outline="#95e7b2", width=px(2))
+            inner_y = draw_wrapped(draw, "• " + item, inner_x, inner_y, inner_w, FONTS["small"], fill=COLORS["ink"], gap=8) + px(8)
 
     footer = f"worldcup-match-predictor | {datetime.now().strftime('%Y-%m-%d %H:%M')} | 投注有风险，仅供参考"
     draw_text(draw, (inner_x, card_y + card_h - px(42)), footer, FONTS["tiny"], COLORS["muted"])

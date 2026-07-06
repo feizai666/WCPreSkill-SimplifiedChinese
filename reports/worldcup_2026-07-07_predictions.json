@@ -1,0 +1,158 @@
+{
+  "date": "2026-07-07（北京时间）",
+  "summary": "目标口径：按北京时间 2026-07-07 统计，共 2 场世界杯 16 强淘汰赛；当地日期均为 2026-07-06。赛程为葡萄牙 vs 西班牙、美国 vs 比利时。本版已更新并读取阵容台账 data/rosters/2026-07-07/：Nico Williams（ESP）可用但更像替补冲击点，Yéremy Pino（ESP）/Víctor Muñoz（ESP）伤疑，Vitinha（POR）和 Bruno Fernandes（POR）按可首发但需监控分钟处理；Balogun（USA）红牌停赛被 FIFA 缓刑执行、可以出战 Belgium（BEL），McKenzie（USA）/Roldan（USA）伤疑，Debast（BEL）恢复训练但不预计首发，Lukaku（BEL）仍是分钟管理的关键后手。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-07-06 13:15。赛程、裁判、阵容与复盘参考 ESPN、UEFA、RotoWire、Guardian、Barca Blaugranes、Fox Sports、NWS、Sporttery 等公开信息。投注有风险，仅供参考。",
+  "reflection": {
+    "title": "赛后复盘：强队名气不能替代赛单",
+    "subtitle": "复盘口径：对比北京时间 2026-07-06 两场 16 强真实赛果与昨日预测；每场单独复盘实际首发、换人、关键过程和我预测里做对/做错的地方。复盘中的阵容用紧凑格式，不重复给每名球员打国家简称。",
+    "sections": [
+      {
+        "title": "巴西 1-2 挪威",
+        "items": [
+          "实际首发：Brazil 4-4-2，Alisson；Douglas Santos、Danilo、Gabriel Magalhães、Marquinhos；Martinelli、Rayan、Casemiro、Bruno Guimarães；Vinícius Júnior、Cunha。换人：Cunha(Endrick 58')，Martinelli(Neymar 67')，Rayan(D. Santos 67')，Bruno Guimarães(Éderson 79')。Norway 4-3-3，Nyland；Møller Wolfe、Ryerson、Heggem、Ajer；Berge、Berg、Ødegaard；Nusa、Sørloth、Haaland。换人：Sørloth(Bobb 45')，Nusa(Schjelderup 45')，Ryerson(Aursnes 63')，Møller Wolfe(Østigård 90+5')。",
+          "关键过程：Nyland 扑出 Bruno Guimarães 的点球，Brazil 的 xG 很大部分来自点球而不是稳定运动战；Haaland 79' 和 90' 两次终结把比赛直接翻走，Neymar 90+10' 点球追回但已经太晚。Norway 控球 66%，这不是单纯摆大巴偷鸡，而是用中场控制拖垮 Brazil 的节奏。",
+          "预测对的部分：我昨天确实把 Haaland 单点和 Norway 进球风险写进主线，也把 2-2 作为次选，说明没有把强队盘写成 3-0 模板。",
+          "预测错的部分：首选 2-1 Brazil 方向错。错在我低估 Norway 的控球质量和 Nyland 的门线状态，也高估 Brazil 缺少 Paquetá 后重新组织中路的速度。更严重的是 roster 处理：赛前源称 Raphinha 伤缺，但 ESPN 实际赛单仍把 Raphinha 列入替补席且未出场。以后这种冲突必须标成 source_conflict，不能写成确定 ruled_out。",
+          "今日校准：葡西这类高水平熟人局，不能只看“谁纸面更顺”。如果强队的运动战机会不干净、对方门将或中锋有极端单点优势，比赛会被一个点球、一次反击和一次补水暂停后的调整拉到完全不同脚本。"
+        ]
+      },
+      {
+        "title": "墨西哥 2-3 英格兰",
+        "items": [
+          "实际首发：Mexico 4-3-3，Rangel；Sánchez、Montes、Vásquez、Gallardo；Lira、Romo、Mora；Alvarado、Raúl Jiménez、Quiñones。关键换人：Montes(Edson Álvarez 45')，Mora(Santiago Giménez 61')，后续继续加攻击点。England 4-2-3-1，Pickford；Spence、Quansah、Guéhi、O'Reilly；Rice、Anderson；Saka、Bellingham、Gordon；Kane。关键换人：Saka(John Stones 57')，后段用 Burn 等防守后手顶住。",
+          "关键过程：雷雨导致开球延后，Mexico 上半场控球和射门都更多，但 Bellingham 36'、38' 连进两球把比赛打成 England 想要的反击效率局；Quiñones 42' 追回，Quansah 54' 红牌后 England 变成十人，Kane 60' 点球扩大，Raúl Jiménez 69' 点球再追，最后 11 分钟补时靠 Pickford 和后卫线硬守。",
+          "预测对的部分：我昨天写 England 晋级略优、Quansah/右路是关键变量、Mexico 会利用海拔和主场开局压迫，这些方向都对。",
+          "预测错的部分：首选 1-1 低估了事件密度。雷雨、红牌、两个点球和 Bellingham 的 98 秒双响把比赛推到 5 球，我虽然写了高风险，却没有把“早段效率球 + 红牌后点球互换”的高方差分支放得足够前。",
+          "其他跟进：Quansah 红牌按正常规则应停赛 England 下一场对 Norway；Jordan Henderson 庆祝战胜 Mexico 后被担架抬离，下一轮必须重新抓新闻，不得默认可用。Balogun 的红牌被缓刑执行则说明纪律规则本届存在不稳定变量，未来停赛判断要先查 FIFA 最新纪律公告。"
+        ]
+      }
+    ]
+  },
+  "matches": [
+    {
+      "home": "葡萄牙",
+      "away": "西班牙",
+      "group": "16 强 · 淘汰赛",
+      "time_bj": "2026-07-07 03:00",
+      "time_local": "阿灵顿/达拉斯 2026-07-06 14:00（CDT）",
+      "venue": "Dallas Stadium / AT&T Stadium, Arlington",
+      "predicted_score": "1-1",
+      "alt_score": "1-2",
+      "total_goals": "常规时间预计 2-3 球，核心落点 2 球；竞彩最低档为 3 球但 2 球紧随，平局和一球差都要重防",
+      "probability": {
+        "win": "25%",
+        "draw": "32%",
+        "lose": "43%"
+      },
+      "confidence": "低",
+      "key_factors": [
+        "竞彩给 Spain（ESP）常规客胜 1.73，最低波胆是 1:2，市场仍明显偏 Spain（ESP）；但 1:1 只有 6.05，Portugal（POR）+1 也只有 1.85，说明市场承认这不是普通强弱盘。我的常规时间首选 1-1，是因为这场更像一年前欧国联决赛的复刻：Spain（ESP）控球更顺，Portugal（POR）有足够多能把比赛拖深的单点。",
+        "2025 欧国联决赛是最重要的参照。Spain（ESP）21' 由 Zubimendi（ESP）先进，Nuno Mendes（POR）26' 迅速回应，Oyarzabal（ESP）45' 再次领先，Cristiano Ronaldo（POR）61' 接 Nuno Mendes（POR）折射传中凌空扳平，最终 2-2 后点球 Portugal（POR）5-3 获胜。那场 Portugal（POR）不是靠纯防守活下来，而是靠半场后 Rúben Neves（POR）/Nélson Semedo（POR）调整、Nuno Mendes（POR）压住 Lamine Yamal（ESP）并反打左路。",
+        "UEFA 记录的那场首发和换人很有启发：Portugal 用 Diogo Costa；João Neves(Nélson Semedo 46')、Rúben Dias、Gonçalo Inácio(Renato Veiga 74')、Nuno Mendes；Bernardo Silva(Rafael Leão 74')、Vitinha；Francisco Conceição(Rúben Neves 46')、Bruno Fernandes、Pedro Neto(Diogo Jota 106')；Ronaldo(Gonçalo Ramos 88')。Spain 用 Unai Simón；Mingueza(Pedro Porro 92')、Le Normand、Huijsen、Cucurella；Pedri(Isco 74')、Zubimendi、Fabián Ruiz(Merino 74')；Yamal(Pino 106')、Oyarzabal(Morata 111')、Williams(Álex Baena 92')。",
+        "这次双方骨架仍然很接近，但状态不同。Spain（ESP）本届五场不丢球，淘汰 Austria（AUT）时终于把压迫和边路宽度踢顺；Rodri（ESP）、Pedri（ESP）、Dani Olmo（ESP）的三角让对手很难连续反击。Portugal（POR）上一轮 2-1 Croatia（CRO）靠 Gonçalo Ramos（POR）94' 头球和 VAR 细节过关，过程比结果危险。",
+        "关键对位仍是 Lamine Yamal（ESP）vs Nuno Mendes（POR），但不能只看边路。Rodri（ESP）能不能锁住 Bruno Fernandes（POR）的接球线，Vitinha（POR）和 João Neves（POR）能不能在 Spain（ESP）第一压迫后完成转身，才决定 Portugal（POR）是能反击还是只能长传找 Ronaldo（POR）。",
+        "候选脚本：1-1 是 Spain（ESP）控球进一球、Portugal（POR）靠定位球/传中回应；1-2 是 Spain（ESP）后 70 分钟通过 Baena（ESP）或 Yamal（ESP）制造第二球；2-2 是欧国联式互相回应并进入点球；0-1 则要求 Spain（ESP）继续零封。最终我把 1-1 放首选，晋级端仍略给 Spain（ESP），但 Portugal（POR）点球分支非常真实。"
+      ],
+      "other_factors": [
+        "Diogo Jota（POR）已经不在本届名单语境中，但一年前欧国联决赛他 106' 替补登场、随后不久离世，这会让 Portugal（POR）这场带有强情绪背景。情绪本身不能替代技战术，但淘汰赛里会影响 Ronaldo（POR）、Rúben Neves（POR）和老队员的抗压。",
+        "Barca Blaugranes 赛前稿把 Spain（ESP）的 Nico Williams（ESP）、Yéremy Pino（ESP）、Víctor Muñoz（ESP）列为伤疑/疑问点；RotoWire 更倾向 Nico Williams（ESP）作为替补冲击。Spain（ESP）若没有健康版 Nico Williams（ESP），左路纵深会弱一些，Baena（ESP）和 Grimaldo（ESP）/Cucurella（ESP）的定位球权重上升。",
+        "RotoWire 提到 Vitinha（POR）和 Bruno Fernandes（POR）上一轮过早被换下是唯一需要监控的 Portugal（POR）变量。若这两人的分钟受限，Portugal（POR）后 60 分钟就更依赖 Leão（POR）/Ramos（POR）直接冲击，而不是靠中场细传拆 Spain（ESP）。"
+      ],
+      "weather": "阿灵顿白天预计接近 37°C，NWS 对当地给出接近 99°F 的高温与约 103°F 的体感风险；Climate Central 也把本场列为高概率影响表现的热场次。AT&T Stadium 有可闭合屋顶，若闭顶会稳定传控环境，但赛前热身、交通和补水节奏仍会影响两队体能管理。",
+      "referee": {
+        "name": "Anthony Taylor（ENG）",
+        "style": "赛前多源消息显示本场主裁为 Taylor（ENG）。他大赛经验丰富，通常允许一定身体对抗，但对禁区争议、抗议和连续战术犯规会较快介入。",
+        "history": "Iberian derby 的情绪和边路一对一会制造较多判罚压力。Nuno Mendes（POR）防 Yamal（ESP）、Cucurella（ESP）防 Pedro Neto（POR）/Leão（POR），都可能早早进入黄牌管理。"
+      },
+      "card_prediction": "预计黄牌 5-7 张，红牌概率约 8-12%，点球概率约 22-28%。若 Taylor（ENG）早期给牌压节奏，比赛会更像 Spain（ESP）控球慢磨；若尺度宽，Portugal（POR）的身体对抗和反击会更舒服。",
+      "coach_tactics": "Martínez（POR 主帅/ESP）最大的题是 Ronaldo（POR）的首发与后手平衡：让他首发能固定禁区威胁，但若 Spain（ESP）长时间控球，Portugal（POR）前场压迫会少一个机动点。De la Fuente（ESP 主帅）会继续用 Rodri（ESP）稳住中路，补水暂停后重点调 Yamal（ESP）接球高度，让他避开 Nuno Mendes（POR）的正面对抗。",
+      "bench_depth": "Spain（ESP）替补更均衡，Merino（ESP）、Morata（ESP）、Nico Williams（ESP）若健康、Grimaldo（ESP）都能改变局部。Portugal（POR）替补冲击更爆点化，Leão（POR）、Ramos（POR）、Rúben Neves（POR）和 João Félix（POR）能把比赛从控球局拽成冲刺局。若进入加时，Portugal（POR）的点球心理记忆不差。",
+      "knockout": {
+        "regular_time": "1-1",
+        "extra_time": "加时仍可能 1-1；若有进球，更偏 Spain（ESP）靠后手和控球制造 1-2",
+        "penalties": "点球大战概率约 24%，若进入点球 Spain（ESP）51%-49% 微弱优势，但 Portugal（POR）有 2025 决赛心理样本",
+        "advancer": "西班牙",
+        "advancement_prob": "西班牙 56% / 葡萄牙 44%"
+      },
+      "odds": {
+        "spf": {
+          "win": "3.88",
+          "draw": "3.40",
+          "lose": "1.73"
+        },
+        "rspf": {
+          "handicap": "+1",
+          "win": "1.85",
+          "draw": "3.32",
+          "lose": "3.47"
+        },
+        "goals": "3球(3.35)、2球(3.55)、4球(4.80)、1球(5.45)、5球(9.65)、0球(13.50)、6球(16.00)、7+球(24.00)",
+        "score": "1:2(5.85)、1:1(6.05)、0:1(8.00)、0:2(9.25)、2:2(10.00)、2:1(11.00)、1:3(12.00)、0:0(13.50)、1:0(13.50)、0:3(17.00)、2:3(19.00)、2:0(24.00)、3:2(30.00)、3:1(31.00)"
+      },
+      "bet_advice": "主看 90 分钟平局和 Portugal（POR）+1，比分 1:1 防 1:2；若要博胆，2:2 比 0:1 更符合双方近期互相熟悉后的高质量回应脚本。Spain（ESP）晋级可以小注，但不建议把常规时间客胜当稳胆。若赛前 Nico Williams（ESP）确认首发且状态完整，1:2 权重上调；若 Vitinha（POR）/Bruno Fernandes（POR）均无分钟限制，1:1/2:2 权重上调。",
+      "risk": "博胆"
+    },
+    {
+      "home": "美国",
+      "away": "比利时",
+      "group": "16 强 · 淘汰赛",
+      "time_bj": "2026-07-07 08:00",
+      "time_local": "西雅图 2026-07-06 17:00（PDT）",
+      "venue": "Seattle Stadium / Lumen Field, Seattle",
+      "predicted_score": "2-1",
+      "alt_score": "1-1",
+      "total_goals": "常规时间预计 2-4 球，核心落点 3 球；竞彩最低档为 3 球，双方进球概率高",
+      "probability": {
+        "win": "43%",
+        "draw": "28%",
+        "lose": "29%"
+      },
+      "confidence": "低",
+      "key_factors": [
+        "竞彩主胜 2.20、客胜 2.63，美国（USA）作为东道主被轻微放在前面；最低波胆 1:1、2:1、1:2 三个都很靠前，说明这是高质量接近盘而不是纯主场热。我的首选 2-1，是因为 Balogun（USA）恢复可出场后，美国（USA）的纵深和禁区占位完整度明显回升。",
+        "Balogun（USA）本来因对 Bosnia（BIH）的红牌要停赛，FIFA 现在用 Article 27 缓刑执行，红牌记录保留一年但本场可出场。Guardian 的战术分析说得很准：他同时能背身做支点和冲身后，会给 Pulisic（USA）、McKennie（USA）、Tillman（USA）和 Dest（USA）释放更多空间。",
+        "Belgium（BEL）并不是纸面老化就没有威胁。De Bruyne（BEL）、Tielemans（BEL）、Trossard（BEL）和 Doku（BEL）能在 20 秒内把一个普通回合变成射门；Lukaku（BEL）即使不首发，也是后 60 分钟最能改变禁区形态的人。",
+        "但 Belgium（BEL）本届过程并不稳定。RotoWire 和 Guardian 都提到他们控球多但禁区效率不够，打 Senegal（SEN）时 82 分钟还 0-2 落后，最后靠加时和点球才翻过来。美国（USA）如果能用 Adams（USA）/McKennie（USA）的对抗和两翼传切逼 Belgium（BEL）横向回追，会有机会打到 Belgium（BEL）中卫脚下慢的弱点。",
+        "ESPN 预测 USA（USA）首发仍是 Freese（USA）；Freeman（USA）、Richards（USA）、Ream（USA）、Robinson（USA）；McKennie（USA）、Adams（USA）、Tillman（USA）；Dest（USA）、Pepi（USA）、Pulisic（USA）。但 Balogun（USA）缓刑后，我把 Pepi（USA）首发改为 Balogun（USA）更可能，Pepi（USA）回到替补 Plan B。",
+        "候选脚本：2-1 是 USA（USA）借主场和 Balogun（USA）回归先制造纵深，Belgium（BEL）靠 Trossard（BEL）/Doku（BEL）回应但防线被再打一次；1-1 是 Courtois（BEL）和 Freese（USA）都把比赛拖住；1-2 是 De Bruyne（BEL）定位球或 Lukaku（BEL）后手改变；2-2 则是最开放的加时分支。"
+      ],
+      "other_factors": [
+        "Balogun（USA）事件会给比赛加一层不舒服的公平性争议。Belgium（BEL）方面公开表示震惊并考虑维护权益，这可能让裁判和双方球员对身体接触更敏感。模型上不能把它当成纯实力加分，但它确实改变了 Belgium（BEL）备战和美国（USA）士气。",
+        "Fox Sports 提到 2026 年 3 月 Belgium（BEL）曾 5-2 击败 USA（USA），但 Adams（USA）、Freese（USA）、Freeman（USA）、Richards（USA）、Dest（USA）等这次关键首发当时缺席或背景不同；这场不能照搬友谊赛比分。",
+        "Seattle 主场票价和关注度很高，Lumen Field 会非常偏 USA（USA）。这会提高美国（USA）前 20 分钟压迫的强度，也会放大 Belgium（BEL）如果先丢球后的心理压力。"
+      ],
+      "weather": "西雅图当地 17:00 预计晴朗温和，NWS 给出约 79°F 高温、晚间转 56°F 左右，北风不大。天气不是阻碍，反而利于 USA（USA）打高节奏；Lumen Field 的主场声浪和场地适应性比气候更重要。",
+      "referee": {
+        "name": "Adham Makhadmeh（JOR）",
+        "style": "ESPN 赛前信息列本场主裁为 Makhadmeh（JOR）。他本届前几场整体不是极端重牌型，但这场有主场压力、Balogun（USA）纪律争议和 Belgium（BEL）对 FIFA 决定的不满，比赛管理难度会明显高于普通小组赛。",
+        "history": "若他早期不出牌，USA（USA）会更敢高压和身体对抗；若他保护持球人，Doku（BEL）/Trossard（BEL）的一对一收益会增加。"
+      },
+      "card_prediction": "预计黄牌 4-6 张，红牌概率约 9-13%，点球概率约 20-26%。USA（USA）的高位反抢和 Belgium（BEL）边路一对一都容易制造战术犯规；Balogun（USA）处于一年缓刑语境，动作尺度可能更谨慎。",
+      "coach_tactics": "Pochettino（USA 主帅/ARG）会把 Balogun（USA）作为中路牵制点，让 Pulisic（USA）和 Dest（USA）在两侧形成三角，补水暂停时重点调 Belgium（BEL）双后腰身后的切入。Garcia（BEL 主帅）若继续让 De Bruyne（BEL）自由游弋，就必须让 Tielemans（BEL）和 Onana（BEL）保护转换；若 60 分钟后打不开，Lukaku（BEL）会让 Belgium（BEL）改成更直接的传中和二点球打法。",
+      "bench_depth": "Belgium（BEL）替补名气更大，Lukaku（BEL）和 Debast（BEL）这类人能改变比赛类型；USA（USA）替补更贴合主场能量，Pepi（USA）、Reyna（USA）、Weah（USA）和 Musah（USA）能持续冲击。若进入加时，美国（USA）不一定纸面更强，但体能和主场会让他们更敢继续压。",
+      "knockout": {
+        "regular_time": "2-1",
+        "extra_time": "若 90 分钟 1-1，USA（USA）加时仍会主动压；Belgium（BEL）会押 Lukaku（BEL）禁区冲击",
+        "penalties": "点球大战概率约 18%，若进入点球 Belgium（BEL）53%-47% 微弱优势，Courtois（BEL）是变量",
+        "advancer": "美国",
+        "advancement_prob": "美国 56% / 比利时 44%"
+      },
+      "odds": {
+        "spf": {
+          "win": "2.20",
+          "draw": "3.40",
+          "lose": "2.63"
+        },
+        "rspf": {
+          "handicap": "+1",
+          "win": "1.36",
+          "draw": "4.60",
+          "lose": "5.65"
+        },
+        "goals": "3球(3.30)、2球(3.65)、4球(4.80)、1球(6.10)、5球(8.50)、6球(14.00)、0球(14.50)、7+球(21.00)",
+        "score": "1:1(6.25)、2:1(6.50)、1:2(7.30)、2:2(9.25)、1:0(11.50)、0:1(12.50)、2:0(14.00)、0:0(14.50)、3:1(15.00)、0:2(18.00)、3:2(19.00)、1:3(21.00)、2:3(24.00)、3:0(25.00)"
+      },
+      "bet_advice": "主看 USA（USA）不败和双方进球，比分 2:1 防 1:1/1:2；总进球 2-4 球。让球(+1)主胜赔率太低，不如用 USA（USA）晋级或常规主胜小注。若临场确认 Balogun（USA）只是替补，1:1 权重上调；若 Belgium（BEL）让 Lukaku（BEL）首发，1:2 和 2:2 权重上调。",
+      "risk": "博胆"
+    }
+  ]
+}
