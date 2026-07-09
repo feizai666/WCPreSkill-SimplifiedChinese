@@ -1,0 +1,74 @@
+{
+  "date": "2026-07-10（北京时间）",
+  "summary": "单场预测卡：世界杯 1/4 决赛 France vs Morocco。赛程、预计首发、伤停与中国体育彩票竞彩赔率已于北京时间 2026-07-09 上午核对；roster snapshot：data/rosters/2026-07-10/。本卡不生成 00 复盘卡。",
+  "matches": [
+    {
+      "home": "法国",
+      "away": "摩洛哥",
+      "group": "1/4 决赛 · 8进4",
+      "time_bj": "2026-07-10 04:00",
+      "time_local": "波士顿 2026-07-09 16:00（EDT）",
+      "venue": "Boston Stadium / Gillette Stadium, Foxborough",
+      "predicted_score": "1-0",
+      "alt_score": "2-1",
+      "total_goals": "常规时间预计 1-2 球，核心落点 1/2 球；若 France（FRA）60 分钟前领先，2-1/2-0 权重上升，若 Morocco（MAR）撑过 75 分钟，0-0/1-1 和加时权重明显上升。",
+      "probability": {
+        "win": "56%",
+        "draw": "27%",
+        "lose": "17%"
+      },
+      "confidence": "中",
+      "match_process": [
+        "0-15 分钟：France（FRA）会先控球找节奏，不会一上来极端压上；Morocco（MAR）前 15 分钟最重要的是别复制对 Canada（CAN）时的慢热，Hakimi（MAR）和 Mazraoui（MAR）会优先保护边路身后。这个阶段 0-0 权重最高。",
+        "15-45 分钟：France（FRA）的第一波真威胁大概率来自 Olise（FRA）内收、Dembélé（FRA）横向换位和 Mbappé（FRA）左肋冲刺。Morocco（MAR）如果 Saibari（MAR）不能首发，反击第一脚会更依赖 Díaz（MAR）和 Ounahi（MAR），Rahimi（MAR）负责冲 Upamecano（FRA）/Saliba（FRA）身后。半场最像 0-0 或 France（FRA）1-0。",
+        "45-60 分钟：若仍是 0-0，Morocco（MAR）的信心会明显上来，Bounou（MAR）的扑救和定位球防守会把比赛拖进他们喜欢的节奏；但 France（FRA）也会开始提高二点反抢，Koné（FRA）/Rabiot（FRA）能不能压住 Ounahi（MAR）的第一下转身，是这段的关键。",
+        "60-75 分钟：这是首球窗口。Deschamps（FRA 主帅）手里有 Doué（FRA）/Barcola（FRA）/Cherki（FRA）/Mateta（FRA）等不同后手，France（FRA）可以从地面肋部改成禁区冲点；Ouahbi（MAR 主帅）若 Saibari（MAR）缺阵，更多是用 El Kaabi（MAR）或 Abde（MAR）补冲击而不是稳定控球。",
+        "75-90 分钟：France（FRA）若领先会收成 4-4-2/4-5-1，主看 1-0 和 2-0；若还平，Morocco（MAR）会接受加时并把节奏切碎，1-1/0-0 权重上升。若 Morocco（MAR）先偷到一个，France（FRA）会把 Mateta（FRA）和更多边锋堆进禁区，比分会向 2-1 或 1-1 反转。",
+        "加时/点球分支：若 90 分钟 0-0 或 1-1，France（FRA）替补火力仍略优，但 Bounou（MAR）会显著抬高 Morocco（MAR）点球胜率；这个分支不是 France（FRA）稳胆，只能给 France（FRA）52%-48% 微弱优势"
+      ],
+      "key_factors": [
+        "竞彩不让球给 France（FRA）胜 1.39、平 3.88、Morocco（MAR）胜 6.55；让球(-1)为 2.48/3.05/2.51，说明 France（FRA）优势明确，但市场并不敢说能稳定赢 2 球。总进球最低为 2 球，波胆最低是 2:1、1:0、2:0、1:1，节奏更像小胜盘。",
+        "France（FRA）最大优势是终结点和后手层次。Mbappé（FRA）已经 7 球，Olise（FRA）创造力稳定，Dembélé（FRA）能制造一对一；即使 Tchouaméni（FRA）大概率继续缺阵，Koné（FRA）和 Rabiot（FRA）仍能提供足够对抗与二点保护。",
+        "Morocco（MAR）的防守纪律和 Bounou（MAR）门线能力让这场不能轻易写成 France（FRA）打穿。Hakimi（MAR）/Mazraoui（MAR）能限制边路推进，El Aynaoui（MAR）和 Bouaddi（MAR）如果顶住前 60 分钟，比赛会越来越像加时脚本。",
+        "伤停变量偏向 France（FRA）。Saibari（MAR）腿筋伤疑，如果不能首发，Morocco（MAR）少一个能从中路直接带球冲禁区的人；Chadi Riad（MAR）也需要赛前确认。France（FRA）这边 Tchouaméni（FRA）伤疑会削弱中场控制上限，但 Deschamps（FRA 主帅）有更成熟的替代结构。",
+        "候选波胆：1-0 是 France（FRA）60-75 分钟破密集后守住；2-1 是 Morocco（MAR）靠反击或定位球回应；0-0 是 Bounou（MAR）和低位防线撑进加时；2-0 是 France（FRA）早进球后用替补再打一次转换。首选 1-0 不是模板，是盘口、阵容可用性和淘汰赛节奏共同指向。"
+      ],
+      "other_factors": [
+        "裁判组争议会制造情绪变量。Guardian 报道 Deschamps（FRA 主帅）回应了阿根廷裁判组执法 France（FRA）vs Morocco（MAR）的讨论；这类背景下，早牌、抗议和边路身体对抗会比普通比赛更敏感。",
+        "这也是 2022 半决赛重演，但两队都已经换了不少结构。Morocco（MAR）不应只被当成复仇叙事，Ouahbi（MAR 主帅）强调目标是赢世界杯；France（FRA）则更接近一支能在不同节奏里赢球的成熟淘汰赛队。"
+      ],
+      "referee": {
+        "name": "Facundo Tello（ARG）",
+        "style": "Tello（ARG）并非每场都重牌，但他有用牌压制冲突的历史，遇到抗议、报复动作和边路连续犯规时不太会长期放任。",
+        "history": "赛前多方消息称本场由阿根廷裁判组执法，Guardian 也提到法国赛前对该安排的讨论。Tello（ARG）过去有过高冲突比赛经验，本场情绪管理比普通 1/4 决赛更重要。"
+      },
+      "card_prediction": "预计黄牌 5-7 张，红牌概率 8-12%，点球概率 20-26%。Morocco（MAR）边路防 Mbappé（FRA）/Dembélé（FRA）时容易出战术犯规；France（FRA）若丢球后反抢失位，也可能被 Díaz（MAR）/Rahimi（MAR）逼出拉拽牌。",
+      "coach_tactics": "Deschamps（FRA 主帅）大概率先用稳定双后腰保护转换，再靠 60 分钟后的边锋/中锋后手提速；Ouahbi（MAR 主帅）需要让 Morocco（MAR）前 20 分钟更主动一点，不能只等 Bounou（MAR）救场，否则 France（FRA）会持续把球送到禁区边缘找 Mbappé（FRA）和 Olise（FRA）。",
+      "bench_depth": "France（FRA）的后手更完整：Doué（FRA）、Barcola（FRA）、Cherki（FRA）、Mateta（FRA）能分别提供盘带、速度、最后一传和禁区点。Morocco（MAR）后手更依赖 Saibari（MAR）是否能带伤出场，以及 El Kaabi（MAR）/Abde（MAR）能否把反击变成射门。",
+      "knockout": {
+        "regular_time": "1-0",
+        "extra_time": "若 90 分钟 0-0/1-1，加时仍偏 France（FRA）靠替补制造一次禁区机会，但 Morocco（MAR）守到点球的概率不低。",
+        "penalties": "概率约 20%；若进入点球，France（FRA）52% / Morocco（MAR）48%，Bounou（MAR）让这个分支非常接近。",
+        "advancer": "法国",
+        "advancement_prob": "法国 69% / 摩洛哥 31%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.39",
+          "draw": "3.88",
+          "lose": "6.55"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "2.48",
+          "draw": "3.05",
+          "lose": "2.51"
+        },
+        "goals": "2球(3.40)、3球(3.65)、1球(5.00)、4球(5.30)、5球(9.25)、0球(11.50)、6球(15.50)、7+球(26.00)",
+        "score": "2:1(6.25)、1:0(6.60)、2:0(6.90)、1:1(7.20)、3:1(9.00)、3:0(11.00)、0:0(11.50)、2:2(15.00)、3:2(15.00)、0:1(17.50)、1:2(23.00)、4:2(25.00)、4:1(26.00)、4:0(27.00)"
+      },
+      "bet_advice": "竞彩主胜 1.39 偏低，单关价值一般；让球(-1)三项接近，说明 1 球小胜风险很高。主看 France（FRA）晋级/90 分钟不败方向，波胆 1:0 防 2:1/2:0/1:1；总进球 2 球是最低档，和本场小胜脚本一致。若临场确认 Saibari（MAR）替补且 Chadi Riad（MAR）不满血，2:0 权重上调；若 Tchouaméni（FRA）也进替补且 Morocco（MAR）首发更保守，0:0/1:0 权重上调。",
+      "risk": "博胆"
+    }
+  ]
+}

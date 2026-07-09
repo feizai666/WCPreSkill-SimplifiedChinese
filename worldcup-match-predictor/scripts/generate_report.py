@@ -376,6 +376,30 @@ def knockout_summary(match):
     return "；".join(parts)
 
 
+def section_items(value):
+    if not value:
+        return []
+    if isinstance(value, list):
+        return [str(item) for item in value if str(item).strip()]
+    if isinstance(value, dict):
+        items = []
+        for key, item in value.items():
+            if not str(item).strip():
+                continue
+            label = str(key).replace("_", "-")
+            items.append(f"{label}：{item}")
+        return items
+    return [str(value)]
+
+
+def match_process_items(match):
+    return (
+        section_items(match.get("match_process"))
+        or section_items(match.get("process_prediction"))
+        or section_items(match.get("game_flow"))
+    )
+
+
 def match_extra_sections(match):
     sections = []
     other_factors = match.get("other_factors")
@@ -384,9 +408,6 @@ def match_extra_sections(match):
             sections.append(("其他因素", other_factors))
         else:
             sections.append(("其他因素", [str(other_factors)]))
-
-    if match.get("weather"):
-        sections.append(("天气/场地", [match["weather"]]))
 
     referee = match.get("referee")
     card_prediction = match.get("card_prediction")
@@ -433,7 +454,7 @@ def measure_odds_advice(draw, match, width):
 
 
 def draw_odds_advice(draw, match, x, y, width):
-    y = draw_section(draw, "竞彩赔率 / 建议", x, y, width)
+    y = draw_section(draw, match.get("odds_title", "竞彩赔率 / 建议"), x, y, width)
     odds = match.get("odds", {})
     y = draw_odds_table(draw, odds, x, y, width) + px(22)
     y = draw_wrapped(draw, "总进球数：" + (odds.get("goals") or "-"), x, y, width, FONTS["small"], fill=COLORS["muted"], gap=8) + px(10)
@@ -480,6 +501,13 @@ def layout_metrics(draw, match):
     y += prob_h + goals_h + knockout_h + px(28)
 
     y += measure_odds_advice(draw, match, inner_w) + px(32)
+
+    process_items = match_process_items(match)
+    if process_items:
+        y += px(60)
+        for item in process_items:
+            h, _ = measure_wrapped(draw, "• " + item, inner_w, FONTS["body"], 8)
+            y += h + px(10)
 
     y += px(60)
     for factor in match.get("key_factors", []):
@@ -632,6 +660,13 @@ def render_match_png(data, match, index, output_dir):
 
     inner_y = draw_odds_advice(draw, match, inner_x, inner_y, inner_w) + px(32)
 
+    process_items = match_process_items(match)
+    if process_items:
+        inner_y = draw_section(draw, "比赛进程预测", inner_x, inner_y, inner_w)
+        for item in process_items:
+            inner_y = draw_wrapped(draw, "• " + item, inner_x, inner_y, inner_w, FONTS["body"], fill=COLORS["ink"], gap=8) + px(10)
+        inner_y += px(22)
+
     inner_y = draw_section(draw, "关键分析", inner_x, inner_y, inner_w)
     for factor in match.get("key_factors", []):
         inner_y = draw_wrapped(draw, "• " + factor, inner_x, inner_y, inner_w, FONTS["body"], fill=COLORS["ink"], gap=8) + px(10)
@@ -661,12 +696,13 @@ def main():
 
     output_dir = Path(sys.argv[2])
     matches = data.get("matches", [])
-    if not matches:
-        print("未发现 matches，未生成 PNG。")
+    reflection = data.get("reflection")
+
+    if not reflection and not matches:
+        print("未发现 reflection 或 matches，未生成 PNG。")
         return
 
     generated = []
-    reflection = data.get("reflection")
     if reflection:
         generated.append(render_reflection_png(data, reflection, output_dir))
     for idx, match in enumerate(matches, start=1):

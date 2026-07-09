@@ -1,0 +1,154 @@
+{
+  "date": "2026-07-08（北京时间）",
+  "summary": "目标口径：按北京时间 2026-07-08 统计，共 2 场世界杯 16 强淘汰赛；北美当地日期均为 2026-07-07。赛程为阿根廷 vs 埃及、瑞士 vs 哥伦比亚。已生成 roster snapshot：data/rosters/2026-07-08/，并写入当天 availability_overrides：Egypt（EGY）后防伤停、Switzerland（SUI）Manzambi/Vargas/Sow 训练提前退出、Colombia（COL）Jhon Córdoba 伤退等。竞彩赔率来自中国体育彩票 Sporttery JSON API，抓取时间约为北京时间 2026-07-07 12:00。投注有风险，仅供参考。",
+  "reflection": {
+    "title": "赛后复盘：早球和后手不能只写成尾部风险",
+    "subtitle": "复盘口径：对比北京时间 2026-07-07 两场 16 强实际赛果与昨日预测。昨日方向上只抓到 Spain（ESP）晋级，但 90 分钟比分和 USA（USA）方向明显失真；今天降低强行胜负倾向，提高早球、门将、后防伤停和替补后手权重。",
+    "sections": [
+      {
+        "title": "葡萄牙 0-1 西班牙",
+        "items": [
+          "实际首发：Portugal（POR）4-2-3-1：Diogo Costa；Nuno Mendes、João Cancelo、Renato Veiga、Rúben Dias；João Neves、Vitinha；João Félix、Bruno Fernandes、Pedro Neto；Cristiano Ronaldo。Spain（ESP）4-2-3-1：Unai Simón；Marc Cucurella、Pedro Porro、Aymeric Laporte、Pau Cubarsí；Pedri、Rodri；Álex Baena、Dani Olmo、Lamine Yamal；Mikel Oyarzabal。",
+          "替补上场：Portugal（POR）：Nélson Semedo 换 Nuno Mendes 56'，Diogo Dalot 换 João Cancelo 71'，Rafael Leão 换 João Félix 71'，Francisco Conceição 换 Pedro Neto 83'，Bernardo Silva 换 Vitinha 83'。Spain（ESP）：Ferran Torres 换 Álex Baena 75'，Mikel Merino 换 Dani Olmo 85'，Fabián Ruiz 换 Pedri 85'，Borja Iglesias 换 Mikel Oyarzabal 90+7'。",
+          "昨日首选写 1-1、Spain（ESP）晋级略优，实际是 Spain（ESP）1-0 解决比赛。做对的是没有被 Portugal（POR）情绪线和点球记忆带偏，仍把 Spain（ESP）晋级放在主线；做错的是高估 Portugal（POR）能持续制造有效反击，低估 Spain（ESP）后 70 分钟控球耐心和替补终结能力。",
+          "Mikel Merino（ESP）替补后段制胜，说明淘汰赛不是只有首发强度。昨天我写了 Spain（ESP）替补更均衡，但没有把 Merino（ESP）/Ferran Torres（ESP）这种后手组合前置到投注脚本里，导致常规时间平局权重过高。",
+          "Cristiano Ronaldo（POR）踢满 90 分钟但影响有限，提醒我不能把巨星存在感自动换算成禁区威胁。Portugal（POR）中场纸面好看，但 Roberto Martínez（POR 主帅/ESP）没有把阵容质量兑现成足够多的中路压迫和二次进攻。今天看 Argentina（ARG）也一样，Messi（ARG）能改变比赛，但不能掩盖整体防守回追问题。"
+        ]
+      },
+      {
+        "title": "美国 1-4 比利时",
+        "items": [
+          "实际首发：USA（USA）4-3-3：Matt Freese；Tim Ream、Chris Richards、Antonee Robinson、Alex Freeman；Tyler Adams、Malik Tillman、Weston McKennie；Folarin Balogun、Christian Pulisic、Sergiño Dest。Belgium（BEL）4-2-3-1：Thibaut Courtois；Brandon Mechele、Nathan Ngoy、Maxim De Cuyper、Timothy Castagne；Youri Tielemans、Nicolas Raskin、Amadou Onana；Charles De Ketelaere、Leandro Trossard、Dodi Lukébakio。",
+          "替补上场：USA（USA）：Giovanni Reyna 换 Sergiño Dest 46'，Sebastian Berhalter 换 Christian Pulisic 59'（伤退），Ricardo Pepi 换 Tyler Adams 72'，Max Arfsten 换 Antonee Robinson 90+2'，Haji Wright 换 Folarin Balogun 90+2'。Belgium（BEL）：Hans Vanaken 换 Amadou Onana 21'（伤退），Jérémy Doku 换 Dodi Lukébakio 67'，Romelu Lukaku 换 Charles De Ketelaere 67'，Alexis Saelemaekers 换 Leandro Trossard 89'，Axel Witsel 换 Nicolas Raskin 89'。",
+          "昨日首选 USA（USA）2-1，实际 Belgium（BEL）4-1 大胜，属于方向和比分都错。核心误差是我把 Balogun（USA）缓刑回归当成战术完整性加分，却没有充分惩罚 USA（USA）后场出球、门将处理和中卫转身的硬伤。",
+          "Charles De Ketelaere（BEL）早段双响改变了比赛性质。这里我还犯了一个复盘细节错误：Kevin De Bruyne（BEL）在替补席但一分钟没上，不能写成实际后手。Belgium（BEL）领先后反而没有冒险启用他，更像是 Rudi Garcia（BEL 主帅/FRA）判断当前比赛需要跑动覆盖、回防强度和转换速度；真正改变比赛的是 Vanaken（BEL）、Doku（BEL）、Lukaku（BEL）这些被换上的后手。",
+          "今天校准：强队/热门不自动大胜，均势也不自动 1-1；但一旦一方后防伤停或门将/中卫存在清晰弱点，就必须把早球后的高方差比分放到更靠前位置。Argentina（ARG）vs Egypt（EGY）要防 Egypt（EGY）进球，Switzerland（SUI）vs Colombia（COL）要把 Switzerland（SUI）伤疑对进攻爆点的削弱写成核心变量。"
+        ]
+      }
+    ]
+  },
+  "matches": [
+    {
+      "home": "阿根廷",
+      "away": "埃及",
+      "group": "16 强 · 淘汰赛",
+      "time_bj": "2026-07-08 00:00",
+      "time_local": "亚特兰大 2026-07-07 12:00（EDT）",
+      "venue": "Atlanta Stadium / Mercedes-Benz Stadium, Atlanta",
+      "predicted_score": "2-1",
+      "alt_score": "1-1",
+      "total_goals": "常规时间预计 2-3 球，核心落点 3 球；竞彩最低档为 2 球，但 3 球紧随其后，双方进球要重防。",
+      "probability": {
+        "win": "58%",
+        "draw": "25%",
+        "lose": "17%"
+      },
+      "confidence": "中",
+      "key_factors": [
+        "竞彩不让球给 Argentina（ARG）主胜 1.22，市场明确认为 Argentina（ARG）90 分钟优势很大；但我不把它写成 2-0 或 3-0，是因为 Argentina（ARG）上一轮被 Cape Verde（CPV）拖到加时，边路回追和禁区二点保护并不稳。",
+        "Egypt（EGY）不是只会守。Mohamed Salah（EGY）虽然有伤病负荷，但 Guardian 报道他仍是本届创造机会最多的球员之一；Omar Marmoush（EGY）和 Emam Ashour（EGY）能复制 Cape Verde（CPV）打 Argentina（ARG）边路身后的思路。",
+        "Egypt（EGY）的难点在后防。ESPN 写 Ahmed Fatouh（EGY）和 Mohamed Abdelmonem（EGY）缺阵，Karim Hafez（EGY）也有伤疑来源冲突，这让 Egypt（EGY）左路和中卫轮转都不稳。Messi（ARG）回撤吸人后，Lautaro Martínez（ARG）或 Julián Álvarez（ARG）的第一脚冲禁区会很危险。",
+        "Argentina（ARG）自身也有体能变量。Nicolás González（ARG）伤疑，Facundo Medina（ARG）和 Nahuel Molina（ARG）都需要赛前确认；Scaloni（ARG 主帅）如果继续 4-4-2，边前卫回防质量会直接决定 Salah（EGY）和 Marmoush（EGY）能不能打出三次以上高质量转换。",
+        "候选脚本：2-1 是 Argentina（ARG）靠 Messi（ARG）牵制和中锋终结赢下，但 Egypt（EGY）能抓到反击；1-1 是 Egypt（EGY）先守住上半场并把比赛拖进加时；2-0 要求 Argentina（ARG）早早领先并控制转换，概率有但不如市场想象稳；3-1 是 Egypt（EGY）后段压上后被再打一次。"
+      ],
+      "other_factors": [
+        "两队都经历过上一轮加时或点球强消耗，开局可能谨慎。若 30 分钟后仍 0-0，Egypt（EGY）会越来越接受把比赛拖深；若 Argentina（ARG）早进球，比赛会变得更开放，2-1/3-1 权重上升。",
+        "Mohanad Lasheen（EGY）已经结束停赛回归，这点要修正此前对 Egypt（EGY）纪律风险的误判。他的存在能帮助 Egypt（EGY）中路多一道拦截，但并不能完全补足左路后防伤停。"
+      ],
+      "weather": "Mercedes-Benz Stadium 为可控室内/半室内环境，天气对传控影响较小；真正变量是中午开球后的热身体感、四天内旅行恢复和补水暂停时的临场调整。",
+      "referee": {
+        "name": "François Letexier（FRA）",
+        "style": "Letexier（FRA）长期场均黄牌约 3.5 张，不是极端重牌型，更倾向先维持比赛流畅，再对战术犯规和抗议升级管理。",
+        "history": "AS 报道他本届已执法 Côte d'Ivoire（CIV）vs Ecuador（ECU）和 Cape Verde（CPV）vs Saudi Arabia（KSA），本场是第一次执法 Argentina（ARG）。"
+      },
+      "card_prediction": "预计黄牌 4-5 张，红牌概率 6-10%，点球概率 18-24%。Egypt（EGY）如果长时间低位防守，禁区边缘拦截和边后卫补位更容易吃牌；Argentina（ARG）需要小心被 Salah（EGY）转换逼出战术犯规。",
+      "coach_tactics": "Scaloni（ARG 主帅）需要在补水暂停时调整 Messi（ARG）身边的跑动密度，不能只让全队等 Messi（ARG）最后一传。Hossam Hassan（EGY 主帅）大概率先压低阵型，用 Salah（EGY）/Marmoush（EGY）打 Argentina（ARG）边路身后，若落后会用 Trezeguet（EGY）和 Hamza Abdelkarim（EGY）增加冲刺点。",
+      "bench_depth": "Argentina（ARG）替补有 Julián Álvarez（ARG）、Giovanni Lo Celso（ARG）、Leandro Paredes（ARG）等可以改节奏的人，后手质量明显更高。Egypt（EGY）的后手更偏速度和情绪冲击，若 70 分钟后仍平，门将与定位球会成为他们最现实的拖加时路径。",
+      "knockout": {
+        "regular_time": "2-1",
+        "extra_time": "若 90 分钟 1-1，加时更可能仍由 Argentina（ARG）压出一个机会，但体能会让失误概率上升。",
+        "penalties": "点球大战概率约 18%，若进入点球 Argentina（ARG）55%-45% 略优。",
+        "advancer": "阿根廷",
+        "advancement_prob": "阿根廷 64% / 埃及 36%"
+      },
+      "odds": {
+        "spf": {
+          "win": "1.22",
+          "draw": "4.72",
+          "lose": "10.25"
+        },
+        "rspf": {
+          "handicap": "-1",
+          "win": "1.83",
+          "draw": "3.50",
+          "lose": "3.36"
+        },
+        "goals": "2球(3.25)、3球(3.40)、1球(4.90)、4球(5.50)、0球(11.00)、5球(11.00)、6球(20.00)、7+球(29.00)",
+        "score": "2:0(4.50)、1:0(5.70)、2:1(6.80)、3:0(6.90)、1:1(9.20)、3:1(9.20)、0:0(11.00)、4:0(15.00)、4:1(22.00)、0:1(23.00)、2:2(25.00)、3:2(36.00)"
+      },
+      "bet_advice": "主胜赔率太低，不建议单独追；更合理是 Argentina（ARG）晋级或让球(-1)方向小注，比分 2:1 防 1:1/2:0。若临场确认 Egypt（EGY）左后卫继续伤缺且 Argentina（ARG）用 Julián Álvarez（ARG）首发冲击，2:0/3:1 权重上调；若 Argentina（ARG）边后卫也有轮换，双方进球更值得看。",
+      "risk": "博胆"
+    },
+    {
+      "home": "瑞士",
+      "away": "哥伦比亚",
+      "group": "16 强 · 淘汰赛",
+      "time_bj": "2026-07-08 04:00",
+      "time_local": "温哥华 2026-07-07 13:00（PDT）",
+      "venue": "BC Place / Vancouver, Canada",
+      "predicted_score": "1-1",
+      "alt_score": "1-2",
+      "total_goals": "常规时间预计 2-3 球，核心落点 2 球；竞彩总进球最低档是 2 球，市场也把 1:1 放在最低波胆。",
+      "probability": {
+        "win": "27%",
+        "draw": "33%",
+        "lose": "40%"
+      },
+      "confidence": "低",
+      "key_factors": [
+        "竞彩不让球给 Colombia（COL）客胜 2.12，draw 2.95，Switzerland（SUI）主胜 3.15；这不是大热盘，而是 Colombia（COL）略优的接近盘。我的常规时间首选 1-1，是因为 Switzerland（SUI）的中后场纪律仍强，Colombia（COL）也缺少 Jhon Córdoba（COL）的中锋冲击。",
+        "最新伤情把天平往 Colombia（COL）推了一点。ESPN/AP 和 Reuters 都说 Johan Manzambi（SUI）、Ruben Vargas（SUI）、Djibril Sow（SUI）提前退出训练，Murat Yakin（SUI 主帅）称 Manzambi（SUI）若不能踢会是巨大问题。Manzambi（SUI）本届 3 球 2 助，是 Switzerland（SUI）从稳守到威胁转换的关键。",
+        "Colombia（COL）的问题也不小。Jhon Córdoba（COL）因腿筋伤势退出本届后续比赛，Luis Suárez（COL）预计首发；James Rodríguez（COL）上一场半场被换下是战术原因不是伤病，但如果他节奏慢，Lorenzo（COL 主帅/ARG）可能更早用 Richard Ríos（COL）提升覆盖。",
+        "关键对位是 Luis Díaz（COL）vs Denis Zakaria（SUI）/Ricardo Rodríguez（SUI）这一侧，以及 Daniel Muñoz（COL）的右路后插上。Switzerland（SUI）如果 Manzambi（SUI）和 Vargas（SUI）不满血，反击第一脚会变慢，Colombia（COL）可以更放心把边后卫推上。",
+        "候选脚本：1-1 是 Switzerland（SUI）靠 Xhaka（SUI）和 Akanji（SUI）维持结构，Colombia（COL）靠 Díaz（COL）或定位球回应；1-2 是 Switzerland（SUI）伤疑削弱后，Colombia（COL）后 70 分钟靠替补或边路二次进攻制胜；0-1 是 Colombia（COL）低比分控制；2-1 只有在 Manzambi（SUI）确认首发且活动能力正常时才明显上调。"
+      ],
+      "other_factors": [
+        "BC Place 对 Switzerland（SUI）并不陌生，他们已经在温哥华赢过 Canada（CAN）和 Algeria（ALG），场地适应是加分项；但 Colombia（COL）球迷氛围通常会把中立场变成半主场，情绪和声浪不一定输。",
+        "瑞士伤疑名单的发布时间离比赛很近，赛前首发非常关键。如果 Manzambi（SUI）和 Vargas（SUI）都替补甚至缺阵，我会把常规时间首选从 1-1 改到 1-2。"
+      ],
+      "weather": "BC Place 是顶棚球场，温哥华外部天气对比赛影响有限；更重要的是人工/封闭场地节奏较快，利于 Colombia（COL）边路速度，也利于 Switzerland（SUI）按训练节奏执行中低位防守。",
+      "referee": {
+        "name": "Iván Barton（SLV）",
+        "style": "Barton（SLV）过往场均黄牌约 5 张，属于更愿意用牌管理对抗的裁判；他在 CONCACAF 高压比赛里有过多红牌场面。",
+        "history": "SI 赛前信息列本场主裁为 Barton（SLV）。这类 Switzerland（SUI）纪律防守 vs Colombia（COL）边路一对一的比赛，早牌会明显改变边后卫动作尺度。"
+      },
+      "card_prediction": "预计黄牌 5-7 张，红牌概率 10-15%，点球概率 20-26%。Colombia（COL）的边路突破会制造拉拽和补位犯规，Switzerland（SUI）若早吃牌，防 Díaz（COL）的难度会陡增。",
+      "coach_tactics": "Yakin（SUI 主帅）会先保证 Xhaka（SUI）/Freuler（SUI）身前身后的距离，补水暂停时重点修正 Díaz（COL）接球后的协防角度。Lorenzo（COL 主帅/ARG）若发现 James Rodríguez（COL）被 Xhaka（SUI）限制，会更早换上 Richard Ríos（COL）或 Carrascal（COL）提升推进速度。",
+      "bench_depth": "Colombia（COL）替补选择更能改变进攻形态，Richard Ríos（COL）、Carrascal（COL）、Quintero（COL）能提供不同类型的持球与定位球。Switzerland（SUI）如果 Manzambi（SUI）/Vargas（SUI）带伤，板凳其实是被迫补洞，不是主动加码。",
+      "knockout": {
+        "regular_time": "1-1",
+        "extra_time": "加时更偏 Colombia（COL）靠边路和替补质量制造 1-2；若 Switzerland（SUI）撑到点球，Kobel（SUI）会让比赛重新变五五开。",
+        "penalties": "点球大战概率约 23%，若进入点球 Colombia（COL）51%-49% 微弱优势。",
+        "advancer": "哥伦比亚",
+        "advancement_prob": "哥伦比亚 55% / 瑞士 45%"
+      },
+      "odds": {
+        "spf": {
+          "win": "3.15",
+          "draw": "2.95",
+          "lose": "2.12"
+        },
+        "rspf": {
+          "handicap": "+1",
+          "win": "1.55",
+          "draw": "3.50",
+          "lose": "5.05"
+        },
+        "goals": "2球(3.05)、3球(3.75)、1球(4.00)、4球(6.80)、0球(8.00)、5球(14.00)、6球(25.00)、7+球(38.00)",
+        "score": "1:1(4.55)、1:2(6.50)、0:1(7.00)、0:0(8.00)、2:1(8.50)、1:0(9.25)、0:2(11.00)、2:2(12.00)、1:3(19.00)、2:0(19.50)、0:3(24.00)、3:1(30.00)"
+      },
+      "bet_advice": "主看 Colombia（COL）不败和 2-3 球，比分 1:1 防 1:2。竞彩 Switzerland（SUI）+1 主胜 1.55 太低，但适合作为防守腿；若临场 Manzambi（SUI）/Vargas（SUI）均确认缺阵，Colombia（COL）90 分钟客胜和 1:2 权重上调。若两人都首发且活动正常，1:1 和加时分支更稳。",
+      "risk": "博胆"
+    }
+  ]
+}

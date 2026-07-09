@@ -1,0 +1,41 @@
+{
+  "date": "2026-07-09（北京时间）",
+  "summary": "仅生成赛后复盘卡：复盘北京时间 2026-07-08 两场世界杯 16 强。实际结果为阿根廷 3-2 埃及、瑞士 0-0 哥伦比亚（瑞士点球 4-3 晋级）。不输出预测卡。",
+  "reflection": {
+    "title": "赛后复盘：方向对不等于过程对",
+    "subtitle": "复盘口径：对比 2026-07-08 两场 16 强实际赛果与昨日预测。阿根廷方向命中但过程严重低估埃及的领先能力；瑞士低比分路径接近，但我错把哥伦比亚后手和常规时间威胁转化成晋级优势。",
+    "sections": [
+      {
+        "title": "阿根廷 3-2 埃及",
+        "items": [
+          "实际首发：Argentina 4-1-3-2：Emiliano Martínez；Nahuel Molina、Cristian Romero、Lisandro Martínez、Nicolás Tagliafico；Leandro Paredes；Rodrigo De Paul、Enzo Fernández、Alexis Mac Allister；Julián Álvarez、Lionel Messi。Egypt 4-4-2/4-2-3-1：Mostafa Shobeir；Mohamed Hany、Yasser Ibrahim、Ramy Rabia、Karim Hafez；Emam Ashour、Marwan Attia、Mohanad Lasheen、Haissem Hassan；Mostafa Zico、Mohamed Salah。",
+          "替补上场：Argentina：Nico González 换 Tagliafico 66'，Lautaro Martínez 换 De Paul 66'，Gonzalo Montiel 换 Molina 73'，Nicolás Otamendi 换 Romero 90+5'，Facundo Medina 换 Julián Álvarez 90+5'。Egypt：Hamdi Fathy 换 Emam Ashour 46'，Trézéguet/Mahmoud Hassan 换 Haissem Hassan 73'，Omar Marmoush 换 Mostafa Zico 80'，Zizo 换 Mohanad Lasheen 90+6'。",
+          "昨日首选 Argentina 2-1，方向和“埃及能进球”判断是对的，但过程完全不够。实际 Egypt 15' 靠 Yasser Ibrahim 先入，21' Messi 点球被 Mostafa Shobeir 扑出，67' Zico 把比分变成 0-2；这不是普通的“强队被偷一个”，而是阿根廷连续两轮淘汰赛都被低估方打到悬崖边。",
+          "做对的部分：没有把 Argentina 写成 3-0/2-0 稳穿，提前强调 Egypt 的反击和边路身后；Lasheen 停赛结束后确实首发，说明 roster 修正有价值。做错的部分：我太依赖 Salah/Marmoush 叙事，低估了 Haissem Hassan 首发后的速度、持球和给 Zico 的推进价值，也低估了 Egypt 定位球能先打开局面。",
+          "换人复盘：Scaloni 的 66' 双换是转折点，Lautaro 虽然没首发，但最后助攻 Enzo Fernández 绝杀；Montiel 73' 上场后给 Messi 83' 扳平。昨天我写 Argentina 替补质量高，但投注脚本没有把“落后后靠 Lautaro/Montiel 改变比赛”放到足够靠前，这是过程预测的缺口。",
+          "下一轮校准：Argentina 进攻韧性仍是顶级，但边后卫身后、定位球盯人和 Paredes 身后覆盖都是真问题。以后不能把 Messi 的终结和情绪牵引自动等同于比赛可控；如果再遇到纪律性强、门将状态好的对手，1 球领先或 0-0 拖深都会很危险。"
+        ]
+      },
+      {
+        "title": "瑞士 0-0 哥伦比亚（点球 4-3）",
+        "items": [
+          "实际首发：Switzerland 4-2-3-1：Gregor Kobel；Ricardo Rodríguez、Denis Zakaria、Manuel Akanji、Nico Elvedi；Granit Xhaka、Remo Freuler；Dan Ndoye、Ardon Jashari、Fabian Rieder；Breel Embolo。Colombia 4-4-1-1：Camilo Vargas；Johan Mojica、Daniel Muñoz、Jhon Lucumí、Davinson Sánchez；Luis Díaz、Jhon Arias、Gustavo Puerta、Jefferson Lerma；James Rodríguez；Luis Suárez。",
+          "替补上场：Switzerland：Djibril Sow 换 Jashari 45'，Miro Muheim 换 Rodríguez 71'，Cedric Itten 换 Embolo 87'，Silvan Widmer 换 Zakaria 87'，Ruben Vargas 换 Ndoye 90+2'，Zeki Amdouni 换 Rieder 103'。Colombia：Jaminton Campaz 换 Arias 66'，Juan Quintero 换 James Rodríguez 66'，Cucho Hernández 换 Luis Suárez 82'，Richard Ríos 换 Lerma 82'，Yerry Mina 换 Lucumí 119'。",
+          "昨日首选常规时间 1-1、晋级偏 Colombia，实际 120 分钟 0-0、Switzerland 点球 4-3 晋级。做对的是低比分、平局和点球路径；做错的是把 Colombia 的边路爆点和替补变化估成晋级优势，低估 Switzerland 的门将、点球准备和守住禁区质量。",
+          "Manzambi 没有进入首发，Vargas 只在 90+2' 才上场，这恰好证明伤疑信息是核心变量。这里我应该更果断把 1-1 下调到 0-0/0-1 区间：Switzerland 没有 Manzambi 的前场持球爆点，运动战上限明显降低，但防守结构和 Xhaka/Freuler 的控节奏足够把比赛拖进加时。",
+          "Colombia 不是没有机会。ESPN 赛后数据给 Colombia xG 1.03、Switzerland 0.35，Lucumí 加时击中横梁，Campaz 115' 的高质量机会打飞；点球里 Sánchez 中横梁、Cucho Hernández 被 Kobel 扑出。问题是 Córdoba 缺阵后禁区第一点不够硬，James 66' 下场后传控灵感变成替补冲击，没能换成一锤定音。",
+          "点球复盘：我给 Colombia 点球微优是错的。Kobel 的扑救状态、Switzerland 点球执行顺序、Vargas 最后一罚的心理质量都应该被更高权重处理。淘汰赛后续不能只写“点球五五开”，必须把门将点球能力、主罚名单、临场体能和替补上场后触球状态单独拆出来。"
+        ]
+      },
+      {
+        "title": "今日校准",
+        "items": [
+          "比分模型修正：不要因为强弱盘而压低冷门方 2 球领先的可能。Argentina 这种强队可以翻回来，但并不代表前 75 分钟的问题可以忽略；复盘时要把“结果救回来”和“过程失控”分开写。",
+          "阵容模型修正：预计首发只能当假设，伤疑球员必须等实际名单。Manzambi 没首发、Vargas 极晚登场，直接把 Switzerland 的运动战进球概率压低；以后如果关键爆点未首发，应立即重算总进球和晋级路径。",
+          "淘汰赛模型修正：换人和点球要继续加权。今天两个晋级队都靠后手或点球完成生存：Argentina 的 Lautaro/Montiel 改变比分，Switzerland 的 Itten/Amdouni/Vargas 和 Kobel 决定点球。下一轮必须把 26 人后手、门将、点球脚法写得更具体。"
+        ]
+      }
+    ]
+  },
+  "matches": []
+}
