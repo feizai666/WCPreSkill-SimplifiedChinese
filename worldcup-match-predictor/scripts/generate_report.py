@@ -400,8 +400,25 @@ def match_process_items(match):
     )
 
 
+def multi_agent_display_items(match):
+    analysis = match.get("multi_agent_analysis")
+    if not isinstance(analysis, dict):
+        return []
+    display = analysis.get("display")
+    if not isinstance(display, dict) or display.get("enabled") is not True:
+        return []
+    items = display.get("items")
+    if not isinstance(items, list):
+        return []
+    return [item.strip() for item in items if isinstance(item, str) and item.strip()][:4]
+
+
 def match_extra_sections(match):
     sections = []
+    multi_agent_items = multi_agent_display_items(match)
+    if multi_agent_items:
+        sections.append(("多智能体研判", multi_agent_items))
+
     other_factors = match.get("other_factors")
     if other_factors:
         if isinstance(other_factors, list):

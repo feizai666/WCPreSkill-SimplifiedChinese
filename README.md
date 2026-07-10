@@ -4,7 +4,7 @@
 
 ## 简介
 
-`worldcup-match-predictor` 是一个面向世界杯比赛的中文预测 skill。给定日期（默认北京时间次日）后，它会先复盘前一比赛日，再生成当天每场比赛的 PNG 预测卡片和结构化 JSON 数据。
+`worldcup-match-predictor` 是一个面向世界杯比赛的中文预测 skill。给定日期（默认北京时间次日）后，它会先复盘前一比赛日，再生成当天每场比赛的 PNG 预测卡片和结构化 JSON 数据。`Monte` 分支额外使用多智能体独立盲审、匿名质疑、红队审计与概率聚合，避免用户观点、单一分析者或竞彩市场成为唯一锚点。
 
 主要能力：
 
@@ -13,8 +13,9 @@
 3. **赛程与赛事情境分析** —— 按北京时间确定目标日期，检查小组积分、淘汰赛路径、轮换动机、出线/晋级压力。
 4. **多维信息收集** —— 结合球队状态、历史交锋、打法风格、球员伤停、黄牌停赛、天气场地、主裁判执法尺度、主教练临场调整和替补后手。
 5. **比分与晋级建模** —— 小组赛输出 90 分钟预测比分；淘汰赛会拆分常规时间比分、加时/点球概率和最终晋级判断。
-6. **竞彩赔率对比** —— 只使用中国体育彩票竞彩官方赔率，抓取胜平负、让球胜平负、总进球数和比分/波胆，做投注参考。
-7. **PNG 报告输出** —— 为每场比赛生成高清 PNG 卡片，中文宋体、英文和数字 Times New Roman，并写入 300 DPI 元数据。
+6. **Monte 多智能体研判** —— 概率基线、情景模拟、战术对位、阵容/教练角色先独立判断，再交叉质疑；事实核验、红队和裁决角色不参与投票。
+7. **竞彩赔率对比** —— 足球共识锁定后，只使用中国体育彩票竞彩官方赔率，抓取胜平负、让球胜平负、总进球数和比分/波胆，做投注参考。
+8. **PNG 报告输出** —— 为每场比赛生成高清 PNG 卡片，中文宋体、英文和数字 Times New Roman，并写入 300 DPI 元数据。
 
 报告里提到球员、主教练、裁判等人名时，会在名字后标注三字母国家/队伍简称，例如 `Davies（CAN）`、`Hugo Broos（RSA）`、`João Pinheiro（POR）`，避免读者混淆归属。
 
@@ -24,12 +25,21 @@
 worldcup-match-predictor/
 ├── SKILL.md                          # 技能主指令
 ├── references/
+│   ├── multi-agent-deliberation.md   # Monte 多智能体盲审与质疑协议
 │   └── prediction-framework.md       # 预测方法论与权重框架
-└── scripts/
-    ├── generate_report.py            # PNG 报告卡片生成脚本
-    ├── update_rosters.py             # 阵容台账 CSV 生成脚本
-    └── sample_data.json              # 示例数据
+├── scripts/
+│   ├── generate_report.py            # PNG 报告卡片生成脚本
+│   ├── monte_consensus.py            # 概率池与分歧度量
+│   ├── update_rosters.py             # 阵容台账 CSV 生成脚本
+│   └── sample_data.json              # 示例数据
+└── tests/
+    └── test_monte_workflow.py        # 聚合、校验与 300 DPI 渲染测试
 ```
+
+## 分支
+
+- `initial`：保留引入多智能体研判之前的原始 skill。
+- `Monte`：在 `initial` 基础上增加盲审、交叉质疑、红队、概率共识和 PNG 研判摘要。
 
 ## 使用方式
 
@@ -46,6 +56,17 @@ worldcup-match-predictor/
 ```bash
 python worldcup-match-predictor/scripts/generate_report.py <data.json> reports/YYYY-MM-DD/
 ```
+
+Monte JSON 在渲染前先做机械校验与共识聚合：
+
+```bash
+python worldcup-match-predictor/scripts/monte_consensus.py \
+  reports/worldcup_YYYY-MM-DD_predictions.json \
+  --require-panel \
+  --in-place
+```
+
+聚合器会校验每个有票角色的首轮盲审、最终修订、胜平负概率与比分矩阵，计算线性概率池、Jensen-Shannon 分歧、最大概率极差和少数赛果权重。严格模式下缺少 schema v2 或任一比赛面板会直接失败；默认模式仍可读取历史旧 JSON。完整讨论保存在 JSON；PNG 只显示 2–4 条裁决摘要。
 
 输出规则：
 
