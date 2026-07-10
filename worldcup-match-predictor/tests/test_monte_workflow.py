@@ -136,6 +136,23 @@ class MonteConsensusTests(unittest.TestCase):
         with self.assertRaises(consensus.ConsensusError):
             consensus.aggregate_report(data, require_panel=True)
 
+    def test_strict_mode_requires_visible_audit_process(self):
+        data = copy.deepcopy(self.sample)
+        analysis = data["matches"][0]["multi_agent_analysis"]
+        del analysis["audit_display"]
+
+        self.assertEqual(consensus.aggregate_report(data), 1)
+        with self.assertRaises(consensus.ConsensusError):
+            consensus.aggregate_report(data, require_panel=True)
+
+    def test_strict_audit_must_cover_every_voting_agent(self):
+        data = copy.deepcopy(self.sample)
+        audit = data["matches"][0]["multi_agent_analysis"]["audit_display"]
+        audit["agents"].pop()
+
+        with self.assertRaises(consensus.ConsensusError):
+            consensus.aggregate_report(data, require_panel=True)
+
     def test_historical_weights_allow_bounded_non_equal_pool(self):
         data = copy.deepcopy(self.sample)
         analysis = data["matches"][0]["multi_agent_analysis"]
@@ -169,7 +186,17 @@ class MonteRendererTests(unittest.TestCase):
         match["multi_agent_analysis"]["display"]["enabled"] = False
         self.assertEqual(renderer.multi_agent_display_items(match), [])
 
-    def test_sample_renders_two_300_dpi_cards(self):
+    def test_audit_display_is_opt_in_and_sanitized(self):
+        match = copy.deepcopy(self.sample["matches"][0])
+        audit = renderer.multi_agent_audit_display(match)
+        self.assertIsNotNone(audit)
+        self.assertEqual(len(audit["agents"]), 4)
+        self.assertIn("qbase", {agent["id"] for agent in audit["agents"]})
+
+        match["multi_agent_analysis"]["audit_display"]["enabled"] = False
+        self.assertIsNone(renderer.multi_agent_audit_display(match))
+
+    def test_sample_renders_three_300_dpi_cards(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             output_dir = Path(tmp_dir)
             reflection_path = renderer.render_reflection_png(
@@ -183,15 +210,24 @@ class MonteRendererTests(unittest.TestCase):
                 1,
                 output_dir,
             )
+            audit_path = renderer.render_audit_png(
+                self.sample,
+                self.sample["matches"][0],
+                1,
+                output_dir,
+            )
 
             self.assertTrue(reflection_path.exists())
             self.assertTrue(match_path.exists())
-            self.assertEqual(len(list(output_dir.glob("*.png"))), 2)
-            with Image.open(match_path) as image:
-                dpi = image.info.get("dpi")
-                self.assertIsNotNone(dpi)
-                self.assertAlmostEqual(dpi[0], 300, delta=1)
-                self.assertGreater(image.height, 2500)
+            self.assertIsNotNone(audit_path)
+            self.assertTrue(audit_path.exists())
+            self.assertEqual(len(list(output_dir.glob("*.png"))), 3)
+            for path in (match_path, audit_path):
+                with Image.open(path) as image:
+                    dpi = image.info.get("dpi")
+                    self.assertIsNotNone(dpi)
+                    self.assertAlmostEqual(dpi[0], 300, delta=1)
+                    self.assertGreater(image.height, 2500)
 
 
 if __name__ == "__main__":

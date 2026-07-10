@@ -357,7 +357,7 @@ def apply_overrides(rosters, overrides, snapshot_date, last_checked):
 def write_csv(path, rows):
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=ROSTER_FIELDS)
+        writer = csv.DictWriter(f, fieldnames=ROSTER_FIELDS, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow({field: row.get(field, "") for field in ROSTER_FIELDS})

@@ -10,7 +10,7 @@ data.json 结构示例见同目录 sample_data.json。
 输出规则：
   - 如果 data.json 包含 reflection，则先生成 00 号赛后复盘卡。
   - 每场比赛生成 1 张 PNG。
-  - 当天 6 场比赛就生成 6 张 PNG。
+  - Monte 比赛若包含 audit_display，则每场额外生成 1 张研判审计附录。
   - PNG 文件保存到调用方传入的日期目录，例如 reports/2026-06-25/。
 """
 import html
@@ -413,6 +413,66 @@ def multi_agent_display_items(match):
     return [item.strip() for item in items if isinstance(item, str) and item.strip()][:4]
 
 
+def _audit_text(value):
+    if not isinstance(value, str):
+        return ""
+    return strip_markup(value).strip()
+
+
+def multi_agent_audit_display(match):
+    analysis = match.get("multi_agent_analysis")
+    if not isinstance(analysis, dict):
+        return None
+    audit = analysis.get("audit_display")
+    if not isinstance(audit, dict) or audit.get("enabled") is not True:
+        return None
+
+    agents = []
+    for item in audit.get("agents", []):
+        if not isinstance(item, dict):
+            continue
+        basis = item.get("basis")
+        if isinstance(basis, list):
+            basis = [
+                _audit_text(value)
+                for value in basis
+                if _audit_text(value)
+            ]
+        else:
+            text = _audit_text(basis)
+            basis = [text] if text else []
+        agent = {
+            "id": _audit_text(item.get("id")),
+            "role": _audit_text(item.get("role")),
+            "initial_view": _audit_text(item.get("initial_view")),
+            "basis": basis,
+            "challenge": _audit_text(item.get("challenge")),
+            "revision": _audit_text(item.get("revision")),
+        }
+        if all(agent[key] for key in ("id", "role", "initial_view", "challenge", "revision")) and basis:
+            agents.append(agent)
+
+    def text_list(key):
+        values = audit.get(key)
+        if not isinstance(values, list):
+            return []
+        return [_audit_text(value) for value in values if _audit_text(value)]
+
+    isolation_note = _audit_text(audit.get("isolation_note"))
+    cross_examination = text_list("cross_examination")
+    red_team = text_list("red_team")
+    adjudication = text_list("adjudication")
+    if not agents or not isolation_note or not cross_examination or not red_team or not adjudication:
+        return None
+    return {
+        "isolation_note": isolation_note,
+        "agents": agents,
+        "cross_examination": cross_examination,
+        "red_team": red_team,
+        "adjudication": adjudication,
+    }
+
+
 def match_extra_sections(match):
     sections = []
     multi_agent_items = multi_agent_display_items(match)
@@ -563,6 +623,45 @@ def reflection_layout_metrics(draw, reflection):
     return {"card_h": y + px(70), "inner_w": inner_w}
 
 
+def audit_layout_metrics(draw, match, audit):
+    card_w = WIDTH - MARGIN * 2
+    inner_w = card_w - px(76)
+    y = px(112)
+    h, _ = measure_wrapped(
+        draw,
+        audit["isolation_note"],
+        inner_w,
+        FONTS["small"],
+        8,
+    )
+    y += h + px(28)
+
+    for agent in audit["agents"]:
+        y += px(60)
+        lines = [
+            "初判：" + agent["initial_view"],
+            *["依据：" + item for item in agent["basis"]],
+            "质疑：" + agent["challenge"],
+            "修订：" + agent["revision"],
+        ]
+        for line in lines:
+            h, _ = measure_wrapped(draw, "• " + line, inner_w, FONTS["small"], 8)
+            y += h + px(9)
+        y += px(8)
+
+    for items in (
+        audit["cross_examination"],
+        audit["red_team"],
+        audit["adjudication"],
+    ):
+        y += px(60)
+        for item in items:
+            h, _ = measure_wrapped(draw, "• " + item, inner_w, FONTS["small"], 8)
+            y += h + px(9)
+        y += px(8)
+    return {"card_h": y + px(82), "inner_w": inner_w}
+
+
 def render_reflection_png(data, reflection, output_dir):
     probe = Image.new("RGB", (WIDTH, px(100)), COLORS["bg"])
     probe_draw = ImageDraw.Draw(probe)
@@ -606,6 +705,109 @@ def render_reflection_png(data, reflection, output_dir):
 
     output_dir.mkdir(parents=True, exist_ok=True)
     out_path = output_dir / "00_赛后复盘_今日校准.png"
+    img.save(out_path, dpi=(OUTPUT_DPI, OUTPUT_DPI))
+    return out_path
+
+
+def render_audit_png(data, match, index, output_dir):
+    audit = multi_agent_audit_display(match)
+    if not audit:
+        return None
+
+    probe = Image.new("RGB", (WIDTH, px(100)), COLORS["bg"])
+    probe_draw = ImageDraw.Draw(probe)
+    metrics = audit_layout_metrics(probe_draw, match, audit)
+
+    header_h = px(122)
+    card_w = WIDTH - MARGIN * 2
+    card_y = MARGIN + header_h + px(28)
+    card_h = int(metrics["card_h"])
+    height = card_y + card_h + MARGIN
+
+    img = Image.new("RGB", (WIDTH, height), COLORS["bg"])
+    draw = ImageDraw.Draw(img)
+    x = MARGIN
+    y = MARGIN
+
+    draw.rounded_rectangle(
+        (x, y, x + card_w, y + header_h),
+        radius=CARD_RADIUS,
+        fill=COLORS["blue"],
+    )
+    draw_text(draw, (x + px(34), y + px(24)), "多智能体研判审计", FONTS["title"], "#ffffff")
+    draw_text(draw, (x + px(36), y + px(78)), data.get("date", ""), FONTS["date"], "#dbeafe")
+    draw_text(draw, (x + card_w - px(240), y + px(78)), f"附录 A{index:02d}", FONTS["date"], "#dbeafe")
+
+    draw.rounded_rectangle(
+        (x, card_y, x + card_w, card_y + card_h),
+        radius=CARD_RADIUS,
+        fill=COLORS["panel"],
+    )
+    inner_x = x + px(38)
+    inner_y = card_y + px(34)
+    inner_w = metrics["inner_w"]
+
+    title = f"{match.get('home', '?')} vs {match.get('away', '?')}"
+    draw_text(draw, (inner_x, inner_y), title, FONTS["teams"], COLORS["ink"])
+    inner_y += px(78)
+    inner_y = draw_wrapped(
+        draw,
+        audit["isolation_note"],
+        inner_x,
+        inner_y,
+        inner_w,
+        FONTS["small"],
+        fill=COLORS["muted"],
+        gap=8,
+    ) + px(28)
+
+    for agent in audit["agents"]:
+        section_title = f"{agent['id'].upper()} · {agent['role']}"
+        inner_y = draw_section(draw, section_title, inner_x, inner_y, inner_w)
+        lines = [
+            "初判：" + agent["initial_view"],
+            *["依据：" + item for item in agent["basis"]],
+            "质疑：" + agent["challenge"],
+            "修订：" + agent["revision"],
+        ]
+        for line in lines:
+            inner_y = draw_wrapped(
+                draw,
+                "• " + line,
+                inner_x,
+                inner_y,
+                inner_w,
+                FONTS["small"],
+                fill=COLORS["ink"],
+                gap=8,
+            ) + px(9)
+        inner_y += px(8)
+
+    for title, items in (
+        ("交叉质询焦点", audit["cross_examination"]),
+        ("RED 红队审计", audit["red_team"]),
+        ("机械聚合与裁决", audit["adjudication"]),
+    ):
+        inner_y = draw_section(draw, title, inner_x, inner_y, inner_w)
+        for item in items:
+            inner_y = draw_wrapped(
+                draw,
+                "• " + item,
+                inner_x,
+                inner_y,
+                inner_w,
+                FONTS["small"],
+                fill=COLORS["ink"],
+                gap=8,
+            ) + px(9)
+        inner_y += px(8)
+
+    footer = f"worldcup-match-predictor | {datetime.now().strftime('%Y-%m-%d %H:%M')} | 可审计推理摘要，不包含隐藏思维链"
+    draw_text(draw, (inner_x, card_y + card_h - px(42)), footer, FONTS["tiny"], COLORS["muted"])
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    filename = f"A{index:02d}_{safe_filename(match.get('home', 'home'))}_vs_{safe_filename(match.get('away', 'away'))}_多智能体研判.png"
+    out_path = output_dir / filename
     img.save(out_path, dpi=(OUTPUT_DPI, OUTPUT_DPI))
     return out_path
 
@@ -724,6 +926,10 @@ def main():
         generated.append(render_reflection_png(data, reflection, output_dir))
     for idx, match in enumerate(matches, start=1):
         generated.append(render_match_png(data, match, idx, output_dir))
+    for idx, match in enumerate(matches, start=1):
+        audit_path = render_audit_png(data, match, idx, output_dir)
+        if audit_path:
+            generated.append(audit_path)
 
     print(f"已生成 {len(generated)} 张 PNG 到: {output_dir}")
     for path in generated:

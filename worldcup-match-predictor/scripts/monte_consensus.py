@@ -173,6 +173,61 @@ def _validate_references(analysis, agent_ids):
                 )
 
 
+def _nonempty_text(value, label):
+    if not isinstance(value, str) or not value.strip():
+        raise ConsensusError(f"{label} 必须是非空字符串")
+    return value.strip()
+
+
+def _nonempty_text_list(value, label):
+    if not isinstance(value, list) or not value:
+        raise ConsensusError(f"{label} 必须是非空字符串数组")
+    return [
+        _nonempty_text(item, f"{label}[{index}]")
+        for index, item in enumerate(value)
+    ]
+
+
+def _validate_audit_display(analysis, voters):
+    audit = analysis.get("audit_display")
+    if not isinstance(audit, dict) or audit.get("enabled") is not True:
+        raise ConsensusError("严格 Monte 模式要求 audit_display.enabled=true")
+
+    _nonempty_text(audit.get("isolation_note"), "audit_display.isolation_note")
+    audit_agents = audit.get("agents")
+    if not isinstance(audit_agents, list) or not audit_agents:
+        raise ConsensusError("audit_display.agents 必须是非空数组")
+
+    expected_ids = {agent["id"] for agent in voters}
+    seen_ids = set()
+    for index, agent in enumerate(audit_agents):
+        label = f"audit_display.agents[{index}]"
+        if not isinstance(agent, dict):
+            raise ConsensusError(f"{label} 必须是对象")
+        agent_id = _nonempty_text(agent.get("id"), f"{label}.id")
+        if agent_id in seen_ids:
+            raise ConsensusError(f"audit_display agent id 重复: {agent_id}")
+        seen_ids.add(agent_id)
+        _nonempty_text(agent.get("role"), f"{label}.role")
+        _nonempty_text(agent.get("initial_view"), f"{label}.initial_view")
+        _nonempty_text_list(agent.get("basis"), f"{label}.basis")
+        _nonempty_text(agent.get("challenge"), f"{label}.challenge")
+        _nonempty_text(agent.get("revision"), f"{label}.revision")
+
+    if seen_ids != expected_ids:
+        missing = sorted(expected_ids - seen_ids)
+        extra = sorted(seen_ids - expected_ids)
+        raise ConsensusError(
+            f"audit_display 必须逐一覆盖 voting agents；缺少={missing}，多余={extra}"
+        )
+
+    _nonempty_text_list(
+        audit.get("cross_examination"), "audit_display.cross_examination"
+    )
+    _nonempty_text_list(audit.get("red_team"), "audit_display.red_team")
+    _nonempty_text_list(audit.get("adjudication"), "audit_display.adjudication")
+
+
 def _weights(analysis, voters):
     mode = analysis.get("weighting_mode", "equal")
     if mode == "equal":
@@ -271,7 +326,7 @@ def _auto_display(analysis, voter_records, consensus, agreement):
     display["items"] = items[:4]
 
 
-def aggregate_analysis(analysis):
+def aggregate_analysis(analysis, require_audit=False):
     if not isinstance(analysis, dict):
         raise ConsensusError("multi_agent_analysis 必须是对象")
     agents = analysis.get("agents")
@@ -293,6 +348,8 @@ def aggregate_analysis(analysis):
     voters = [agent for agent in agents if agent.get("voting") is True]
     if len(voters) < 2:
         raise ConsensusError("至少需要两个 voting=true 的 agent")
+    if require_audit:
+        _validate_audit_display(analysis, voters)
     weights = _weights(analysis, voters)
 
     voter_records = []
@@ -423,7 +480,7 @@ def aggregate_report(data, require_panel=False):
                 raise ConsensusError(f"{fixture}: 缺少 multi_agent_analysis")
             continue
         try:
-            aggregate_analysis(analysis)
+            aggregate_analysis(analysis, require_audit=require_panel)
         except ConsensusError as exc:
             fixture = f"{match.get('home', '?')} vs {match.get('away', '?')}"
             raise ConsensusError(f"{fixture}: {exc}") from exc

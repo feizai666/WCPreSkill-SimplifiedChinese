@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "snapshot_id": "20260710-1545-BJ",
+  "as_of_bj": "2026-07-10 15:45",
+  "fixture": {
+    "home": "Spain",
+    "away": "Belgium",
+    "stage": "FIFA World Cup 2026 quarter-final",
+    "kickoff_bj": "2026-07-11 03:00",
+    "kickoff_local": "2026-07-10 12:00 PDT",
+    "venue": "Los Angeles Stadium / SoFi Stadium, Inglewood"
+  },
+  "user_hypothesis": {
+    "status": "quarantined_from_voting_agents",
+    "claim": "用户赛前讨论偏向西班牙低比分取胜和小于 2.75 球；该倾向不进入首轮概率。"
+  },
+  "facts": [
+    {
+      "fact_id": "FIXTURE-001",
+      "status": "verified",
+      "claim": "比赛于洛杉矶当地 2026-07-10 12:00 开球，对应北京时间 2026-07-11 03:00。",
+      "source_url": "https://rfef.es/es/noticias/michael-oliver-arbitrara-los-cuartos-de-final"
+    },
+    {
+      "fact_id": "ESP-AVAIL-001",
+      "status": "conflict",
+      "claim": "西班牙 26 名球员均参加了正常训练；德拉富恩特称 Yéremy Pino、Nico Williams 和 Víctor Muñoz 均可出场，但较晚的 AS 稿件称 Pino 基本不会出场。Pino 不进入确定后手模型。",
+      "source_url": "https://rfef.es/en/noticias/Los-Angeles-Chapter-Two"
+    },
+    {
+      "fact_id": "ESP-AVAIL-002",
+      "status": "verified",
+      "claim": "Ferran Torres 可以出场，但再吃一张淘汰赛黄牌将错过半决赛。",
+      "source_url": "https://cadenaser.com/nacional/2026/07/08/apercibidos-en-cuartos-del-mundial-2026-ferran-torres-unico-espanol-en-riesgo-de-perderse-las-semifinales-cadena-ser/"
+    },
+    {
+      "fact_id": "BEL-AVAIL-001",
+      "status": "verified",
+      "claim": "Amadou Onana 对美国时右膝前十字韧带受伤，确定缺席本场及余下赛事。",
+      "source_url": "https://cadenaser.com/nacional/2026/07/08/el-duro-reves-de-belgica-de-cara-al-partido-contra-espana-y-una-baja-sensible-que-puede-cambiarlo-todo-cadena-ser/"
+    },
+    {
+      "fact_id": "BEL-AVAIL-002",
+      "status": "verified",
+      "claim": "Kevin De Bruyne 因不适未出战美国，但鲁迪·加西亚确认他已可参加对西班牙的比赛；是否首发未确认。",
+      "source_url": "https://as.com/futbol/mundial/rudi-garcia-muchos-consideran-que-nos-van-a-eliminar-pero-confio-en-nosotros-f202607-n/"
+    },
+    {
+      "fact_id": "BEL-AVAIL-003",
+      "status": "conflict",
+      "claim": "Zeno Debast 本届尚未出场；加西亚笼统称除 Onana 外均状态良好，但俱乐部相关与赛前名单消息认为其不具备比赛状态。Debast 不进入确定首发或主要后手模型。",
+      "source_url": "https://www.sportsmole.co.uk/football/spain/world-cup-2026/preview/spain-vs-belgium-prediction-team-news-lineups_600878.html"
+    },
+    {
+      "fact_id": "REF-001",
+      "status": "verified",
+      "claim": "主裁判为 Michael Oliver，助理裁判为 Stuart Burt 与 James Mainwaring。",
+      "source_url": "https://rfef.es/es/noticias/michael-oliver-arbitrara-los-cuartos-de-final"
+    },
+    {
+      "fact_id": "FORM-ESP-001",
+      "status": "verified",
+      "claim": "西班牙上一场 1-0 葡萄牙，控球 55%，15 次射门、6 次射正，Mikel Merino 在 90+1 分钟进球。",
+      "source_url": "https://fdp.fifa.org/assetspublic/ce281/r12538/pdf/FullTimeMatchReport-English.pdf"
+    },
+    {
+      "fact_id": "FORM-BEL-001",
+      "status": "verified",
+      "claim": "比利时上一场 4-1 美国，控球 43%，15 次射门、7 次射正；Onana 21 分钟伤退，De Bruyne 未出场，Doku 与 Lukaku 均在 67 分钟替补出场。",
+      "source_url": "https://fdp.fifa.org/assetspublic/ce281/r12543/pdf/FullTimeMatchReport-English.pdf"
+    }
+  ],
+  "unknowns": [
+    "比利时会用 Hans Vanaken 还是 Kevin De Bruyne 进入首发中场。",
+    "Jérémy Doku 与 Romelu Lukaku 是否继续担任后手。",
+    "Yéremy Pino 的可用性来源冲突；Nico Williams 和 Víctor Muñoz 可用，但实际出场顺位未确认。",
+    "Zeno Debast 的比赛状态来源冲突，不进入确定首发或主要后手。"
+  ],
+  "source_conflicts": [
+    {
+      "topic": "Yéremy Pino 的实际使用概率",
+      "resolution": "官方主帅口径确认可出场；较晚的 AS 稿称其基本不会登场。标为 source_conflict，不进入确定首发或后手。"
+    },
+    {
+      "topic": "Zeno Debast 的本场可用性",
+      "resolution": "主帅概括称除 Onana 外均状态良好，但俱乐部相关与赛前名单消息认为其不具比赛状态。标为 source_conflict，不作确定态。"
+    }
+  ],
+  "hard_blocks": []
+}
